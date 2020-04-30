@@ -1,0 +1,27 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "backend do sistema de gestao do dildo system",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon ./scr/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cpejr/backEnd-dildoSystem.git"
+  },
+  "author": "cpe",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cpejr/backEnd-dildoSystem/issues"
+  },
+  "homepage": "https://github.com/cpejr/backEnd-dildoSystem#readme",
+  "dependencies": {
+    "celebrate": "^12.1.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.3"
+  }
+}
