@@ -1,9 +1,9 @@
 const express = require('express');
 const routes = express.Router();
+const connection = require('./database/connection');
 
 routes.get('/', (request, response)=>{
-    console.log("Rota padrao faz nada");
-    return response.json({resposta: "AAAAAA"});
+    return response.json({resposta: "Conectou na rota.get('/')"});
 })
 
 module.exports = routes;

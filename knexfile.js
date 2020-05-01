@@ -3,13 +3,16 @@ module.exports = {
     development: {
         client: 'mysql',
         connection: {
-            host: 'localhost' || process.env.MYSQL_HOST,
-            user: 'root' || process.env.MYSQL_USER,
-            password: 'cpejr123' || process.env.MYSQL_PASSWORD,
-            database: 'bemConectado' || process.env.MYSQL_DATABASE,
+            host: process.env.MYSQL_HOST || 'localhost',
+            user: process.env.MYSQL_USER || 'root',
+            password: process.env.MYSQL_PASSWORD || 'cpejr123',
+            database: process.env.MYSQL_DATABASE || 'bemconectado'
         },
         migrations: {
             directory: './src/database/migrations'
+        },
+        seeds: {
+            directory: './src/database/seeds'
         },
         useNullAsDefault: true,
     },
