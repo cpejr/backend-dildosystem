@@ -1,7 +1,7 @@
 module.exports = {
 
     development: {
-        client: 'mysql',
+        client: 'sqlite3',
         connection: {
             filename: './src/database/db.sqlite'
         },
@@ -11,6 +11,7 @@ module.exports = {
         seeds: {
             directory: './src/database/seeds'
         },
+        useNullAsDefault: true,
     },
 
     production: {
