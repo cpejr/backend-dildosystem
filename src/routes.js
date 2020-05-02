@@ -1,9 +1,8 @@
 const express = require('express');
 const routes = express.Router();
-const connection = require('./database/connection');
+const UserController = require('./controllers/UserController');
 
-routes.get('/', (request, response)=>{
-    return response.json({resposta: "Conectou na rota.get('/')"});
-})
+//Users
+routes.get('/users', UserController.index);
 
 module.exports = routes;
