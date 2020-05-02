@@ -1,10 +1,10 @@
 
 exports.seed = function(knex) {
   // Deletes ALL existing entries
-  return knex('table_name').del()
+  return knex('users').del()
     .then(function () {
       // Inserts seed entries
-      return knex('table_name').insert([
+      return knex('users').insert([
         {name: 'Jose', email: 'jose@hotmail.com', firebase: 'KHSBAHKNDJAHXHA'},
         {name: 'Maria', email: 'Maria@hotmail.com', firebase: 'KHSBAHFKAJDJAHXHA'},
         {name: 'Paula', email: 'Paula@hotmail.com', firebase: 'KHSBAHKABCJNAKAHXHA'},
