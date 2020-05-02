@@ -1,9 +1,11 @@
 require('dotenv').config();
 
+const mysql = require('mysql');
 const express = require('express');
 const cors = require('cors');
 const routes = require('./routes');
 const { errors } = require('celebrate');
+const port = process.env.PORT || 3333;
 
 const app = express();
 
@@ -13,7 +15,9 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.use(express.json());
-//app.use(routes);
+app.use(routes);
 app.use(errors());
 
-app.listen(process.env.PORT || 3333);
+app.listen(port, ()=>{
+  console.log("Listening on port: " + port);
+});
