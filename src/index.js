@@ -1,6 +1,5 @@
 require('dotenv').config();
 
-const mysql = require('mysql');
 const express = require('express');
 const cors = require('cors');
 const routes = require('./routes');
