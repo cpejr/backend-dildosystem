@@ -45,5 +45,18 @@ module.exports = {
           reject(errorMessage);
         });
     })
+  }, 
+  async login (email, password) {
+    return new Promise((resolve, reject) => {
+      firebase.auth().signInWithEmailAndPassword(email, password)
+        .then((result) => {
+          resolve(result.user.uid);
+        })
+        .catch((error) => {
+          console.log(error);
+          const errorMessage = error.message;
+          reject(errorMessage);
+        });
+    })
   }
 };
