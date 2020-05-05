@@ -1,9 +1,27 @@
 const express = require('express');
 const routes = express.Router();
 const UserController = require('./controllers/UserController');
+const { celebrate, Segments, Joi } = require('celebrate');
 
 //Users
 routes.get('/users', UserController.index);
-routes.get('/', (request, response) =>{ return response.json({resposta: "Banana", feijao: "cozido"})});
+routes.post('/user', celebrate({
+    [Segments.BODY]: Joi.object().keys({
+      name: Joi.string().required(),
+      email: Joi.string().required(),
+      firebase: Joi.string().required(),
+      type: Joi.string().valid("admin", "retailer", "wholesaler").required(),
+      cpf: Joi.string().required(),
+      birthdate: Joi.string().optional(),
+      zipcode: Joi.string().optional(),
+      phonenumber: Joi.string().optional(),
+      state: Joi.string().optional(),
+      city: Joi.string().optional(),
+      neighborhood: Joi.string().optional(),
+      street: Joi.string().optional(),
+      number: Joi.string().optional(),
+      complement: Joi.string().optional(),
+      })
+  }), UserController.create);
 
 module.exports = routes;
