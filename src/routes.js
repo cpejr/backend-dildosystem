@@ -53,5 +53,25 @@ routes.post('/newProduct', authenticateToken, isAdmin, celebrate({
   })
 }), ProductController.create);
 
+routes.put('/updateProduct/:id', authenticateToken, isAdmin, celebrate({
+  [Segments.PARAMS]: Joi.object().keys({
+    id: Joi.number().required(),
+  }),
+  [Segments.BODY]: Joi.object().keys({
+    name: Joi.string().optional(),
+    client_price: Joi.number().optional(),
+    client_sale_price: Joi.number().optional(),
+    wholesailer_price: Joi.number().optional(),
+    wholesailer_sale_price: Joi.number().optional(),
+    on_sale_client: Joi.boolean().optional(),
+    on_sale_wholesaler: Joi.boolean().optional(),
+    featured: Joi.boolean().optional(),
+    description: Joi.string().optional(),
+    visible: Joi.boolean().optional(),
+    stock_quantity: Joi.number().optional(),
+    image_id: Joi.string().optional(),
+  })
+}), ProductController.update);
+
 
 module.exports = routes;

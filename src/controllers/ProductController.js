@@ -18,5 +18,19 @@ module.exports = {
 
       return response.status(500).json({ notification: "Internal server error while trying to register the new product" });
     }
+  },
+
+  async update(request, response) {
+    try {
+      const newProduct = request.body;
+      const { id }  = request.params;
+
+      await DataBaseModel.updateProduct(newProduct, id);
+
+      response.status(200).json({ message: "Sucesso!" });
+    } catch (err) {
+      console.log(err);
+      return response.status(500).json({ notification: "Internal server error while trying to update product" });
+    }
   }
 }

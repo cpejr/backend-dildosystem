@@ -25,6 +25,18 @@ module.exports = {
     });
   },
 
+  updateProduct(product, product_id) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const response = await connection("products").where({id: product_id}).update(product);
+        resolve(response);
+      } catch (error) {
+        console.log(error);
+        reject(error);
+      }
+    });
+  },
+
   getProductbyId(id) {
     return new Promise(async (resolve, reject) => {
       try {
