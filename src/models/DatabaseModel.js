@@ -28,7 +28,7 @@ module.exports = {
   updateProduct(product, product_id) {
     return new Promise(async (resolve, reject) => {
       try {
-        const response = await connection("products").where({id: product_id}).update(product);
+        const response = await connection("products").where({ id: product_id }).update(product);
         resolve(response);
       } catch (error) {
         console.log(error);
@@ -47,5 +47,49 @@ module.exports = {
         reject(error);
       }
     });
-  }
+  },
+
+  getCredentials() {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const response = await connection("credentials").select("*").first();
+        resolve(response);
+      } catch (error) {
+        console.log(error);
+        reject(error);
+      }
+    })
+  },
+
+  updateCredentials(credentials) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const token = await connection("credentials").first();
+
+        if (!token) {
+          createCredentials(credentials)
+        }
+
+        const response = await connection("credentials").first().update(credentials);
+        resolve(response);
+      } catch (error) {
+        console.log(error);
+        reject(error);
+      }
+    })
+  },
+
+  createCredentials: createCredentials
+}
+
+function createCredentials(credentials) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const response = await connection("credentials").insert(credentials);
+      resolve(response);
+    } catch (error) {
+      console.log(error);
+      reject(error);
+    }
+  })
 }

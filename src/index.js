@@ -4,6 +4,8 @@ const express = require('express');
 const cors = require('cors');
 const routes = require('./routes');
 const { errors } = require('celebrate');
+require('./models/GoogleDriveModel').config();
+
 const port = process.env.PORT || 3333;
 
 const app = express();

@@ -3,6 +3,7 @@ const routes = express.Router();
 const UserController = require('./controllers/UserController');
 const ProductController = require('./controllers/ProductController');
 const SessionController = require('./controllers/SessionController');
+const DriveController = require('./controllers/DriveController');
 const { authenticateToken, isAdmin } = require('./middlewares/authentication');
 const { celebrate, Segments, Joi } = require('celebrate');
 
@@ -73,5 +74,8 @@ routes.put('/updateProduct/:id', authenticateToken, isAdmin, celebrate({
   })
 }), ProductController.update);
 
+
+//GoogleDrive
+routes.get('/validateCredentials', DriveController.validateCredentials)
 
 module.exports = routes;
