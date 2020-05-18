@@ -3,8 +3,20 @@ const DataBaseModel = require('../models/DatabaseModel');
 
 module.exports = {
   async index(request, response) {
-    const users = await connection('users').select('*');
-    return response.json(users);
+    let type = "retailer";
+    if (request.session)
+      type = request.session.user.type;
+
+    let columns = ["id", "name", "client_price", "client_sale_price", "on_sale_client", "featured", "description", "visible", "stock_quantity", "image_id"];
+    if (type === 'admin' || type === 'wholesaler')
+      columns = [...columns, "wholesailer_price", "wholesailer_sale_price", "on_sale_wholesaler" ];
+
+    let query = connection('products').select(columns);
+    if (type !== 'admin')
+      query = query.where({ visible: true });
+
+    const result = await query;
+    return response.json(result);
   },
 
   async create(request, response) {
@@ -23,7 +35,7 @@ module.exports = {
   async update(request, response) {
     try {
       const newProduct = request.body;
-      const { id }  = request.params;
+      const { id } = request.params;
 
       await DataBaseModel.updateProduct(newProduct, id);
 
