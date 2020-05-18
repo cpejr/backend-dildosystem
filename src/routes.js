@@ -4,7 +4,7 @@ const UserController = require('./controllers/UserController');
 const ProductController = require('./controllers/ProductController');
 const SessionController = require('./controllers/SessionController');
 const DriveController = require('./controllers/DriveController');
-const { authenticateToken, isAdmin } = require('./middlewares/authentication');
+const { authenticateToken, isAdmin, authenticateOptionalToken } = require('./middlewares/authentication');
 const { celebrate, Segments, Joi } = require('celebrate');
 
 //Users
@@ -73,6 +73,23 @@ routes.put('/updateProduct/:id', authenticateToken, isAdmin, celebrate({
     image_id: Joi.string().optional(),
   })
 }), ProductController.update);
+
+routes.get('/products', authenticateOptionalToken, celebrate({
+  [Segments.QUERY]: Joi.object().keys({
+    name: Joi.string().optional(),
+    client_price: Joi.number().optional(),
+    client_sale_price: Joi.number().optional(),
+    wholesailer_price: Joi.number().optional(),
+    wholesailer_sale_price: Joi.number().optional(),
+    on_sale_client: Joi.boolean().optional(),
+    on_sale_wholesaler: Joi.boolean().optional(),
+    featured: Joi.boolean().optional(),
+    description: Joi.string().optional(),
+    visible: Joi.boolean().optional(),
+    stock_quantity: Joi.number().optional(),
+    image_id: Joi.string().optional(),
+  })
+}), ProductController.index);
 
 
 //GoogleDrive
