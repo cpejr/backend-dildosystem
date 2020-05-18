@@ -1,4 +1,6 @@
 const { google } = require('googleapis');
+const stream = require('stream');
+const path = require("path");
 const DatabaseModel = require('../models/DatabaseModel');
 
 // If modifying these scopes, delete token.json.
@@ -104,4 +106,36 @@ function listFiles() {
       console.log('No files found.');
     }
   });
+}
+
+exports.uploadFile = function uploadFile(buffer, name, mimeType) {
+  return new Promise(async (resolve, reject) => {
+
+    let bufferStream = new stream.PassThrough();
+    bufferStream.end(buffer);
+
+    const drive = google.drive({ version: 'v3', auth: oAuth2Client });
+    var fileMetadata = { name: `${Date.now()}${path.extname(name)}`, parents: ["1chQUtCqjDxkkEPVldCvNnlC3NCoqp7YK"] };
+
+    var media = {
+      mimeType,
+      body: bufferStream
+    };
+
+    drive.files.create({
+      resource: fileMetadata,
+      media: media,
+      fields: 'id'
+    }, function (err, res) {
+      if (err) {
+        // Handle error
+        console.log(err);
+        reject(err);
+      } else {
+        resolve(res.data.id)
+      }
+    });
+  })
+
+
 }

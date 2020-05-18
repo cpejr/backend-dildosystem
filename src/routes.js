@@ -6,6 +6,7 @@ const SessionController = require('./controllers/SessionController');
 const DriveController = require('./controllers/DriveController');
 const { authenticateToken, isAdmin, authenticateOptionalToken } = require('./middlewares/authentication');
 const { celebrate, Segments, Joi } = require('celebrate');
+const imageUpload = require('./middlewares/imageUpload');
 
 //Users
 routes.get('/users', UserController.index);
@@ -37,7 +38,7 @@ routes.post('/login', celebrate({
 }), SessionController.signin);
 
 //Product
-routes.post('/newProduct', authenticateToken, isAdmin, celebrate({
+routes.post('/newProduct', authenticateToken, isAdmin, imageUpload('imageFile'), celebrate({
   [Segments.BODY]: Joi.object().keys({
     name: Joi.string().required(),
     client_price: Joi.number().required(),
@@ -50,11 +51,10 @@ routes.post('/newProduct', authenticateToken, isAdmin, celebrate({
     description: Joi.string().required(),
     visible: Joi.boolean().optional(),
     stock_quantity: Joi.number().required(),
-    image_id: Joi.string().optional(),
   })
 }), ProductController.create);
 
-routes.put('/updateProduct/:id', authenticateToken, isAdmin, celebrate({
+routes.put('/updateProduct/:id', authenticateToken, isAdmin, imageUpload('imageFile'), celebrate({
   [Segments.PARAMS]: Joi.object().keys({
     id: Joi.number().required(),
   }),
@@ -70,7 +70,6 @@ routes.put('/updateProduct/:id', authenticateToken, isAdmin, celebrate({
     description: Joi.string().optional(),
     visible: Joi.boolean().optional(),
     stock_quantity: Joi.number().optional(),
-    image_id: Joi.string().optional(),
   })
 }), ProductController.update);
 

@@ -1,6 +1,7 @@
 const connection = require('../database/connection');
 const DataBaseModel = require('../models/DatabaseModel');
-const GoogleDriveModel = require('../models/GoogleDriveModel');
+const { uploadFile } = require('../models/GoogleDriveModel');
+
 
 module.exports = {
   async index(request, response) {
@@ -23,6 +24,11 @@ module.exports = {
   async create(request, response) {
     try {
       const newProduct = request.body;
+      const { originalname, buffer, mimetype } = request.file;
+
+      const image_id = await uploadFile(buffer, originalname, mimetype);
+
+      newProduct.image_id = image_id;
 
       const [id] = await DataBaseModel.createNewProduct(newProduct);
 
@@ -36,7 +42,13 @@ module.exports = {
   async update(request, response) {
     try {
       const newProduct = request.body;
+      const { originalname, buffer, mimetype } = request.file;
+      
       const { id } = request.params;
+
+      const image_id = await uploadFile(buffer, originalname, mimetype);
+
+      newProduct.image_id = image_id;
 
       await DataBaseModel.updateProduct(newProduct, id);
 
