@@ -4,6 +4,7 @@ const UserController = require('./controllers/UserController');
 const ProductController = require('./controllers/ProductController');
 const SessionController = require('./controllers/SessionController');
 const DriveController = require('./controllers/DriveController');
+const SubproductController = require('./controllers/SubproductController');
 const { authenticateToken, isAdmin, authenticateOptionalToken } = require('./middlewares/authentication');
 const { celebrate, Segments, Joi } = require('celebrate');
 const imageUpload = require('./middlewares/imageUpload');
@@ -89,6 +90,24 @@ routes.get('/products', authenticateOptionalToken, celebrate({
     image_id: Joi.string().optional(),
   })
 }), ProductController.index);
+
+
+//Subproducts
+routes.post('/newSubproduct', authenticateToken, isAdmin, imageUpload('imageFile'), celebrate({
+  [Segments.BODY]: Joi.object().keys({
+    name: Joi.string().required(),
+    description: Joi.string().required(),
+    visible: Joi.boolean().optional(),
+    stock_quantity: Joi.number().required(),
+    product_id: Joi.number().required(),
+  })
+}), SubproductController.create);
+
+routes.get('/subproducts/:product_id', authenticateOptionalToken, celebrate({
+  [Segments.PARAMS]: Joi.object().keys({
+    product_id: Joi.number().required(),
+  })
+}), SubproductController.getSubproducts);
 
 
 //GoogleDrive

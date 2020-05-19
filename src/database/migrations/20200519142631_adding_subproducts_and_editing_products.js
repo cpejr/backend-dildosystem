@@ -13,7 +13,6 @@ exports.up = function(knex) {
         table.timestamp('updated_at').defaultTo(knex.fn.now());
     })
     .table('products', function (table) {   
-        table.boolean('has_subproducts').notNullable().defaultTo(false);
         table.renameColumn('wholesailer_price', 'wholesaler_price');
         table.renameColumn('wholesailer_sale_price', 'wholesaler_sale_price');
     });
@@ -22,7 +21,6 @@ exports.up = function(knex) {
 exports.down = function(knex) {
     return knex.schema.dropTable('subproducts')
     .table('products', function (table) {   
-        table.dropColumn('has_subproducts');
         table.renameColumn('wholesaler_price', 'wholesailer_price');
         table.renameColumn('wholesaler_sale_price', 'wholesailer_sale_price');
     });
