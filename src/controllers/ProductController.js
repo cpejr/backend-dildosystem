@@ -11,7 +11,7 @@ module.exports = {
 
     let columns = ["id", "name", "client_price", "client_sale_price", "on_sale_client", "featured", "description", "visible", "stock_quantity", "image_id"];
     if (type === 'admin' || type === 'wholesaler')
-      columns = [...columns, "wholesailer_price", "wholesailer_sale_price", "on_sale_wholesaler" ];
+      columns = [...columns, "wholesaler_price", "wholesaler_sale_price", "on_sale_wholesaler" ];
 
     let query = connection('products').select(columns);
     if (type !== 'admin')
