@@ -79,7 +79,7 @@ module.exports = {
   getSubproductsbyProductId(product_id, query) {
     return new Promise(async (resolve, reject) => {
       try {
-        const newQuery = {...query, product_id: product_id};
+        const newQuery = { ...query, product_id: product_id };
         const response = await connection("subproducts").where(newQuery).select("*");
         resolve(response);
       } catch (error) {
@@ -101,6 +101,78 @@ module.exports = {
     });
   },
 
+  //Orders
+  createNewOrder(order) {
+    return new Promise((resolve, reject) => {
+      connection("orders").insert(order)
+        .then(response => resolve(response))
+        .catch(error => {
+          console.log(error);
+          reject(error);
+        });
+    });
+  },
+
+  createProductOrder(products) {
+    return new Promise((resolve, reject) => {
+      connection("orders_products").insert(products)
+        .then(response => resolve(response))
+        .catch(error => {
+          console.log(error);
+          reject(error);
+        });
+    });
+  },
+
+  getOrders() {
+    //  SELECT o.*,op.product_id,op.product_quantity,op.subproduct_id 
+    //  FROM orders o 
+    //  INNER JOIN orders_products op ON o.id = op.order_id 
+
+    return new Promise((resolve, reject) => {
+      connection("orders AS o")
+        .select('o.*', ' op.product_id', ' op.product_quantity', ' op.subproduct_id')
+        .innerJoin('orders_products AS op', 'o.id', 'op.order_id')
+        .then(response => {
+          const result = {};
+
+          response.forEach((value) => {
+            const order = {
+              id: value.id,
+              user_id: value.user_id,
+              created_at: value.created_at,
+              payment_type: value.payment_type,
+              status: value.status,
+              products: []
+            }
+
+            if (!result[order.id])
+              result[order.id] = order;
+
+            const product = {
+              product_id: value.product_id,
+              product_quantity: value.product_quantity,
+              subproduct_id: value.subproduct_id,
+            }
+
+            result[order.id].products.push(product)
+          })
+
+          const finalResult = [];
+          Object.keys(result).forEach((value, index) => {
+            finalResult[index] = result[value]
+          })
+
+          resolve(finalResult)
+        }
+        )
+        .catch((error) => {
+          console.log(error);
+          reject(error);
+        })
+    });
+  },
+  
   //Credentials
   getCredentials() {
     return new Promise(async (resolve, reject) => {
