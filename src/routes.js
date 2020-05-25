@@ -92,6 +92,11 @@ routes.get('/products', authenticateOptionalToken, celebrate({
   })
 }), ProductController.index);
 
+routes.get('/product/:product_id', authenticateOptionalToken, celebrate({
+  [Segments.PARAMS]: Joi.object().keys({
+    product_id: Joi.number().required(),
+  })
+}), ProductController.getProduct);
 
 //Subproducts
 routes.post('/newSubproduct', authenticateToken, isAdmin, imageUpload('imageFile'), celebrate({
@@ -109,6 +114,7 @@ routes.get('/subproducts/:product_id', authenticateOptionalToken, celebrate({
     product_id: Joi.number().required(),
   })
 }), SubproductController.getSubproducts);
+
 
 //Orders
 routes.post('/newOrder', authenticateToken, celebrate({

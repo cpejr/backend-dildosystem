@@ -62,5 +62,33 @@ module.exports = {
       console.log(err);
       return response.status(500).json({ notification: "Internal server error while trying to update product" });
     }
-  }
+  },
+
+  async getProduct(request, response) {
+    try {
+      const { product_id } = request.params;
+
+      let showWholesaler = false;
+      if (request.session){
+        const type = request.session.user.type;
+        showWholesaler = type === "admin" || type === "wholesaler"
+      }
+
+      const promises = [];
+
+      promises.push(DataBaseModel.getProductbyId(product_id, showWholesaler));
+      promises.push(DataBaseModel.getSubproductsbyProductId(product_id));
+
+      const result = await Promise.all(promises);
+      let data = result[0];
+      if (data)
+        data.subproducts = result[1];
+
+      return response.status(200).json(data);
+
+    } catch (err) {
+      console.log(err);
+      return response.status(500).json({ notification: "Internal server error while trying to get products" });
+    }
+  },
 }
