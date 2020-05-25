@@ -39,10 +39,14 @@ module.exports = {
     });
   },
 
-  getProductbyId(id) {
+  getProductbyId(id, showWholesaler = false) {
     return new Promise(async (resolve, reject) => {
       try {
-        const response = await connection("products").where("id", id).select("*").first();
+        let columns = ["id", "name", "client_price", "client_sale_price", "on_sale_client", "featured", "description", "visible", "stock_quantity", "image_id"];
+        if (showWholesaler)
+          columns = [...columns, "wholesaler_price", "wholesaler_sale_price", "on_sale_wholesaler"];
+        const response = await connection("products").where("id", id).select(columns).first();
+        
         resolve(response);
       } catch (error) {
         console.log(error);
