@@ -1,6 +1,7 @@
 const express = require('express');
 const routes = express.Router();
 const UserController = require('./controllers/UserController');
+const CategoryController = require('./controllers/CategoryController');
 const ProductController = require('./controllers/ProductController');
 const SessionController = require('./controllers/SessionController');
 const DriveController = require('./controllers/DriveController');
@@ -43,16 +44,17 @@ routes.post('/login', celebrate({
 routes.post('/newProduct', authenticateToken, isAdmin, imageUpload('imageFile'), celebrate({
   [Segments.BODY]: Joi.object().keys({
     name: Joi.string().required(),
-    client_price: Joi.number().required(),
-    client_sale_price: Joi.number().optional(),
-    wholesaler_price: Joi.number().required(),
-    wholesaler_sale_price: Joi.number().optional(),
+    client_price: Joi.number().min(0).required(),
+    client_sale_price: Joi.number().min(0).optional(),
+    wholesaler_price: Joi.number().min(0).required(),
+    wholesaler_sale_price: Joi.number().min(0).optional(),
     on_sale_client: Joi.boolean().optional(),
     on_sale_wholesaler: Joi.boolean().optional(),
     featured: Joi.boolean().optional(),
     description: Joi.string().required(),
     visible: Joi.boolean().optional(),
     stock_quantity: Joi.number().required(),
+    subcategory_id: Joi.number().integer().min(0).required(),
   })
 }), ProductController.create);
 
@@ -62,33 +64,34 @@ routes.put('/updateProduct/:id', authenticateToken, isAdmin, imageUpload('imageF
   }),
   [Segments.BODY]: Joi.object().keys({
     name: Joi.string().optional(),
-    client_price: Joi.number().optional(),
-    client_sale_price: Joi.number().optional(),
-    wholesaler_price: Joi.number().optional(),
-    wholesaler_sale_price: Joi.number().optional(),
+    client_price: Joi.number().min(0).optional(),
+    client_sale_price: Joi.number().min(0).optional(),
+    wholesaler_price: Joi.number().min(0).optional(),
+    wholesaler_sale_price: Joi.number().min(0).optional(),
     on_sale_client: Joi.boolean().optional(),
     on_sale_wholesaler: Joi.boolean().optional(),
     featured: Joi.boolean().optional(),
     description: Joi.string().optional(),
     visible: Joi.boolean().optional(),
     stock_quantity: Joi.number().optional(),
+    subcategory_id: Joi.number().integer().min(0).optional(),
   })
 }), ProductController.update);
 
 routes.get('/products', authenticateOptionalToken, celebrate({
   [Segments.QUERY]: Joi.object().keys({
     name: Joi.string().optional(),
-    client_price: Joi.number().optional(),
-    client_sale_price: Joi.number().optional(),
-    wholesaler_price: Joi.number().optional(),
-    wholesaler_sale_price: Joi.number().optional(),
+    client_price: Joi.number().min(0).optional(),
+    client_sale_price: Joi.number().min(0).optional(),
+    wholesaler_price: Joi.number().min(0).optional(),
+    wholesaler_sale_price: Joi.number().min(0).optional(),
     on_sale_client: Joi.boolean().optional(),
     on_sale_wholesaler: Joi.boolean().optional(),
     featured: Joi.boolean().optional(),
     description: Joi.string().optional(),
     visible: Joi.boolean().optional(),
     stock_quantity: Joi.number().optional(),
-    image_id: Joi.string().optional(),
+    subcategory_id: Joi.number().integer().min(0).optional(),
   })
 }), ProductController.index);
 
@@ -133,5 +136,54 @@ routes.get('/orders', authenticateToken, isAdmin,
 
 //GoogleDrive
 routes.get('/validateCredentials', DriveController.validateCredentials)
+
+
+//Categories
+routes.post('/newCategory', authenticateToken, isAdmin, celebrate({
+  [Segments.BODY]: Joi.object().keys({
+    name: Joi.string().required(),
+  })
+}), CategoryController.createCategory);
+
+routes.post('/newSubcategory', authenticateToken, isAdmin, celebrate({
+  [Segments.BODY]: Joi.object().keys({
+    name: Joi.string().required(),
+    category_id: Joi.number().integer().min(0).required(),
+  })
+}), CategoryController.createSubcategory);
+
+routes.put('/category/:id', authenticateToken, isAdmin, celebrate({
+  [Segments.PARAMS]: Joi.object().keys({
+    id: Joi.number().integer().min(0).required(),
+  }),
+  [Segments.BODY]: Joi.object().keys({
+    name: Joi.string().optional(),
+  })
+}), CategoryController.updateCategory);
+
+routes.put('/subcategory/:id', authenticateToken, isAdmin, celebrate({
+  [Segments.PARAMS]: Joi.object().keys({
+    id: Joi.number().integer().min(0).required(),
+  }),
+  [Segments.BODY]: Joi.object().keys({
+    name: Joi.string().optional(),
+    category_id: Joi.number().integer().min(0).optional(),
+  })
+}), CategoryController.updateSubcategory);
+
+routes.delete('/category/:id', authenticateToken, isAdmin, celebrate({
+  [Segments.PARAMS]: Joi.object().keys({
+    id: Joi.number().integer().min(0).required(),
+  }),
+}), CategoryController.deleteCategory);
+
+routes.delete('/subcategory/:id', authenticateToken, isAdmin, celebrate({
+  [Segments.PARAMS]: Joi.object().keys({
+    id: Joi.number().integer().min(0).required(),
+  }),
+}), CategoryController.deleteSubcategory);
+
+
+
 
 module.exports = routes;

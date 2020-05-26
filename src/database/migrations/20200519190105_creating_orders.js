@@ -16,16 +16,11 @@ exports.up = function (knex) {
       table.integer('product_quantity').unsigned().notNullable();
       table.integer('subproduct_id').nullable();
       table.foreign('subproduct_id').references('id').inTable('subproducts').onDelete('SET NULL');
-    })
-    .table('products', function (table) {
-      table.integer('stock_quantity').notNullable().defaultTo(0).unsigned();
     });
 };
 
 exports.down = function (knex) {
-  return knex.schema.table('products', function(table){
-    table.dropColumn('stock_quantity');
-  })
+  return knex.schema
     .dropTable('orders_products')
     .dropTable('orders');
 };

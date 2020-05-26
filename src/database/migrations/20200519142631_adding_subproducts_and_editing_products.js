@@ -11,19 +11,9 @@ exports.up = function(knex) {
         table.foreign('product_id').references('id').inTable('products').onDelete('CASCADE');
         table.timestamp('created_at').defaultTo(knex.fn.now());
         table.timestamp('updated_at').defaultTo(knex.fn.now());
-    })
-    .table('products', function (table) {   
-        table.renameColumn('wholesailer_price', 'wholesaler_price');
-        table.renameColumn('wholesailer_sale_price', 'wholesaler_sale_price');
-        table.dropColumn('stock_quantity');    
     });
 };
 
 exports.down = function(knex) {
-    return knex.schema.dropTable('subproducts')
-    .table('products', function (table) {   
-        table.renameColumn('wholesaler_price', 'wholesailer_price');
-        table.renameColumn('wholesaler_sale_price', 'wholesailer_sale_price');
-        table.int('stock_quantity').notNullable().defaultTo(0);
-    });
+    return knex.schema.dropTable('subproducts');
 };

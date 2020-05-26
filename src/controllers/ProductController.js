@@ -5,17 +5,18 @@ const { uploadFile } = require('../models/GoogleDriveModel');
 module.exports = {
   async index(request, response) {
     try {
+      const filter = request.query;
       let type = "retailer";
       if (request.session)
         type = request.session.user.type;
 
-      let columns = ["id", "name", "client_price", "client_sale_price", "on_sale_client", "featured", "description", "visible", "stock_quantity", "image_id"];
+      let columns = ["id", "name", "client_price", "client_sale_price", "on_sale_client", "featured", "description", "visible", "stock_quantity", "image_id", "subcategory_id"];
       if (type === 'admin' || type === 'wholesaler')
         columns = [...columns, "wholesaler_price", "wholesaler_sale_price", "on_sale_wholesaler"];
 
-      let query = { visible: true };
+      let query = { visible: true, ...filter };
       if (type === 'admin')
-        query = {};
+        query = { ...filter };
 
       const result = await DataBaseModel.getProducts(columns, query);
       return response.status(200).json(result);
