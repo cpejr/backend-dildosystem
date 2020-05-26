@@ -49,23 +49,14 @@ module.exports = {
     }
   },
 
-  async update(request, response) {
+  async delete(request, response) {
     try {
-      const newProduct = request.body;
-      const { originalname, buffer, mimetype } = request.file;
-
-      const { id } = request.params;
-
-      const image_id = await uploadFile(buffer, originalname, mimetype);
-
-      newProduct.image_id = image_id;
-
-      await DataBaseModel.updateProduct(newProduct, id);
-
-      response.status(200).json({ message: "Sucesso!" });
+      const { order_id } = request.params;
+      await DataBaseModel.deleteOrder(order_id);
+      response.status(200).json({message: "Deleted order: " + order_id});
     } catch (err) {
-      console.log(err);
-      return response.status(500).json({ notification: "Internal server error while trying to update product" });
+      return response.status(500).json({ notification: "Internal server error while trying to delete product" });
     }
-  }
+  },
+
 }

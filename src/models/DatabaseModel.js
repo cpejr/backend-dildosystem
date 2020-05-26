@@ -46,7 +46,7 @@ module.exports = {
         if (showWholesaler)
           columns = [...columns, "wholesaler_price", "wholesaler_sale_price", "on_sale_wholesaler"];
         const response = await connection("products").where("id", id).select(columns).first();
-        
+
         resolve(response);
       } catch (error) {
         console.log(error);
@@ -119,12 +119,14 @@ module.exports = {
 
   createProductOrder(products) {
     return new Promise((resolve, reject) => {
-      connection("orders_products").insert(products)
-        .then(response => resolve(response))
-        .catch(error => {
-          console.log(error);
-          reject(error);
-        });
+      operateStock(products, false).then(() => {
+        connection("orders_products").insert(products)
+          .then(response => resolve(response))
+          .catch(error => {
+            console.log(error);
+            reject(error);
+          });
+      })
     });
   },
 
@@ -176,7 +178,34 @@ module.exports = {
         })
     });
   },
-  
+
+  deleteOrder(order_id) {
+    return new Promise((resolve, reject) => {
+      connection("orders_products")
+        .where("order_id", "=", order_id)
+        .then((orders_products_vector) => {
+          operateStock(orders_products_vector, true)
+            .then(() => {
+              connection("orders")
+                .where("id", "=", order_id)
+                .delete()
+                .then((result) => {
+                  resolve(result);
+                }).catch((err) =>{
+                  console.log(err);
+                  reject(err);
+                });
+            }).catch((err) => {
+              console.log(err);
+              reject(err);
+            });
+        }).catch((err) => {
+          console.log(err);
+          reject(err);
+        });
+    })
+  },
+
   //Credentials
   getCredentials() {
     return new Promise(async (resolve, reject) => {
@@ -221,4 +250,29 @@ function createCredentials(credentials) {
       reject(error);
     }
   })
+}
+
+function operateStock(product_vector, isIncrement) {
+  //This function is being used to manipulate the stock quantity inside the products with a vector of products inside an order.
+  let promiseVector = [];
+  product_vector.forEach((value) => {
+    let product_quantity = value.product_quantity;
+    if (!isIncrement) {
+      product_quantity = -value.product_quantity;
+    }
+    if (!value.subproduct_id) {
+      promiseVector.push(
+        connection("products AS pr")
+          .where("pr.id", "=", value.product_id)
+          .increment("stock_quantity", product_quantity)
+      );
+    } else {
+      promiseVector.push(
+        connection("subproducts AS sb")
+          .where("sb.id", "=", value.subproduct_id)
+          .increment("stock_quantity", product_quantity)
+      );
+    }
+  })
+  return (Promise.all(promiseVector));
 }

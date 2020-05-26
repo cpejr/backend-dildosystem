@@ -131,6 +131,12 @@ routes.post('/newOrder', authenticateToken, celebrate({
 routes.get('/orders', authenticateToken, isAdmin,
  OrderController.index);
 
+routes.delete('/order/:order_id', authenticateToken, isAdmin, celebrate({
+  [Segments.PARAMS]: Joi.object().keys({
+    order_id: Joi.number().integer().min(0).required(),
+  })
+}), OrderController.delete)
+
 //GoogleDrive
 routes.get('/validateCredentials', DriveController.validateCredentials)
 
