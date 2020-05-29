@@ -72,7 +72,7 @@ module.exports = {
       let showWholesaler = false;
       if (request.session){
         const type = request.session.user.type;
-        showWholesaler = type === "admin" || type === "wholesaler"
+        showWholesaler = type === "admin" || type === "wholesaler";
       }
 
       const promises = [];
@@ -92,4 +92,15 @@ module.exports = {
       return response.status(500).json({ notification: "Internal server error while trying to get products" });
     }
   },
+
+  async delete(request, response) {
+    try {
+      const { product_id } = request.params;
+      await DataBaseModel.deleteProduct(product_id);
+      response.status(200).json({message: "Deleted product: " + product_id});
+    } catch (err) {
+      return response.status(500).json({ notification: "Internal server error while trying to delete product" });
+    }
+  },
+
 }
