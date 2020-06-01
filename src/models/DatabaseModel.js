@@ -140,6 +140,18 @@ module.exports = {
     });
   },
 
+  deleteProduct(product_id) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const response = await connection("products").where({ id: product_id }).delete();
+        resolve(response);
+      } catch (error) {
+        console.log(error);
+        reject(error);
+      }
+    })
+  },
+
   //Subproducts
   createNewSubproduct(subproduct) {
     return new Promise(async (resolve, reject) => {

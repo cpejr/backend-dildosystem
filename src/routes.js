@@ -101,6 +101,12 @@ routes.get('/product/:product_id', authenticateOptionalToken, celebrate({
   })
 }), ProductController.getProduct);
 
+routes.delete('/product/:product_id', authenticateToken, isAdmin, celebrate({ //ver se ta certo
+  [Segments.PARAMS]: Joi.object().keys({
+    product_id: Joi.number().integer().min(0).required(), //ver se ta certo
+  })
+}), ProductController.delete);
+
 //Subproducts
 routes.post('/newSubproduct', authenticateToken, isAdmin, imageUpload('imageFile'), celebrate({
   [Segments.BODY]: Joi.object().keys({
@@ -138,7 +144,7 @@ routes.delete('/order/:order_id', authenticateToken, isAdmin, celebrate({
   [Segments.PARAMS]: Joi.object().keys({
     order_id: Joi.number().integer().min(0).required(),
   })
-}), OrderController.delete)
+}), OrderController.delete);
 
 //GoogleDrive
 routes.get('/validateCredentials', DriveController.validateCredentials)
