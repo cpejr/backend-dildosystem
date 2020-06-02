@@ -137,7 +137,7 @@ module.exports = {
         if (type === 'admin' || type === 'wholesaler')
           columns = [...columns, "wholesaler_price", "wholesaler_sale_price", "on_sale_wholesaler"];
 
-        let pipeline = connection("products").select(columns);
+        let pipeline = connection("products");
         let reference = type === "retailer" ? "client_price" : "wholesaler_price";
         let reference_sale = type === "retailer" ? "client_sale_price" : "wholesaler_sale_price";
         let reference_on_sale = type === "retailer" ? "on_sale_client" : "on_sale_wholesaler";
@@ -173,14 +173,13 @@ module.exports = {
         if (order_by) {
           pipeline = pipeline.orderByRaw(`case when ${reference_on_sale} = true then ${reference_sale} else ${reference} end ${order_reference} `); //VERIFY WHEN CHANGE DATABASE YOU DICK!
         }
+        const totalCount = await pipeline.clone().select().count('id').first();
 
         pipeline = pipeline.limit(ITEMS_PER_PAGE)
           .offset((page - 1) * ITEMS_PER_PAGE);
 
-        const totalCount = await pipeline.clone().count('id').first();
-
-        const response = await pipeline;
-        resolve({ data: response, totalCount: totalCount });
+        const response = await pipeline.select(columns);
+        resolve({ data: response, totalCount: totalCount['count(`id`)'] });
       } catch (error) {
         console.log(error);
         reject(error);
