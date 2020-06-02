@@ -92,6 +92,11 @@ routes.get('/products', authenticateOptionalToken, celebrate({
     visible: Joi.boolean().optional(),
     stock_quantity: Joi.number().optional(),
     subcategory_id: Joi.number().integer().min(0).optional(),
+    max_price: Joi.number().min(0).optional(),
+    min_price: Joi.number().min(0).optional(),
+    order_by: Joi.string().valid('price'),
+    order_ascending: Joi.boolean().optional(),
+    page: Joi.number().integer().min(1).optional(),
   })
 }), ProductController.index);
 
@@ -101,9 +106,9 @@ routes.get('/product/:product_id', authenticateOptionalToken, celebrate({
   })
 }), ProductController.getProduct);
 
-routes.delete('/product/:product_id', authenticateToken, isAdmin, celebrate({ //ver se ta certo
+routes.delete('/product/:product_id', authenticateToken, isAdmin, celebrate({ 
   [Segments.PARAMS]: Joi.object().keys({
-    product_id: Joi.number().integer().min(0).required(), //ver se ta certo
+    product_id: Joi.number().integer().min(0).required(), 
   })
 }), ProductController.delete);
 
