@@ -128,10 +128,55 @@ module.exports = {
     });
   },
 
-  getProducts(columns, query) {
+  getProducts(type, query, max_price, min_price, order_by, order_ascending, page) {
     return new Promise(async (resolve, reject) => {
       try {
-        const response = await connection("products").where(query).select(columns);
+        let columns = ["id", "name", "client_price", "client_sale_price", "on_sale_client", "featured", "description", "visible", "stock_quantity", "image_id", "subcategory_id"];
+       
+        if (type === 'admin' || type === 'wholesaler')
+          columns = [...columns, "wholesaler_price", "wholesaler_sale_price", "on_sale_wholesaler"];
+
+        let pipeline = connection("products").select(columns);
+        let reference = type === "retailer"?"client_price": "wholesaler_price";
+        let reference_sale = type === "retailer"?"client_sale_price": "wholesaler_sale_price";
+        let reference_on_sale = type === "retailer"?"on_sale_client": "on_sale_wholesaler";
+        let order_reference = order_ascending === true?"asc": "desc";
+        
+        if (query)
+          pipeline = pipeline.andWhere(query);
+
+        if (max_price){
+          pipeline = pipeline.andWhere( (qb) => {
+            qb.where( (qb2) => {
+              qb2.andWhere(reference, "<=", max_price)
+                .andWhere(reference_on_sale, "=", false)
+            }).orWhere( (qb2) => {
+              qb2.andWhere(reference_sale, "<=", max_price)
+                .andWhere(reference_on_sale, "=", true)
+            })
+          })
+        }
+
+        if (min_price){
+          pipeline = pipeline.andWhere( (qb) => {
+            qb.where( (qb2) => {
+              qb2.andWhere(reference, ">=", min_price)
+                .andWhere(reference_on_sale, "=", false)
+            }).orWhere( (qb2) => {
+              qb2.andWhere(reference_sale, ">=", min_price)
+                .andWhere(reference_on_sale, "=", true)
+            })
+          })
+        }
+
+        if (order_by){
+          pipeline = pipeline.orderByRaw(`case when ${reference_on_sale} = true then ${reference_sale} else ${reference} end ${order_reference} `); //VERIFY WHEN CHANGE DATABASE YOU DICK!
+        }
+
+        // if (page)
+        //   pipeline = pipeline.andWhere(query);
+
+        const response = await pipeline;
         resolve(response);
       } catch (error) {
         console.log(error);
@@ -149,7 +194,7 @@ module.exports = {
         console.log(error);
         reject(error);
       }
-    })
+    });
   },
 
   //Subproducts
