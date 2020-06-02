@@ -6,7 +6,7 @@ module.exports = {
   async index(request, response) {
     try {
       const filter = request.query;
-      const {max_price, min_price, order_by, order_ascending, page} = filter;
+      const { max_price, min_price, order_by, order_ascending, page } = filter;
       delete filter.max_price;
       delete filter.min_price;
       delete filter.order_by;
@@ -21,7 +21,11 @@ module.exports = {
         query = { ...filter };
 
       const result = await DataBaseModel.getProducts(type, query, max_price, min_price, order_by, order_ascending, page);
-      return response.status(200).json(result);
+      
+      console.log(result)
+      response.setHeader('X-Total-Count', result.totalCount);
+      return response.status(200).json(result.data);
+      
 
     } catch (err) {
       console.log(err);
@@ -72,7 +76,7 @@ module.exports = {
       const { product_id } = request.params;
 
       let showWholesaler = false;
-      if (request.session){
+      if (request.session) {
         const type = request.session.user.type;
         showWholesaler = type === "admin" || type === "wholesaler";
       }
@@ -99,7 +103,7 @@ module.exports = {
     try {
       const { product_id } = request.params;
       await DataBaseModel.deleteProduct(product_id);
-      response.status(200).json({message: "Deleted product: " + product_id});
+      response.status(200).json({ message: "Deleted product: " + product_id });
     } catch (err) {
       return response.status(500).json({ notification: "Internal server error while trying to delete product" });
     }

@@ -1,8 +1,9 @@
 const connection = require('../database/connection');
+const ITEMS_PER_PAGE = 3;
 
 module.exports = {
   //Categories
-  createNewCategory(category){
+  createNewCategory(category) {
     return new Promise(async (resolve, reject) => {
       try {
         const response = await connection("categories").insert(category);
@@ -14,7 +15,7 @@ module.exports = {
     });
   },
 
-  createNewSubcategory(subcategory){
+  createNewSubcategory(subcategory) {
     return new Promise(async (resolve, reject) => {
       try {
         const response = await connection("subcategories").insert(subcategory);
@@ -73,7 +74,7 @@ module.exports = {
       }
     });
   },
-  
+
   //User
   getUserByUid(uid) {
     return new Promise(async (resolve, reject) => {
@@ -128,56 +129,58 @@ module.exports = {
     });
   },
 
-  getProducts(type, query, max_price, min_price, order_by, order_ascending, page) {
+  getProducts(type, query, max_price, min_price, order_by, order_ascending, page = 1) {
     return new Promise(async (resolve, reject) => {
       try {
         let columns = ["id", "name", "client_price", "client_sale_price", "on_sale_client", "featured", "description", "visible", "stock_quantity", "image_id", "subcategory_id"];
-       
+
         if (type === 'admin' || type === 'wholesaler')
           columns = [...columns, "wholesaler_price", "wholesaler_sale_price", "on_sale_wholesaler"];
 
         let pipeline = connection("products").select(columns);
-        let reference = type === "retailer"?"client_price": "wholesaler_price";
-        let reference_sale = type === "retailer"?"client_sale_price": "wholesaler_sale_price";
-        let reference_on_sale = type === "retailer"?"on_sale_client": "on_sale_wholesaler";
-        let order_reference = order_ascending === true?"asc": "desc";
-        
+        let reference = type === "retailer" ? "client_price" : "wholesaler_price";
+        let reference_sale = type === "retailer" ? "client_sale_price" : "wholesaler_sale_price";
+        let reference_on_sale = type === "retailer" ? "on_sale_client" : "on_sale_wholesaler";
+        let order_reference = order_ascending === true ? "asc" : "desc";
+
         if (query)
           pipeline = pipeline.andWhere(query);
 
-        if (max_price){
-          pipeline = pipeline.andWhere( (qb) => {
-            qb.where( (qb2) => {
+        if (max_price) {
+          pipeline = pipeline.andWhere((qb) => {
+            qb.where((qb2) => {
               qb2.andWhere(reference, "<=", max_price)
                 .andWhere(reference_on_sale, "=", false)
-            }).orWhere( (qb2) => {
+            }).orWhere((qb2) => {
               qb2.andWhere(reference_sale, "<=", max_price)
                 .andWhere(reference_on_sale, "=", true)
             })
           })
         }
 
-        if (min_price){
-          pipeline = pipeline.andWhere( (qb) => {
-            qb.where( (qb2) => {
+        if (min_price) {
+          pipeline = pipeline.andWhere((qb) => {
+            qb.where((qb2) => {
               qb2.andWhere(reference, ">=", min_price)
                 .andWhere(reference_on_sale, "=", false)
-            }).orWhere( (qb2) => {
+            }).orWhere((qb2) => {
               qb2.andWhere(reference_sale, ">=", min_price)
                 .andWhere(reference_on_sale, "=", true)
             })
           })
         }
 
-        if (order_by){
+        if (order_by) {
           pipeline = pipeline.orderByRaw(`case when ${reference_on_sale} = true then ${reference_sale} else ${reference} end ${order_reference} `); //VERIFY WHEN CHANGE DATABASE YOU DICK!
         }
 
-        // if (page)
-        //   pipeline = pipeline.andWhere(query);
+        pipeline = pipeline.limit(ITEMS_PER_PAGE)
+          .offset((page - 1) * ITEMS_PER_PAGE);
+
+        const totalCount = await pipeline.clone().count('id').first();
 
         const response = await pipeline;
-        resolve(response);
+        resolve({ data: response, totalCount: totalCount });
       } catch (error) {
         console.log(error);
         reject(error);
@@ -321,7 +324,7 @@ module.exports = {
                 .delete()
                 .then((result) => {
                   resolve(result);
-                }).catch((err) =>{
+                }).catch((err) => {
                   console.log(err);
                   reject(err);
                 });
