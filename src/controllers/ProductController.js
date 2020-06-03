@@ -22,7 +22,6 @@ module.exports = {
 
       const result = await DataBaseModel.getProducts(type, query, max_price, min_price, order_by, order_ascending, page);
       
-      console.log(result)
       response.setHeader('X-Total-Count', result.totalCount);
       return response.status(200).json(result.data);
       

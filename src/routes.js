@@ -145,8 +145,11 @@ routes.post('/newOrder', authenticateToken, celebrate({
   })
 }), OrderController.create);
 
-routes.get('/orders', authenticateToken, isAdmin,
-  OrderController.index);
+routes.get('/orders', authenticateToken, isAdmin,celebrate({
+  [Segments.QUERY]: Joi.object().keys({
+    page: Joi.number().integer().min(1).optional(),
+  })
+}), OrderController.index);
 
 routes.delete('/order/:order_id', authenticateToken, isAdmin, celebrate({
   [Segments.PARAMS]: Joi.object().keys({

@@ -5,8 +5,12 @@ const { uploadFile } = require('../models/GoogleDriveModel');
 module.exports = {
   async index(request, response) {
     try {
-      const result = await DataBaseModel.getOrders();
-      return response.status(200).json(result);
+      const {page} = request.query;
+      const result = await DataBaseModel.getOrders(page);
+      
+      response.setHeader('X-Total-Count', result.totalCount);
+      return response.status(200).json(result.data);
+      
     } catch (err) {
       console.log(err);
       return response.status(500).json({ notification: "Internal server error while trying to get products" });

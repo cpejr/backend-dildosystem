@@ -1,5 +1,6 @@
 const connection = require('../database/connection');
-const ITEMS_PER_PAGE = 3;
+const ITEMS_PER_PAGE = 15;
+const ORDERS_PER_PAGE = 3;
 
 module.exports = {
   //Categories
@@ -286,114 +287,119 @@ module.exports = {
     });
   },
 
-  getOrders() {
+  getOrders(page = 1) {
     //  SELECT o.*,op.product_id,op.product_quantity,op.subproduct_id 
     //  FROM orders o 
     //  INNER JOIN orders_products op ON o.id = op.order_id 
 
-    return new Promise((resolve, reject) => {
-      connection("orders AS o")
+
+
+    return new Promise(async (resolve, reject) => {
+      const pipeline = connection("orders AS o")
+      
+
+      const query1 = pipeline.select().clone().count('o.id').first();
+
+      const query2 = pipeline.innerJoin('orders_products AS op', 'o.id', 'op.order_id')
         .select('o.*', ' op.product_id', ' op.product_quantity', ' op.subproduct_id')
-        .innerJoin('orders_products AS op', 'o.id', 'op.order_id')
-        .then(response => {
-          const result = {};
+        .limit(ORDERS_PER_PAGE)
+        .offset((page - 1) * ORDERS_PER_PAGE)
 
-          response.forEach((value) => {
-            const order = {
-              id: value.id,
-              user_id: value.user_id,
-              created_at: value.created_at,
-              payment_type: value.payment_type,
-              status: value.status,
-              products: []
-            }
+      const [totalCount, orders] = await Promise.all([query1, query2]);
+      
+      console.log(totalCount);
+      const result = {}
 
-            if (!result[order.id])
-              result[order.id] = order;
-
-            const product = {
-              product_id: value.product_id,
-              product_quantity: value.product_quantity,
-              subproduct_id: value.subproduct_id,
-            }
-
-            result[order.id].products.push(product)
-          })
-
-          const finalResult = [];
-          Object.keys(result).forEach((value, index) => {
-            finalResult[index] = result[value]
-          })
-
-          resolve(finalResult)
+      orders.forEach((value) => {
+        const order = {
+          id: value.id,
+          user_id: value.user_id,
+          created_at: value.created_at,
+          payment_type: value.payment_type,
+          status: value.status,
+          products: []
         }
-        )
-        .catch((error) => {
-          console.log(error);
-          reject(error);
-        })
+
+        if (!result[order.id])
+          result[order.id] = order;
+
+        const product = {
+          product_id: value.product_id,
+          product_quantity: value.product_quantity,
+          subproduct_id: value.subproduct_id,
+        }
+
+        result[order.id].products.push(product)
+      })
+
+      const finalResult = [];
+      Object.keys(result).forEach((value, index) => {
+        finalResult[index] = result[value]
+      })
+
+      resolve({ data: finalResult, totalCount: totalCount['count(`o`.`id`)'] });
     });
-  },
+},
 
   deleteOrder(order_id) {
-    return new Promise((resolve, reject) => {
-      connection("orders_products")
-        .where("order_id", "=", order_id)
-        .then((orders_products_vector) => {
-          operateStock(orders_products_vector, true)
-            .then(() => {
-              connection("orders")
-                .where("id", "=", order_id)
-                .delete()
-                .then((result) => {
-                  resolve(result);
-                }).catch((err) => {
-                  console.log(err);
-                  reject(err);
-                });
-            }).catch((err) => {
-              console.log(err);
-              reject(err);
-            });
-        }).catch((err) => {
-          console.log(err);
-          reject(err);
-        });
-    })
-  },
+  return new Promise((resolve, reject) => {
+    connection("orders_products")
+      .where("order_id", "=", order_id)
+      .then((orders_products_vector) => {
+        operateStock(orders_products_vector, true)
+          .then(() => {
+            connection("orders")
+              .where("id", "=", order_id)
+              .delete()
+              .then((result) => {
+                resolve(result);
+              }).catch((err) => {
+                console.log(err);
+                reject(err);
+              });
+          }).catch((err) => {
+            console.log(err);
+            reject(err);
+          });
+      }).catch((err) => {
+        console.log(err);
+        reject(err);
+      });
+  })
+},
 
-  //Credentials
-  getCredentials() {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const response = await connection("credentials").select("*").first();
-        resolve(response);
-      } catch (error) {
-        console.log(error);
-        reject(error);
+//Credentials
+getCredentials() {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const response = await connection("credentials").select("*").first();
+      resolve(response);
+    } catch (error) {
+      console.log(error);
+      reject(error);
+    }
+  })
+},
+
+updateCredentials(credentials) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const token = await connection("credentials").first();
+
+      if (!token) {
+        createCredentials(credentials)
       }
-    })
-  },
 
-  updateCredentials(credentials) {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const token = await connection("credentials").first();
+      const response = await connection("credentials").first().update(credentials);
+      resolve(response);
+    } catch (error) {
+      console.log(error);
+      reject(error);
+    }
+  })
+},
 
-        if (!token) {
-          createCredentials(credentials)
-        }
-
-        const response = await connection("credentials").first().update(credentials);
-        resolve(response);
-      } catch (error) {
-        console.log(error);
-        reject(error);
-      }
-    })
-  },
-
-  createCredentials: createCredentials
+createCredentials: createCredentials
 }
 
 function createCredentials(credentials) {
