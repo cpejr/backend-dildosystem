@@ -187,6 +187,31 @@ module.exports = {
     });
   },
 
+  getProductsQuantity(products_id, subproducts_id) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        /**
+         * SELECT p.id AS product_id, p.stock_quantity AS product_stock_quantity, sp.id AS subproduct_id, sp.stock_quantity AS subproduct_stock_quantity FROM products p
+         * LEFT OUTER JOIN subproducts sp ON p.id = sp.product_id  AND sp.id IN (2) AND sp.visible = 1
+         * WHERE (p.id IN (2,3,10) OR sp.id IN (2)) AND p.visible = 1 
+         */
+
+        const response = await connection('products AS p')
+          .select('p.id AS product_id', 'p.stock_quantity AS product_stock_quantity', 'sp.id AS subproduct_id', 'sp.stock_quantity AS subproduct_stock_quantity')
+          .leftOuterJoin('subproducts AS sp', function () {
+            this.on('p.id', '=', 'sp.product_id').andOnIn('sp.visible', [true]).andOnIn('sp.id', subproducts_id)
+          })
+          .where(function () {
+            this.whereIn('p.id', products_id).orWhereIn('sp.id', subproducts_id);
+          }).andWhere('p.visible', '=', true);
+
+        resolve(response);
+      } catch (err) {
+        reject(err);
+      }
+    });
+  },
+
   deleteProduct(product_id) {
     return new Promise(async (resolve, reject) => {
       try {
@@ -255,7 +280,6 @@ module.exports = {
         connection("orders_products").insert(products)
           .then(response => resolve(response))
           .catch(error => {
-            console.log(error);
             reject(error);
           });
       })

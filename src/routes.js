@@ -106,9 +106,9 @@ routes.get('/product/:product_id', authenticateOptionalToken, celebrate({
   })
 }), ProductController.getProduct);
 
-routes.delete('/product/:product_id', authenticateToken, isAdmin, celebrate({ 
+routes.delete('/product/:product_id', authenticateToken, isAdmin, celebrate({
   [Segments.PARAMS]: Joi.object().keys({
-    product_id: Joi.number().integer().min(0).required(), 
+    product_id: Joi.number().integer().min(0).required(),
   })
 }), ProductController.delete);
 
@@ -137,13 +137,16 @@ routes.post('/newOrder', authenticateToken, celebrate({
       product_id: Joi.number().integer().min(0).required(),
       product_quantity: Joi.number().integer().min(1).required(),
       subproduct_id: Joi.number().integer().min(0).optional(),
-    })).min(1).required(),
+    }))
+      .min(1)
+      .unique((a, b) => a.product_id === b.product_id && a.subproduct_id === b.subproduct_id)
+      .required(),
     paymentType: Joi.string().required(),
   })
 }), OrderController.create);
 
 routes.get('/orders', authenticateToken, isAdmin,
- OrderController.index);
+  OrderController.index);
 
 routes.delete('/order/:order_id', authenticateToken, isAdmin, celebrate({
   [Segments.PARAMS]: Joi.object().keys({
