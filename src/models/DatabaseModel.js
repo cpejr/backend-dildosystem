@@ -275,6 +275,13 @@ module.exports = {
     });
   },
 
+  async updateOrder(id, order){
+    const response = await connection("orders")
+    .where("id", id)
+    .update(order);
+    return response;
+  },
+
   createProductOrder(products) {
     return new Promise((resolve, reject) => {
       operateStock(products, false).then(() => {
@@ -292,44 +299,40 @@ module.exports = {
     //  FROM orders o 
     //  INNER JOIN orders_products op ON o.id = op.order_id 
 
-
-
     return new Promise(async (resolve, reject) => {
       const pipeline = connection("orders AS o")
       
-
       const query1 = pipeline.select().clone().count('o.id').first();
 
-      const query2 = pipeline.innerJoin('orders_products AS op', 'o.id', 'op.order_id')
-        .select('o.*', ' op.product_id', ' op.product_quantity', ' op.subproduct_id')
+      const query2 = pipeline.select('o.*')
         .limit(ORDERS_PER_PAGE)
         .offset((page - 1) * ORDERS_PER_PAGE)
-
-      const [totalCount, orders] = await Promise.all([query1, query2]);
       
-      console.log(totalCount);
+      const orders = await query2;
+
+      const orders_id = orders.map(order => {
+        return order.id;
+      });      
+
+      const query3 = connection('orders_products AS op')
+        .select(' op.*')
+        .whereIn(' op.order_id', orders_id)
+      
+      const [totalCount, products] = await Promise.all([query1, query3]);
+      
+      //console.log(products);
+
       const result = {}
 
-      orders.forEach((value) => {
-        const order = {
-          id: value.id,
-          user_id: value.user_id,
-          created_at: value.created_at,
-          payment_type: value.payment_type,
-          status: value.status,
-          products: []
-        }
+      orders.forEach((order) => {
+        result[order.id] = order;
+        result[order.id].products = [];
+      })
 
-        if (!result[order.id])
-          result[order.id] = order;
+      //console.log(result);
 
-        const product = {
-          product_id: value.product_id,
-          product_quantity: value.product_quantity,
-          subproduct_id: value.subproduct_id,
-        }
-
-        result[order.id].products.push(product)
+      products.forEach((product) => {
+        result[product.order_id].products.push(product)
       })
 
       const finalResult = [];

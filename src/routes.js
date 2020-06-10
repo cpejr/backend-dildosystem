@@ -151,11 +151,22 @@ routes.get('/orders', authenticateToken, isAdmin,celebrate({
   })
 }), OrderController.index);
 
+routes.put('/order/:id', authenticateToken, isAdmin, celebrate({
+  [Segments.PARAMS]: Joi.object().keys({
+    id: Joi.number().integer().min(0).required(),
+  }),
+  [Segments.BODY]: Joi.object().keys({
+    payment_type: Joi.string().optional(),
+    status: Joi.string().valid('pending', 'paid', 'mailed').optional(),
+  })
+}), OrderController.update);
+
 routes.delete('/order/:order_id', authenticateToken, isAdmin, celebrate({
   [Segments.PARAMS]: Joi.object().keys({
     order_id: Joi.number().integer().min(0).required(),
   })
 }), OrderController.delete);
+
 
 //GoogleDrive
 routes.get('/validateCredentials', DriveController.validateCredentials)

@@ -13,7 +13,21 @@ module.exports = {
       
     } catch (err) {
       console.log(err);
-      return response.status(500).json({ notification: "Internal server error while trying to get products" });
+      return response.status(500).json({ notification: "Internal server error while trying to get orders" });
+    }
+  },
+
+  async update(request, response) {
+    try {
+      const {id} = request.params;
+      const fields = request.body;
+      const result = await DataBaseModel.updateOrder(id, fields);
+      
+      return response.status(200).json(result.data);
+      
+    } catch (err) {
+      console.log(err);
+      return response.status(500).json({ notification: "Internal server error while trying to update order" });
     }
   },
 
@@ -95,7 +109,7 @@ module.exports = {
         return response.status(400).json({ notification: "Invalid ids" });
 
       console.warn(err);
-      return response.status(500).json({ notification: "Internal server error while trying to register the new product" });
+      return response.status(500).json({ notification: "Internal server error while trying to register the new order" });
     }
   },
 
@@ -106,7 +120,7 @@ module.exports = {
       response.status(200).json({ message: "Deleted order: " + order_id });
     } catch (err) {
       console.warn(err);
-      return response.status(500).json({ notification: "Internal server error while trying to delete product" });
+      return response.status(500).json({ notification: "Internal server error while trying to delete order" });
     }
   },
 
