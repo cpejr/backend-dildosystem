@@ -18,7 +18,7 @@ routes.post('/user', celebrate({
     name: Joi.string().required(),
     email: Joi.string().required(),
     password: Joi.string().min(6).required(),
-    type: Joi.string().valid("admin", "retailer", "wholesaler").required(),
+    type: Joi.string().valid("retailer", "wholesaler").required(),
     cpf: Joi.string().required(),
     birthdate: Joi.string().optional(),
     zipcode: Joi.string().optional(),
