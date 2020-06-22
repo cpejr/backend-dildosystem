@@ -55,6 +55,10 @@ routes.post('/newProduct', authenticateToken, isAdmin, imageUpload('imageFile'),
     visible: Joi.boolean().optional(),
     stock_quantity: Joi.number().required(),
     subcategory_id: Joi.number().integer().min(0).required(),
+    weight: Joi.number().min(0).max(300000), //validar
+    height: Joi.number().min(0),
+    width: Joi.number().min(0),
+    length: Joi.number().min(0),
   })
 }), ProductController.create);
 
@@ -75,6 +79,10 @@ routes.put('/updateProduct/:id', authenticateToken, isAdmin, imageUpload('imageF
     visible: Joi.boolean().optional(),
     stock_quantity: Joi.number().optional(),
     subcategory_id: Joi.number().integer().min(0).optional(),
+    weight: Joi.number().min(0).max(300000).optional(), //validar
+    height: Joi.number().min(0).optional(),
+    width: Joi.number().min(0).optional(),
+    length: Joi.number().min(0).optional(),
   })
 }), ProductController.update);
 
