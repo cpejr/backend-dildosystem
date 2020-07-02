@@ -1,33 +1,34 @@
-const DataBaseModel = require('../models/DatabaseModel');
-const { uploadFile } = require('../models/GoogleDriveModel');
-
+const DataBaseModel = require("../models/DatabaseModel");
+const { uploadFile } = require("../models/GoogleDriveModel");
 
 module.exports = {
   async index(request, response) {
     try {
-      const {page} = request.query;
+      const { page } = request.query;
       const result = await DataBaseModel.getOrders(page);
-      
-      response.setHeader('X-Total-Count', result.totalCount);
+
+      response.setHeader("X-Total-Count", result.totalCount);
       return response.status(200).json(result.data);
-      
     } catch (err) {
       console.log(err);
-      return response.status(500).json({ notification: "Internal server error while trying to get orders" });
+      return response.status(500).json({
+        notification: "Internal server error while trying to get orders",
+      });
     }
   },
 
   async update(request, response) {
     try {
-      const {id} = request.params;
+      const { id } = request.params;
       const fields = request.body;
       const result = await DataBaseModel.updateOrder(id, fields);
-      
+
       return response.status(200).json(result.data);
-      
     } catch (err) {
       console.log(err);
-      return response.status(500).json({ notification: "Internal server error while trying to update order" });
+      return response.status(500).json({
+        notification: "Internal server error while trying to update order",
+      });
     }
   },
 
@@ -45,13 +46,14 @@ module.exports = {
       let subproducts_id = [];
 
       products.forEach((value) => {
-        if (value.subproduct_id)
-          subproducts_id.push(value.subproduct_id);
-        else
-          products_id.push(value.product_id);
-      })
+        if (value.subproduct_id) subproducts_id.push(value.subproduct_id);
+        else products_id.push(value.product_id);
+      });
 
-      const stock = await DataBaseModel.getProductsQuantity(products_id, subproducts_id);
+      const stock = await DataBaseModel.getProductsQuantity(
+        products_id,
+        subproducts_id
+      );
 
       let out_of_stock = [];
       let not_found = [];
@@ -61,8 +63,7 @@ module.exports = {
 
         if (ordered.subproduct_id)
           found = verify("subproduct_id", "subproduct_stock_quantity");
-        else
-          found = verify("product_id", "product_stock_quantity");
+        else found = verify("product_id", "product_stock_quantity");
 
         if (!found) not_found.push(ordered);
 
@@ -72,23 +73,36 @@ module.exports = {
 
             if (stock_item[field_id] === ordered[field_id]) {
               if (stock_item[field_quantity] < ordered.product_quantity)
-                out_of_stock.push(ordered)
+                out_of_stock.push(ordered);
 
               return true;
             }
           }
           return false;
         }
-      })
+      });
 
       if (not_found.length > 0)
-        return response.status(400).json({ notification: "Some items were not found or are not available", items: not_found });
+        return response.status(400).json({
+          notification: "Some items were not found or are not available",
+          items: not_found,
+        });
 
       if (out_of_stock.length > 0)
-        return response.status(400).json({ notification: "Some of the items are out of stock", items: out_of_stock });
+        return response.status(400).json({
+          notification: "Some of the items are out of stock",
+          items: out_of_stock,
+        });
 
-      const [order_id] = await DataBaseModel.createNewOrder(order);
-      console.log(order_id);
+      const orderPromise = DataBaseModel.createNewOrder(order);
+      const pricesPromise = DataBaseModel.getProductsPrices(
+        products_id,
+        user.type
+      );
+
+      let [order_id, prices] = await Promise.all([orderPromise, pricesPromise]);
+
+      order_id = order_id[0];
 
       products = products.map((value) => {
         const product = {
@@ -96,7 +110,8 @@ module.exports = {
           order_id,
           product_quantity: value.product_quantity,
           subproduct_id: value.subproduct_id,
-        }
+          price: prices[value.product_id],
+        };
 
         return product;
       });
@@ -109,7 +124,10 @@ module.exports = {
         return response.status(400).json({ notification: "Invalid ids" });
 
       console.warn(err);
-      return response.status(500).json({ notification: "Internal server error while trying to register the new order" });
+      return response.status(500).json({
+        notification:
+          "Internal server error while trying to register the new order",
+      });
     }
   },
 
@@ -120,8 +138,9 @@ module.exports = {
       response.status(200).json({ message: "Deleted order: " + order_id });
     } catch (err) {
       console.warn(err);
-      return response.status(500).json({ notification: "Internal server error while trying to delete order" });
+      return response.status(500).json({
+        notification: "Internal server error while trying to delete order",
+      });
     }
   },
-
-}
+};
