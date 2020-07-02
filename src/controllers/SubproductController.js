@@ -41,5 +41,15 @@ module.exports = {
       console.log(err.errno);
       return response.status(500).json({ notification: "Internal server error while trying to get subproducts" });
     }
-  }
+  },
+
+  async delete(request, response) {
+    try {
+      const { product_id } = request.params;
+      await DataBaseModel.deleteSubProduct(product_id);
+      response.status(200).json({ message: "Deleted subproduct: " + product_id });
+    } catch (err) {
+      return response.status(500).json({ notification: "Internal server error while trying to delete product" });
+    }
+  },
 }
