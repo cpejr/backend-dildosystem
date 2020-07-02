@@ -251,6 +251,18 @@ module.exports = {
     });
   },
 
+  deleteSubProduct(product_id) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const response = await connection("subproducts").where({ id: product_id }).delete();
+        resolve(response);
+      } catch (error) {
+        console.log(error);
+        reject(error);
+      }
+    });
+  },
+
   updateSubproduct(subproduct, subproduct_id) {
     return new Promise(async (resolve, reject) => {
       try {
