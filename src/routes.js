@@ -129,11 +129,6 @@ routes.get('/subproducts/:product_id', authenticateOptionalToken, celebrate({
   })
 }), SubproductController.getSubproducts);
 
-routes.delete('/subproducts/:product_id', authenticateToken, isAdmin, celebrate({
-  [Segments.PARAMS]: Joi.object().keys({
-    product_id: Joi.number().integer().min(0).required(),
-  })
-}), SubproductController.delete);
 
 //Orders
 routes.post('/newOrder', authenticateToken, celebrate({
