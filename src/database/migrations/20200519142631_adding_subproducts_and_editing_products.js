@@ -5,7 +5,8 @@ exports.up = function(knex) {
         table.string('name').notNullable();
         table.string('description').nullable();
         table.boolean('visible').notNullable().defaultTo(false);
-        table.integer('stock_quantity').notNullable();
+        table.integer('stock_quantity').notNullable().defaultTo(0).unsigned();
+        table.integer('min_stock').notNullable().defaultTo(0).unsigned();
         table.string('image_id').nullable();
         table.integer('product_id').notNullable();
         table.foreign('product_id').references('id').inTable('products').onDelete('CASCADE');
