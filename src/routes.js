@@ -54,6 +54,7 @@ routes.post('/newProduct', authenticateToken, isAdmin, imageUpload('imageFile'),
     description: Joi.string().required(),
     visible: Joi.boolean().optional(),
     stock_quantity: Joi.number().required(),
+    min_stock: Joi.number().required(),
     subcategory_id: Joi.number().integer().min(0).required(),
     weight: Joi.number().min(0).max(300000), //validar
     height: Joi.number().min(0),
@@ -78,6 +79,7 @@ routes.put('/updateProduct/:id', authenticateToken, isAdmin, imageUpload('imageF
     description: Joi.string().optional(),
     visible: Joi.boolean().optional(),
     stock_quantity: Joi.number().optional(),
+    min_stock: Joi.number().optional(),
     subcategory_id: Joi.number().integer().min(0).optional(),
     weight: Joi.number().min(0).max(300000).optional(), //validar
     height: Joi.number().min(0).optional(),
@@ -99,6 +101,7 @@ routes.get('/products', authenticateOptionalToken, celebrate({
     description: Joi.string().optional(),
     visible: Joi.boolean().optional(),
     stock_quantity: Joi.number().optional(),
+    min_stock: Joi.number().optional(),
     subcategory_id: Joi.number().integer().min(0).optional(),
     max_price: Joi.number().min(0).optional(),
     min_price: Joi.number().min(0).optional(),
@@ -127,6 +130,7 @@ routes.post('/newSubproduct', authenticateToken, isAdmin, imageUpload('imageFile
     description: Joi.string().required(),
     visible: Joi.boolean().optional(),
     stock_quantity: Joi.number().required(),
+    min_stock: Joi.number().required(),
     product_id: Joi.number().required(),
   })
 }), SubproductController.create);
