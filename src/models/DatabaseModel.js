@@ -140,6 +140,7 @@ module.exports = {
           "description",
           "visible",
           "stock_quantity",
+          "min_stock",
           "image_id",
         ];
         if (showWholesaler)
@@ -183,6 +184,7 @@ module.exports = {
           "description",
           "visible",
           "stock_quantity",
+          "min_stock",
           "image_id",
           "subcategory_id",
         ];
