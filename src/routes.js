@@ -31,6 +31,7 @@ routes.get('/users', UserController.index);
 
 //Session
 routes.post('/login', celebrate(loginValidate.signin), SessionController.signin);
+routes.get('/verify', celebrate(loginValidate.verifyToken), SessionController.verifyToken);
 
 //Product
 routes.post('/newProduct', authenticateToken, isAdmin, imageUpload('imageFile'), celebrate(productValidate.create), ProductController.create);

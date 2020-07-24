@@ -9,4 +9,10 @@ loginValidate.signin = {
     })
 }
 
+loginValidate.verifyToken = {
+    [Segments.HEADERS]: Joi.object().keys({
+        authorization: Joi.string().required(),
+    }).unknown()
+}
+
 module.exports = loginValidate;  
