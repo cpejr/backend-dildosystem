@@ -142,6 +142,10 @@ module.exports = {
           "stock_quantity",
           "min_stock",
           "image_id",
+          "width",
+          "height",
+          "length",
+          "weight"
         ];
         if (showWholesaler)
           columns = [
