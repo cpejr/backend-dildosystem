@@ -1,5 +1,6 @@
 const DataBaseModel = require('../models/DatabaseModel');
-const { uploadFile } = require('../models/GoogleDriveModel');
+const { uploadFile, deleteFile } = require('../models/GoogleDriveModel');
+
 
 
 module.exports = {
@@ -21,10 +22,10 @@ module.exports = {
         query = { ...filter };
 
       const result = await DataBaseModel.getProducts(type, query, max_price, min_price, order_by, order_ascending, page);
-      
+
       response.setHeader('X-Total-Count', result.totalCount);
       return response.status(200).json(result.data);
-      
+
 
     } catch (err) {
       console.log(err);
@@ -53,13 +54,20 @@ module.exports = {
   async update(request, response) {
     try {
       const newProduct = request.body;
-      const { originalname, buffer, mimetype } = request.file;
 
       const { id } = request.params;
 
-      const image_id = await uploadFile(buffer, originalname, mimetype);
+      if (request.file) {
+        const { originalname, buffer, mimetype } = request.file;
 
-      newProduct.image_id = image_id;
+        const image_id = await uploadFile(buffer, originalname, mimetype);
+
+        newProduct.image_id = image_id;
+
+        const prevProduct = await DataBaseModel.getProductbyId(id);
+
+        await deleteFile(prevProduct.image_id);
+      }
 
       await DataBaseModel.updateProduct(newProduct, id);
 
@@ -101,6 +109,8 @@ module.exports = {
   async delete(request, response) {
     try {
       const { product_id } = request.params;
+      const product = await DataBaseModel.getProductbyId(product_id);
+      await deleteFile(product.image_id);
       await DataBaseModel.deleteProduct(product_id);
       response.status(200).json({ message: "Deleted product: " + product_id });
     } catch (err) {
