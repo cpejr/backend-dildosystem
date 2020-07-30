@@ -21,10 +21,10 @@ module.exports = {
         query = { ...filter };
 
       const result = await DataBaseModel.getProducts(type, query, max_price, min_price, order_by, order_ascending, page);
-      
+
       response.setHeader('X-Total-Count', result.totalCount);
       return response.status(200).json(result.data);
-      
+
 
     } catch (err) {
       console.log(err);
@@ -53,13 +53,16 @@ module.exports = {
   async update(request, response) {
     try {
       const newProduct = request.body;
-      const { originalname, buffer, mimetype } = request.file;
+
+      if (request.file) {
+        const { originalname, buffer, mimetype } = request.file;
+
+        const image_id = await uploadFile(buffer, originalname, mimetype);
+
+        newProduct.image_id = image_id;
+      }
 
       const { id } = request.params;
-
-      const image_id = await uploadFile(buffer, originalname, mimetype);
-
-      newProduct.image_id = image_id;
 
       await DataBaseModel.updateProduct(newProduct, id);
 
