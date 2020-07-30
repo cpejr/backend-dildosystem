@@ -2,6 +2,7 @@ const { google } = require('googleapis');
 const stream = require('stream');
 const path = require("path");
 const DatabaseModel = require('../models/DatabaseModel');
+const { drive } = require('googleapis/build/src/apis/drive');
 
 // If modifying these scopes, delete token.json.
 const SCOPES = ['https://www.googleapis.com/auth/drive'];
@@ -136,6 +137,23 @@ exports.uploadFile = function uploadFile(buffer, name, mimeType) {
       }
     });
   })
-
-
 }
+
+exports.deleteFile = function deleteFile(fileId) {
+  return new Promise((resolve, reject) => {
+    const drive = google.drive({ version: 'v3', auth: oAuth2Client });
+    drive.files.delete(
+      {fileId: fileId},
+      function(err, res) {
+        if (err) {
+          // Handle error
+          console.log(err);
+          reject(err);
+        } else {
+          resolve();
+        }
+      }
+    );
+  })
+}
+
