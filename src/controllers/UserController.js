@@ -1,5 +1,8 @@
 const connection = require('../database/connection');
 const FirebaseModel = require('../models/FirebaseModel');
+const { deleteUser } = require('../models/FirebaseModel');
+const DataBaseModel = require('../models/DatabaseModel');
+const { updateUser } = require('../models/DatabaseModel');
 
 module.exports = {
   async index(request, response) {
@@ -28,5 +31,38 @@ module.exports = {
       return response.status(500).json({ notification: "Internal server error while trying to register user" });
     }
     return response.status(200).json({ notification: "Usuario criado!" });
-  }
+  },
+
+  async delete(request, response) {
+    
+    try {
+        const {id} = request.params;
+         
+        const user = await DataBaseModel.getUserById(id);
+        console.log(user);
+
+        await FirebaseModel.deleteUser(user.firebase);
+
+        await DataBaseModel.deleteUser(id);
+
+        response.status(200).json({ message: "Sucesso!" });
+      } catch (err) {
+        console.log(err);
+        return response.status(500).json({ notification: "Internal server error while trying to delete user" });
+      }
+  },
+
+  async update(request, response) {
+    try {
+        const {id} = request.params;
+        const newUser = request.body;
+  
+        await DataBaseModel.updateUser(newUser, id);
+
+        response.status(200).json({ message: "Sucesso!" });
+      } catch (err) {
+        console.log(err);
+        return response.status(500).json({ notification: "Internal server error while trying to update category" });
+      }
+  },
 }

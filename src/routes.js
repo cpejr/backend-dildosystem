@@ -28,6 +28,8 @@ const imageUpload = require('./middlewares/imageUpload');
 //Users
 routes.post('/user', celebrate(userValidate.create), UserController.create);
 routes.get('/users', authenticateToken, isAdmin, UserController.index);
+routes.delete('/user/:id', authenticateToken, isAdmin, celebrate(userValidate.delete), UserController.delete);
+routes.put('/user/:id', authenticateOptionalToken, isAdmin, celebrate(userValidate.update), UserController.update);
 
 //Session
 routes.post('/login', celebrate(loginValidate.signin), SessionController.signin);
