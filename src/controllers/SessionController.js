@@ -37,13 +37,13 @@ module.exports = {
 
     const verify = await new Promise((res) => {
       jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-        if (err) return res({verified: false, user: {}});
+        if (err) return res({ verified: false, user: {} });
 
-        return res({verified: true, user: user});
+        return res({ verified: true, user: user });
       });
     });
 
-    if (verify !== undefined) return response.status(200).json({valid, user} = verify);
+    if (verify !== undefined) return response.status(200).json({ valid, user } = verify);
     return response.status(403).json({ error: "Invalid authorization token" });
   },
 }

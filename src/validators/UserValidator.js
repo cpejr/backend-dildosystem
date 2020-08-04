@@ -33,11 +33,11 @@ userValidate.update = {
     }),
 
     [Segments.BODY]: Joi.object().keys({
-        name: Joi.string().required(),
-        email: Joi.string().required(),
-        password: Joi.string().min(6).required(),
-        type: Joi.string().valid("retailer", "wholesaler").required(),
-        cpf: Joi.string().required(),
+        name: Joi.string().optional(),
+        email: Joi.string().optional(),
+        password: Joi.string().min(6).optional(),
+        type: Joi.string().valid("retailer", "wholesaler").optional(),
+        cpf: Joi.string().optional(),
         birthdate: Joi.string().optional(),
         zipcode: Joi.string().optional(),
         phonenumber: Joi.string().optional(),
