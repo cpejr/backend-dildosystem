@@ -36,6 +36,25 @@ module.exports = {
     }
   },
 
+  async isAdminOrSelf(request, response, next) {
+
+    console.log(request.params.id, request.session.user.id)
+
+    const hasAuthorization = (request.session.user.type === 'admin') || (request.params.id == request.session.user.id);
+
+    if (!hasAuthorization) {
+      let message = "access denied";
+
+      if(request.session.user.type !== "admin")
+        message += " due to not being the user himself";
+
+      response.status(403).json({ error: message });
+    }
+    else {
+      next();
+    }
+  },
+
   async authenticateOptionalToken(request, response, next) {
     const authHeader = request.headers.authorization;
     const [scheme, token] = authHeader
