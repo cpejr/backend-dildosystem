@@ -16,6 +16,7 @@ exports.up = function (knex) {
       table.integer('product_quantity').unsigned().notNullable();
       table.integer('subproduct_id').nullable();
       table.foreign('subproduct_id').references('id').inTable('subproducts').onDelete('SET NULL');
+      table.float('price').notNullable().defaultTo(1);
     });
 };
 
