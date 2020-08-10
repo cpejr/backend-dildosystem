@@ -118,4 +118,20 @@ module.exports = {
     }
   },
 
+  async getlowStock(request, response) {
+    try {
+      const lowProducts = await DataBaseModel.getlowStock();
+      const result = {
+        products: lowProducts,
+        number: lowProducts ? lowProducts.length : 0
+      } 
+      return response.status(200).json(result);
+    }
+     catch (err) {
+      console.log(err);
+      return response.status(500).json({ notification: "Internal server error while trying to get low stock products" });
+    }
+  }
+  
 }
+

@@ -2,6 +2,7 @@ const connection = require("../database/connection");
 const ITEMS_PER_PAGE = 15;
 const ORDERS_PER_PAGE = 10;
 
+
 module.exports = {
   //Categories
   createNewCategory(category) {
@@ -127,6 +128,20 @@ module.exports = {
     });
   },
 
+  getlowStock() {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const response = await connection("products")
+          .select()
+          .where("products.stock_quantity", "<=", connection.raw("products.min_stock"));
+        resolve(response);
+      } catch (error) {
+        console.log(error);
+        reject(error);
+      }
+    });
+  },
+
   getProductbyId(id, showWholesaler = false) {
     return new Promise(async (resolve, reject) => {
       try {
@@ -145,7 +160,7 @@ module.exports = {
           "width",
           "height",
           "length",
-          "weight"
+          "weight",
         ];
         if (showWholesaler)
           columns = [
@@ -383,7 +398,9 @@ module.exports = {
   deleteSubProduct(product_id) {
     return new Promise(async (resolve, reject) => {
       try {
-        const response = await connection("subproducts").where({ id: product_id }).delete();
+        const response = await connection("subproducts")
+          .where({ id: product_id })
+          .delete();
         resolve(response);
       } catch (error) {
         console.log(error);
@@ -395,7 +412,9 @@ module.exports = {
   deleteSubProduct(product_id) {
     return new Promise(async (resolve, reject) => {
       try {
-        const response = await connection("subproducts").where({ id: product_id }).delete();
+        const response = await connection("subproducts")
+          .where({ id: product_id })
+          .delete();
         resolve(response);
       } catch (error) {
         console.log(error);
