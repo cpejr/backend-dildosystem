@@ -42,6 +42,7 @@ routes.get('/product/:product_id', authenticateOptionalToken, celebrate(productV
 routes.put('/updateProduct/:id', authenticateToken, isAdmin, imageUpload('imageFile', 'update'), celebrate(productValidate.update), ProductController.update);
 routes.delete('/product/:product_id', authenticateToken, isAdmin, celebrate(productValidate.delete), ProductController.delete);
 routes.get('/lowStock', authenticateToken, isAdmin, ProductController.getlowStock);
+
 //Subproducts
 routes.post('/newSubproduct', authenticateToken, isAdmin, imageUpload('imageFile'), celebrate(subProductValidate.create), SubproductController.create);
 routes.get('/subproducts/:product_id', authenticateOptionalToken, celebrate(subProductValidate.getSubproducts), SubproductController.getSubproducts);
