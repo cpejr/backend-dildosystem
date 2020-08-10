@@ -5,13 +5,10 @@ exports.seed = function(knex) {
     .then(function () {
       // Inserts seed entries
       return knex('users').insert([
-        {name: 'Jose', email: 'jose@hotmail.com', firebase: 'KHSBAHKNDJAHXHA', type: 'admin', cpf: '17901271249128', birthdate: '12/06/1976', zipcode: '121512432'},
-        {name: 'Maria', email: 'Maria@hotmail.com', firebase: 'KHSBAHFKAJDJAHXHA', type: 'admin', cpf: '179025137949128', birthdate: '12/07/1976', zipcode: '33352432'},
-        {name: 'Paula', email: 'Paula@hotmail.com', firebase: 'KHSBAHKABCJNAKAHXHA', type: 'admin', cpf: '179065477949128', birthdate: '12/08/1976', zipcode: '22152432'},
-        {name: 'Ana', email: 'Ana@hotmail.com', firebase: 'KHSBAVSAHBDJJAHXHA', type: 'admin', cpf: '12290127949698', birthdate: '12/09/1976', zipcode: '88852432'},
-        {name: 'Marcos', email: 'Marcos@hotmail.com', firebase: 'KHSBACNALKNK', type: 'admin', cpf: '56590127949128', birthdate: '12/10/1976', zipcode: '09952432'},
-        {name: 'Pedro', email: 'Pedro@hotmail.com', firebase: 'AJNAKLNKHKNDJAHXHA', type: 'admin', cpf: '9859012723949128', birthdate: '12/11/1976', zipcode: '11252432'},
-        {name: 'Felipe', email: 'Felipe@hotmail.com', firebase: 'JAKBJLDAHKNDJAHXHA', type: 'admin', cpf: '6737901237949128', birthdate: '12/12/1976', zipcode: '44352432'},
+        {name: 'Arthur', firebase: 'Mpn273QdElcxqvYYsuFuOe2NHE63', type: 'admin', cpf: '15112358439', birthdate: '09/01/2001', zipcode: '3175844', phonenumber: '9857467384', state: 'Minas Gerais', city: 'Belo Horizonte', neighborhood: 'União', street: 'Nelson', number: '123', complement: 'apt 101', approved: 'false'},
+        {name: 'Giovanna', firebase: 'cAmJkGCkgsSCfogOYbUAfgZIgqF2', type: 'retailer', cpf: '15112358439', birthdate: '09/01/2001', zipcode: '3175844', phonenumber: '9857467384', state: 'Minas Gerais', city: 'Belo Horizonte', neighborhood: 'União', street: 'Nelson', number: '123', complement: 'apt 101', approved: 'false'},
+        {name: 'João', firebase: 'mMnkpc3cvZXrzVL9tZf1z17lKWb2', type: 'wholesaler', cpf: '15112358439', birthdate: '09/01/2001', zipcode: '3175844', phonenumber: '9857467384', state: 'Minas Gerais', city: 'Belo Horizonte', neighborhood: 'União', street: 'Nelson', number: '123', complement: 'apt 101', approved: 'false'},
+        {name: 'JoãoX', firebase: 'eNtyK4Fn9GWBE364ohZX0sDPbSx1', type: 'wholesaler', cpf: '15112358439', birthdate: '09/01/2001', zipcode: '3175844', phonenumber: '9857467384', state: 'Minas Gerais', city: 'Belo Horizonte', neighborhood: 'União', street: 'Nelsonnn', number: '123', complement: 'apt 101', approved: 'true'}
       ]);
-    });
+    }); 
 };

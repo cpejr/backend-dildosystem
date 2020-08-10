@@ -21,13 +21,15 @@ const subProductValidate = require('./validators/SubProductValidator');
 const OrderController = require('./controllers/OrderController');
 const orderValidate = require('./validators/OrderValidator');
 
-const { authenticateToken, isAdmin, authenticateOptionalToken } = require('./middlewares/authentication');
+const { authenticateToken, isAdmin, authenticateOptionalToken, isAdminOrSelf } = require('./middlewares/authentication');
 const { celebrate, Segments, Joi } = require('celebrate');
 const imageUpload = require('./middlewares/imageUpload');
 
 //Users
 routes.post('/user', celebrate(userValidate.create), UserController.create);
 routes.get('/users', authenticateToken, isAdmin, UserController.index);
+routes.delete('/user/:id', authenticateToken, isAdminOrSelf, celebrate(userValidate.delete), UserController.delete);
+routes.put('/user/:id', authenticateOptionalToken, isAdminOrSelf, celebrate(userValidate.update), UserController.update);
 
 //Session
 routes.post('/login', celebrate(loginValidate.signin), SessionController.signin);
