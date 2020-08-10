@@ -61,6 +61,21 @@ module.exports = {
         })
     })
   },
+  async changeUserEmail(uid, newEmail) {
+    return new Promise((resolve, reject) => {
+      admin.auth().updateUser(uid, {
+        email: newEmail
+      })
+        .then((result) => {
+          resolve(result);
+        })
+        .catch((error) => {
+          console.log(error);
+          const errorMessage = error.message;
+          reject(errorMessage);
+        })
+    })
+  },
   async login (email, password) {
     return new Promise((resolve, reject) => {
       firebase.auth().signInWithEmailAndPassword(email, password)

@@ -54,7 +54,7 @@ module.exports = {
     try {
       const { id } = request.params;
       const newUser = request.body;
-      const { password } = request.body;
+      const { password, email } = request.body;
 
       if (password) {
         const user = await DataBaseModel.getUserById(id);
@@ -64,6 +64,16 @@ module.exports = {
         await FirebaseModel.changeUserPassword(firebaseUid, password);
 
         delete newUser.password;
+      }
+
+      if(email) {
+        const user = await DataBaseModel.getUserById(id);
+        
+        const firebaseUid = user.firebase;
+
+        await FirebaseModel.changeUserEmail(firebaseUid, email);
+
+        delete newUser.email;
       }
 
       await DataBaseModel.updateUser(newUser, id);
