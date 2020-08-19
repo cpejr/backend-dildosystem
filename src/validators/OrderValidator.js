@@ -19,6 +19,7 @@ orderValidate.create = {
 orderValidate.index = {
     [Segments.QUERY]: Joi.object().keys({
         page: Joi.number().integer().min(1).optional(),
+        byStatus: Joi.string().valid('pending', 'paid', 'mailed').optional()
     })
 }
 
