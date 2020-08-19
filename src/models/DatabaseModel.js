@@ -512,7 +512,7 @@ module.exports = {
     });
   },
 
-  getOrders(page = 1) {
+  getOrders(page = 1, query) {
     //  SELECT o.*,op.product_id,op.product_quantity,op.subproduct_id
     //  FROM orders o
     //  INNER JOIN orders_products op ON o.id = op.order_id
@@ -528,7 +528,7 @@ module.exports = {
         .select(
           "o.*",
           "u.name",
-          "u.email",
+          "u.firebase",
           "u.type",
           "u.cpf",
           "u.birthdate",
@@ -542,6 +542,7 @@ module.exports = {
           "u.complement"
         )
         .join("users AS u", "u.id", "=", "o.user_id")
+        .where(query)
         .limit(ORDERS_PER_PAGE)
         .offset((page - 1) * ORDERS_PER_PAGE);
 

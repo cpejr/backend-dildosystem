@@ -17,7 +17,7 @@ exports.up = function (knex) {
         table.string('complement');
         table.timestamp('created_at').defaultTo(knex.fn.now());
         table.timestamp('updated_at').defaultTo(knex.fn.now());
-        table.boolean('approved').defaultTo(false).notNullable();
+        table.enu('status', ['pending', 'approved', 'refused']).notNullable().defaultTo('pending');
     });
 };
 
