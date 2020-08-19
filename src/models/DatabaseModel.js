@@ -233,6 +233,7 @@ module.exports = {
     min_price,
     order_by,
     order_ascending,
+    search,
     page = 1
   ) {
     return new Promise(async (resolve, reject) => {
@@ -268,6 +269,16 @@ module.exports = {
         let reference_on_sale =
           type === "retailer" ? "on_sale_client" : "on_sale_wholesaler";
         let order_reference = order_ascending === true ? "asc" : "desc";
+
+
+        if (search) {
+          pipeline = pipeline.andWhere(qb => {
+            qb
+              .where('name', 'like', `%${search}%`)
+              .orWhere('description', 'like', `%${search}%`)
+          })
+        }
+
 
         if (query) pipeline = pipeline.andWhere(query);
 

@@ -7,12 +7,13 @@ module.exports = {
   async index(request, response) {
     try {
       const filter = request.query;
-      const { max_price, min_price, order_by, order_ascending, page } = filter;
+      const { max_price, min_price, order_by, order_ascending, page, search } = filter;
       delete filter.max_price;
       delete filter.min_price;
       delete filter.order_by;
       delete filter.order_ascending;
       delete filter.page;
+      delete filter.search;
       let type = "retailer";
       if (request.session)
         type = request.session.user.type;
@@ -21,7 +22,7 @@ module.exports = {
       if (type === 'admin')
         query = { ...filter };
 
-      const result = await DataBaseModel.getProducts(type, query, max_price, min_price, order_by, order_ascending, page);
+      const result = await DataBaseModel.getProducts(type, query, max_price, min_price, order_by, order_ascending, search, page);
 
       response.setHeader('X-Total-Count', result.totalCount);
       return response.status(200).json(result.data);
