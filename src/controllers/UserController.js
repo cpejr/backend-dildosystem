@@ -10,7 +10,7 @@ module.exports = {
 
   async create(request, response) {
     const user = request.body; 
-    let firebaseUid;
+    let firebaseUid; 
     try {
       firebaseUid = await FirebaseModel.createNewUser(user.email, user.password);
       user.firebase = firebaseUid;
