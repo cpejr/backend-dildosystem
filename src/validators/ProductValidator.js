@@ -70,6 +70,7 @@ productValidate.index = {
         order_by: Joi.string().valid('price'),
         order_ascending: Joi.boolean().optional(),
         page: Joi.number().integer().min(1).optional(),
+        search: Joi.string().optional()
     })
 }
 
