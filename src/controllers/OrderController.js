@@ -4,9 +4,8 @@ const { uploadFile } = require("../models/GoogleDriveModel");
 module.exports = {
   async index(request, response) {
     try {
-      const { page, byStatus } = request.query;
-      let query = byStatus ? { status: byStatus } : {};
-      const result = await DataBaseModel.getOrders(page, query);
+      const { page } = request.query;
+      const result = await DataBaseModel.getOrders(page);
 
       response.setHeader("X-Total-Count", result.totalCount);
       return response.status(200).json(result.data);
