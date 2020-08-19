@@ -233,6 +233,7 @@ module.exports = {
     min_price,
     order_by,
     order_ascending,
+    search,
     page = 1
   ) {
     return new Promise(async (resolve, reject) => {
@@ -268,6 +269,16 @@ module.exports = {
         let reference_on_sale =
           type === "retailer" ? "on_sale_client" : "on_sale_wholesaler";
         let order_reference = order_ascending === true ? "asc" : "desc";
+
+
+        if (search) {
+          pipeline = pipeline.andWhere(qb => {
+            qb
+              .where('name', 'like', `%${search}%`)
+              .orWhere('description', 'like', `%${search}%`)
+          })
+        }
+
 
         if (query) pipeline = pipeline.andWhere(query);
 
@@ -512,7 +523,7 @@ module.exports = {
     });
   },
 
-  getOrders(page = 1, query) {
+  getOrders(page = 1) {
     //  SELECT o.*,op.product_id,op.product_quantity,op.subproduct_id
     //  FROM orders o
     //  INNER JOIN orders_products op ON o.id = op.order_id
@@ -528,7 +539,7 @@ module.exports = {
         .select(
           "o.*",
           "u.name",
-          "u.firebase",
+          "u.email",
           "u.type",
           "u.cpf",
           "u.birthdate",
@@ -542,7 +553,6 @@ module.exports = {
           "u.complement"
         )
         .join("users AS u", "u.id", "=", "o.user_id")
-        .where(query)
         .limit(ORDERS_PER_PAGE)
         .offset((page - 1) * ORDERS_PER_PAGE);
 
