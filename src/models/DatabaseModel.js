@@ -564,7 +564,8 @@ module.exports = {
           "u.neighborhood",
           "u.street",
           "u.number",
-          "u.complement"
+          "u.complement",
+ 
         )
         .join("users AS u", "u.id", "=", "o.user_id")
         .where(query)
