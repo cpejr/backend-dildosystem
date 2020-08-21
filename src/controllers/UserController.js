@@ -4,8 +4,8 @@ const DataBaseModel = require('../models/DatabaseModel');
 
 module.exports = {
   async index(request, response) {
-    const { status } = request.query;
-    let query = status ? { status } : {};
+    const { user_status } = request.query;
+    let query = user_status ? { user_status } : {};
     const users = await DataBaseModel.getUsers(query);
     return response.json(users);
   },

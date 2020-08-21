@@ -366,10 +366,8 @@ module.exports = {
               .andOnIn("sp.id", subproducts_id);
           })
           .where(function () {
-            this.whereIn("p.id", products_id).orWhereIn(
-              "sp.id",
-              subproducts_id
-            );
+            this.whereIn("p.id", products_id)
+            .orWhereIn("sp.id",subproducts_id);
           })
           .andWhere("p.visible", "=", true);
 
@@ -564,7 +562,8 @@ module.exports = {
           "u.neighborhood",
           "u.street",
           "u.number",
-          "u.complement"
+          "u.complement",
+ 
         )
         .join("users AS u", "u.id", "=", "o.user_id")
         .where(query)

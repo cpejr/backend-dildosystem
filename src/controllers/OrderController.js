@@ -5,7 +5,7 @@ module.exports = {
   async index(request, response) {
     try {
       const { page, byStatus } = request.query;
-      let query = byStatus ? { status: byStatus } : {};
+      let query = byStatus ? { order_status: byStatus } : {};
       const result = await DataBaseModel.getOrders(page, query);
       
       response.setHeader("X-Total-Count", result.totalCount);
