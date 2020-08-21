@@ -1,7 +1,7 @@
 const { google } = require('googleapis');
 const stream = require('stream');
 const path = require("path");
-const DatabaseModel = require('../models/DatabaseModel');
+const CredentialModel = require('../models/CredentialModel');
 const { drive } = require('googleapis/build/src/apis/drive');
 
 // If modifying these scopes, delete token.json.
@@ -32,11 +32,11 @@ module.exports.config = async function config() {
     client_id, client_secret, redirect_uris[0]);
 
   oAuth2Client.on('tokens', (newToken) => {
-    DatabaseModel.updateCredentials(newToken);
+    CredentialModel.updateCredentials(newToken);
   });
 
   // Check if we have previously stored a token.
-  const tokenData = await DatabaseModel.getCredentials();
+  const tokenData = await CredentialModel.getCredentials();
 
   if (tokenData && tokenData.refresh_token) {
     oAuth2Client.setCredentials(tokenData);
