@@ -10,6 +10,12 @@ module.exports = {
     return response.json(users);
   },
 
+  async getOne(request, response) {
+    const { id } = request.params;
+    const users = await UserModel.getUserById(id);
+    return response.json(users);
+  },
+
   async create(request, response) {
     const user = request.body; 
     let firebaseUid; 

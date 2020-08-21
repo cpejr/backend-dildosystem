@@ -21,9 +21,15 @@ userValidate.create = {
     })
 }
 
-userValidate.delete = {
+userValidate.index = {
+    [Segments.QUERY]: Joi.object().keys({
+        user_status: Joi.string().valid('pending', 'approved', 'refused').optional(),
+    })
+}
+
+userValidate.getOne = {
     [Segments.PARAMS]: Joi.object().keys({
-        id: Joi.number().integer().min(0).required(),
+        id: Joi.string().optional(),
     })
 }
 
@@ -52,10 +58,11 @@ userValidate.update = {
     
 }
 
-userValidate.index = {
-    [Segments.QUERY]: Joi.object().keys({
-        user_status: Joi.string().valid('pending', 'approved', 'refused').optional(),
+userValidate.delete = {
+    [Segments.PARAMS]: Joi.object().keys({
+        id: Joi.number().integer().min(0).required(),
     })
 }
+
 
 module.exports = userValidate;      

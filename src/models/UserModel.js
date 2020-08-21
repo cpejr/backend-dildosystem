@@ -1,4 +1,5 @@
 const connection = require("../database/connection");
+const FirebaseModel = require("./FirebaseModel");
 
 module.exports = {
     getUsers(query) {
@@ -22,6 +23,9 @@ module.exports = {
                     .where("firebase", uid)
                     .select("*")
                     .first();
+
+                const email = await FirebaseModel.getUserEmail(uid);
+                user = { ...user, email };
                 resolve(user);
             } catch (error) {
                 console.log(error);
@@ -33,10 +37,12 @@ module.exports = {
     getUserById(id) {
         return new Promise(async (resolve, reject) => {
             try {
-                const user = await connection("users")
+                let user = await connection("users")
                     .where("id", id)
                     .select("*")
                     .first();
+                const email = await FirebaseModel.getUserEmail(user.firebase);
+                user = { ...user, email };
                 resolve(user);
             } catch (error) {
                 console.log(error);

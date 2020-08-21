@@ -2,7 +2,6 @@ const { google } = require('googleapis');
 const stream = require('stream');
 const path = require("path");
 const CredentialModel = require('../models/CredentialModel');
-const { drive } = require('googleapis/build/src/apis/drive');
 
 // If modifying these scopes, delete token.json.
 const SCOPES = ['https://www.googleapis.com/auth/drive'];

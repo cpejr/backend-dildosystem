@@ -33,6 +33,7 @@ module.exports = {
         });
     })
   },
+
   async deleteUser(uid) {
     return new Promise((resolve, reject) => {
       admin.auth().deleteUser(uid)
@@ -46,6 +47,7 @@ module.exports = {
         });
     })
   }, 
+
   async changeUserPassword(uid, newPassword) {
     return new Promise((resolve, reject) => {
       admin.auth().updateUser(uid, {
@@ -61,6 +63,7 @@ module.exports = {
         })
     })
   },
+
   async changeUserEmail(uid, newEmail) {
     return new Promise((resolve, reject) => {
       admin.auth().updateUser(uid, {
@@ -76,6 +79,22 @@ module.exports = {
         })
     })
   },
+
+  async getUserEmail(uid) {
+    return new Promise((resolve, reject) => {
+      admin.auth().getUser(uid)
+        .then((result) => {
+          const email = result ? result.email : "email not found";
+          resolve(email);
+        })
+        .catch((error) => {
+          console.log(error);
+          const errorMessage = error.message;
+          reject(errorMessage);
+        })
+    })
+  },
+  
   async login (email, password) {
     return new Promise((resolve, reject) => {
       firebase.auth().signInWithEmailAndPassword(email, password)
