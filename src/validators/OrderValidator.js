@@ -29,7 +29,7 @@ orderValidate.update = {
     }),
     [Segments.BODY]: Joi.object().keys({
         payment_type: Joi.string().optional(),
-        status: Joi.string().valid('pending', 'paid', 'mailed').optional(),
+        order_status: Joi.string().valid('pending', 'paid', 'mailed').optional(),
     })
 }
 
