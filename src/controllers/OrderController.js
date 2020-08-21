@@ -7,7 +7,7 @@ module.exports = {
       const { page, byStatus } = request.query;
       let query = byStatus ? { status: byStatus } : {};
       const result = await DataBaseModel.getOrders(page, query);
-
+      
       response.setHeader("X-Total-Count", result.totalCount);
       return response.status(200).json(result.data);
     } catch (err) {

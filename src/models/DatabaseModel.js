@@ -86,6 +86,20 @@ module.exports = {
   },
 
   //User
+  getUsers(query) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const user = await connection("users")
+          .where(query)
+          .select("*");
+        resolve(user);
+      } catch (error) {
+        console.log(error);
+        reject(error);
+      }
+    });
+  },
+
   getUserByUid(uid) {
     return new Promise(async (resolve, reject) => {
       try {

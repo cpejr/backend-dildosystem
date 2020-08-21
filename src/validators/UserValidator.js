@@ -47,8 +47,15 @@ userValidate.update = {
         street: Joi.string().optional(),
         number: Joi.string().optional(),
         complement: Joi.string().optional(),
+        status: Joi.string().valid('pending', 'approved', 'refused').optional()
     })
     
+}
+
+userValidate.index = {
+    [Segments.QUERY]: Joi.object().keys({
+        status: Joi.string().valid('pending', 'approved', 'refused').optional(),
+    })
 }
 
 module.exports = userValidate;      
