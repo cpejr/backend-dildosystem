@@ -1,12 +1,18 @@
 const connection = require('../database/connection');
 const FirebaseModel = require('../models/FirebaseModel');
-const DataBaseModel = require('../models/DatabaseModel');
+const UserModel = require('../models/UserModel');
 
 module.exports = {
   async index(request, response) {
     const { user_status } = request.query;
     let query = user_status ? { user_status } : {};
-    const users = await DataBaseModel.getUsers(query);
+    const users = await UserModel.getUsers(query);
+    return response.json(users);
+  },
+
+  async getOne(request, response) {
+    const { id } = request.params;
+    const users = await UserModel.getUserById(id);
     return response.json(users);
   },
 
@@ -38,12 +44,12 @@ module.exports = {
     try {
       const { id } = request.params;
 
-      const user = await DataBaseModel.getUserById(id);
+      const user = await UserModel.getUserById(id);
       console.log(user);
 
       await FirebaseModel.deleteUser(user.firebase);
 
-      await DataBaseModel.deleteUser(id);
+      await UserModel.deleteUser(id);
 
       response.status(200).json({ message: "Sucesso!" });
     } catch (err) {
@@ -59,7 +65,7 @@ module.exports = {
       const { password, email } = request.body;
 
       if (password) {
-        const user = await DataBaseModel.getUserById(id);
+        const user = await UserModel.getUserById(id);
         
         const firebaseUid = user.firebase;
 
@@ -69,7 +75,7 @@ module.exports = {
       }
 
       if(email) {
-        const user = await DataBaseModel.getUserById(id);
+        const user = await UserModel.getUserById(id);
         
         const firebaseUid = user.firebase;
 
@@ -78,7 +84,7 @@ module.exports = {
         delete newUser.email;
       }
 
-      await DataBaseModel.updateUser(newUser, id);
+      await UserModel.updateUser(newUser, id);
 
       response.status(200).json({ message: "Sucesso!" });
     } catch (err) {

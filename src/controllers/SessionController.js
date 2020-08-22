@@ -1,5 +1,5 @@
 const FirebaseModel = require('../models/FirebaseModel');
-const DatabaseModel = require('../models/DatabaseModel');
+const UserModel = require('../models/UserModel');
 const jwt = require('jsonwebtoken');
 
 module.exports = {
@@ -13,7 +13,7 @@ module.exports = {
       } catch (error) {
         return response.status(400).json({ message: 'Invalid credentials' });
       }
-      const user = await DatabaseModel.getUserByUid(firebaseUid);
+      const user = await UserModel.getUserByUid(firebaseUid);
 
       const accessToken = jwt.sign({ user }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "30d" });
       return response.status(200).json({ accessToken, user });

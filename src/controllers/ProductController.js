@@ -1,7 +1,6 @@
-const DataBaseModel = require('../models/DatabaseModel');
+const ProductModel = require('../models/ProductModel');
+const SubproductModel = require('../models/SubproductModel');
 const { uploadFile, deleteFile } = require('../models/GoogleDriveModel');
-
-
 
 module.exports = {
   async index(request, response) {
@@ -22,7 +21,7 @@ module.exports = {
       if (type === 'admin')
         query = { ...filter };
 
-      const result = await DataBaseModel.getProducts(type, query, max_price, min_price, order_by, order_ascending, search, page);
+      const result = await ProductModel.getProducts(type, query, max_price, min_price, order_by, order_ascending, search, page);
 
       response.setHeader('X-Total-Count', result.totalCount);
       return response.status(200).json(result.data);
@@ -43,7 +42,7 @@ module.exports = {
 
       newProduct.image_id = image_id;
 
-      const [id] = await DataBaseModel.createNewProduct(newProduct);
+      const [id] = await ProductModel.createNewProduct(newProduct);
 
       response.status(200).json({ id });
     } catch (err) {
@@ -65,12 +64,12 @@ module.exports = {
 
         newProduct.image_id = image_id;
 
-        const prevProduct = await DataBaseModel.getProductbyId(id);
+        const prevProduct = await ProductModel.getProductbyId(id);
 
         await deleteFile(prevProduct.image_id);
       }
 
-      await DataBaseModel.updateProduct(newProduct, id);
+      await ProductModel.updateProduct(newProduct, id);
 
       response.status(200).json({ message: "Sucesso!" });
     } catch (err) {
@@ -91,8 +90,8 @@ module.exports = {
 
       const promises = [];
 
-      promises.push(DataBaseModel.getProductbyId(product_id, showWholesaler));
-      promises.push(DataBaseModel.getSubproductsbyProductId(product_id));
+      promises.push(ProductModel.getProductbyId(product_id, showWholesaler));
+      promises.push(SubproductModel.getSubproductsbyProductId(product_id));
 
       const result = await Promise.all(promises);
       let data = result[0];
@@ -110,9 +109,9 @@ module.exports = {
   async delete(request, response) {
     try {
       const { product_id } = request.params;
-      const product = await DataBaseModel.getProductbyId(product_id);
+      const product = await ProductModel.getProductbyId(product_id);
       await deleteFile(product.image_id);
-      await DataBaseModel.deleteProduct(product_id);
+      await ProductModel.deleteProduct(product_id);
       response.status(200).json({ message: "Deleted product: " + product_id });
     } catch (err) {
       return response.status(500).json({ notification: "Internal server error while trying to delete product" });
@@ -121,7 +120,7 @@ module.exports = {
 
   async getlowStock(request, response) {
     try {
-      const lowProducts = await DataBaseModel.getlowStock();
+      const lowProducts = await ProductModel.getlowStock();
       const result = {
         products: lowProducts,
         number: lowProducts ? lowProducts.length : 0

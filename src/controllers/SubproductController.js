@@ -1,4 +1,4 @@
-const DataBaseModel = require('../models/DatabaseModel');
+const SubproductModel = require('../models/SubproductModel');
 const { uploadFile } = require('../models/GoogleDriveModel');
 
 module.exports = {
@@ -11,7 +11,7 @@ module.exports = {
 
       newSubproduct.image_id = image_id;
 
-      const [id] = await DataBaseModel.createNewSubproduct(newSubproduct);
+      const [id] = await SubproductModel.createNewSubproduct(newSubproduct);
 
       response.status(200).json({ id });
     } catch (err) {
@@ -35,7 +35,7 @@ module.exports = {
         query = {};
 
       const { product_id } = request.params;
-      const result = await DataBaseModel.getSubproductsbyProductId(product_id, query);
+      const result = await SubproductModel.getSubproductsbyProductId(product_id, query);
       response.status(200).json(result);
     } catch (err) {
       console.log(err.errno);
@@ -46,7 +46,7 @@ module.exports = {
   async delete(request, response) {
     try {
       const { product_id } = request.params;
-      await DataBaseModel.deleteSubProduct(product_id);
+      await SubproductModel.deleteSubProduct(product_id);
       response.status(200).json({ message: "Deleted subproduct: " + product_id });
     } catch (err) {
       return response.status(500).json({ notification: "Internal server error while trying to delete product" });

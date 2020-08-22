@@ -1,6 +1,4 @@
-const DataBaseModel = require('../models/DatabaseModel');
-const { uploadFile } = require('../models/GoogleDriveModel');
-
+const CategoryModel = require('../models/CategoryModel');
 
 module.exports = {
 
@@ -8,7 +6,7 @@ module.exports = {
     try {
       const newCategory = request.body;
 
-      const [id] = await DataBaseModel.createNewCategory(newCategory);
+      const [id] = await CategoryModel.createNewCategory(newCategory);
 
       response.status(200).json({ id });
     } catch (err) {
@@ -24,7 +22,7 @@ module.exports = {
     try {
         const newSubcategory = request.body;
   
-        const [id] = await DataBaseModel.createNewSubcategory(newSubcategory);
+        const [id] = await CategoryModel.createNewSubcategory(newSubcategory);
   
         response.status(200).json({ id });
       } catch (err) { 
@@ -41,7 +39,7 @@ module.exports = {
         const {id} = request.params;
         const newCategory = request.body;
   
-        await DataBaseModel.updateCategory(newCategory, id);
+        await CategoryModel.updateCategory(newCategory, id);
 
         response.status(200).json({ message: "Sucesso!" });
       } catch (err) {
@@ -55,7 +53,7 @@ module.exports = {
         const {id} = request.params;
         const newSubcategory = request.body;
   
-        await DataBaseModel.updateSubcategory(newSubcategory, id);
+        await CategoryModel.updateSubcategory(newSubcategory, id);
 
         response.status(200).json({ message: "Sucesso!" });
       } catch (err) {
@@ -68,7 +66,7 @@ module.exports = {
     try {
         const {id} = request.params;
   
-        await DataBaseModel.deleteCategory(id);
+        await CategoryModel.deleteCategory(id);
 
         response.status(200).json({ message: "Sucesso!" });
       } catch (err) {
@@ -81,7 +79,7 @@ module.exports = {
     try {
         const {id} = request.params;
   
-        await DataBaseModel.deleteSubcategory(id);
+        await CategoryModel.deleteSubcategory(id);
 
         response.status(200).json({ message: "Sucesso!" });
       } catch (err) {

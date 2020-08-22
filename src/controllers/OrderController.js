@@ -1,12 +1,12 @@
-const DataBaseModel = require("../models/DatabaseModel");
-const { uploadFile } = require("../models/GoogleDriveModel");
+const OrderModel = require("../models/OrderModel");
+const ProductModel = require("../models/ProductModel");
 
 module.exports = {
   async index(request, response) {
     try {
       const { page, byStatus } = request.query;
       let query = byStatus ? { order_status: byStatus } : {};
-      const result = await DataBaseModel.getOrders(page, query);
+      const result = await OrderModel.getOrders(page, query);
       
       response.setHeader("X-Total-Count", result.totalCount);
       return response.status(200).json(result.data);
@@ -22,7 +22,7 @@ module.exports = {
     try {
       const { id } = request.params;
       const fields = request.body;
-      const result = await DataBaseModel.updateOrder(id, fields);
+      const result = await OrderModel.updateOrder(id, fields);
 
       return response.status(200).json(result.data);
     } catch (err) {
@@ -51,7 +51,7 @@ module.exports = {
         else products_id.push(value.product_id);
       });
 
-      const stock = await DataBaseModel.getProductsQuantity(
+      const stock = await ProductModel.getProductsQuantity(
         products_id,
         subproducts_id
       );
@@ -95,8 +95,8 @@ module.exports = {
           items: out_of_stock,
         });
 
-      const orderPromise = DataBaseModel.createNewOrder(order);
-      const pricesPromise = DataBaseModel.getProductsPrices(
+      const orderPromise = OrderModel.createNewOrder(order);
+      const pricesPromise = ProductModel.getProductsPrices(
         products_id,
         user.type
       );
@@ -117,7 +117,7 @@ module.exports = {
         return product;
       });
 
-      await DataBaseModel.createProductOrder(products);
+      await OrderModel.createProductOrder(products);
 
       response.status(200).json({ order_id });
     } catch (err) {
@@ -135,7 +135,7 @@ module.exports = {
   async delete(request, response) {
     try {
       const { order_id } = request.params;
-      await DataBaseModel.deleteOrder(order_id);
+      await OrderModel.deleteOrder(order_id);
       response.status(200).json({ message: "Deleted order: " + order_id });
     } catch (err) {
       console.warn(err);
