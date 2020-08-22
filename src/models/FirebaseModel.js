@@ -80,12 +80,13 @@ module.exports = {
     })
   },
 
-  async getUserEmail(uid) {
+  async getUserEmails(uids) {
     return new Promise((resolve, reject) => {
-      admin.auth().getUser(uid)
-        .then((result) => {
-          const email = result ? result.email : "email not found";
-          resolve(email);
+      admin.auth().getUsers(uids) //Must have entries <= 100 
+        .then((results) => {
+          const users = results ? results.users : [];
+          const emails = users.map((user) => {return {uid: user.uid, email: user.email}});
+          resolve(emails);
         })
         .catch((error) => {
           console.log(error);

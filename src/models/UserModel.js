@@ -2,13 +2,21 @@ const connection = require("../database/connection");
 const FirebaseModel = require("./FirebaseModel");
 
 module.exports = {
-    getUsers(query) {
+    getUsers(query) { //FirebaseModel.getUserEmails only works if there are less than 100 users in the system.
         return new Promise(async (resolve, reject) => {
             try {
-                const user = await connection("users")
+                let users = await connection("users")
                     .where(query)
                     .select("*");
-                resolve(user);
+                const userIds = users.map((user) => { return {uid: user.firebase} });
+                const userObj = await FirebaseModel.getUserEmails(userIds);
+
+                const fullUsers = users.map((user, index) => {
+                    //Only works if FirebaseModel.getUserEmails returns users in the exact order of the ids.
+                    return ({...user, email: userObj[index].email})
+                })
+
+                resolve(fullUsers);
             } catch (error) {
                 console.log(error);
                 reject(error);
@@ -24,8 +32,9 @@ module.exports = {
                     .select("*")
                     .first();
 
-                const email = await FirebaseModel.getUserEmail(uid);
-                user = { ...user, email };
+                const userObj = await FirebaseModel.getUserEmails([{uid: uid}]);
+                const email = userObj[0].email;
+                user = { ...user, email: email };
                 resolve(user);
             } catch (error) {
                 console.log(error);
@@ -41,8 +50,9 @@ module.exports = {
                     .where("id", id)
                     .select("*")
                     .first();
-                const email = await FirebaseModel.getUserEmail(user.firebase);
-                user = { ...user, email };
+                const userObj = await FirebaseModel.getUserEmails([{uid: user.firebase}]);
+                const email = userObj[0].email
+                user = { ...user, email: email };
                 resolve(user);
             } catch (error) {
                 console.log(error);
