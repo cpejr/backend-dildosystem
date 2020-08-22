@@ -11,12 +11,12 @@ module.exports = {
                 const userIds = users.map((user) => { return {uid: user.firebase} });
                 const userObj = await FirebaseModel.getUserEmails(userIds);
 
-                const fullUsers = users.map((user, index) => {
+                users = users.map((user, index) => {
                     //Only works if FirebaseModel.getUserEmails returns users in the exact order of the ids.
                     return ({...user, email: userObj[index].email})
                 })
 
-                resolve(fullUsers);
+                resolve(users);
             } catch (error) {
                 console.log(error);
                 reject(error);
