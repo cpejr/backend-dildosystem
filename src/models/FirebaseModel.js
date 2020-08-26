@@ -66,10 +66,14 @@ module.exports = {
 
   async sendPasswordChangeEmail(emailAddress) {
     return new Promise((resolve, reject) => {
-      firebase.auth().sendPasswordResetEmail(emailAddress).then(function() {
-        // Email sent.
-      }).catch(function(error) {
-        // An error happened.
+      firebase.auth().sendPasswordResetEmail(emailAddress)
+      .then((result) => {
+        resolve(result);
+      })
+      .catch((error) => {
+        console.log(error);
+        const errorMessage = error;
+        reject(error);
       });
     })
   },

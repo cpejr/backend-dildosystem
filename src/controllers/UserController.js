@@ -99,11 +99,13 @@ module.exports = {
     try {
       const { email } = request.body;
 
-      await FirebaseModel.sendPasswordChangeEmail(email);
+      const resp = await FirebaseModel.sendPasswordChangeEmail(email);
+
+      response.status(200).json({ message: "Sucesso!" });
     }
     catch (err) {
       console.log(err);
-      return response.status(500).json({ notification: "Internal server error while trying to send password retrieval email" });
+      return response.status(500).json({ notification: err.message });
     }
   }
 }
