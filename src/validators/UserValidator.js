@@ -53,7 +53,7 @@ userValidate.update = {
         street: Joi.string().optional(),
         number: Joi.string().optional(),
         complement: Joi.string().optional(),
-        user_status: Joi.string().valid('pending', 'approved', 'refused').optional()
+        user_status: Joi.string().valid('pending', 'approved', 'refused').optional(),
     })
     
 }
@@ -61,6 +61,12 @@ userValidate.update = {
 userValidate.delete = {
     [Segments.PARAMS]: Joi.object().keys({
         id: Joi.number().integer().min(0).required(),
+    })
+}
+
+userValidate.forgottenPassword = {
+    [Segments.BODY]: Joi.object().keys({
+        email: Joi.string().required(),
     })
 }
 

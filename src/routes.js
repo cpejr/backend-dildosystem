@@ -31,6 +31,7 @@ routes.get('/users', authenticateToken, isAdmin, celebrate(userValidate.index), 
 routes.get('/user/:id', authenticateToken, isAdmin, celebrate(userValidate.getOne), UserController.getOne);
 routes.delete('/user/:id', authenticateToken, isAdminOrSelf, celebrate(userValidate.delete), UserController.delete);
 routes.put('/user/:id', authenticateOptionalToken, isAdminOrSelf, celebrate(userValidate.update), UserController.update);
+routes.post('/forgottenPassword', celebrate(userValidate.forgottenPassword), UserController.forgottenPassword);
 
 //Session
 routes.post('/login', celebrate(loginValidate.signin), SessionController.signin);
