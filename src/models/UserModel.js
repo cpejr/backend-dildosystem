@@ -27,7 +27,7 @@ module.exports = {
     getUserByUid(uid) {
         return new Promise(async (resolve, reject) => {
             try {
-                const user = await connection("users")
+                let user = await connection("users")
                     .where("firebase", uid)
                     .select("*")
                     .first();

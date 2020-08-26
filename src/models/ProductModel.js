@@ -1,6 +1,5 @@
 const connection = require("../database/connection");
 const ITEMS_PER_PAGE = 15;
-const ORDERS_PER_PAGE = 10;
 
 
 module.exports = {
@@ -95,6 +94,7 @@ module.exports = {
         page = 1
     ) {
         return new Promise(async (resolve, reject) => {
+            console.log(page)
             try {
                 let columns = [
                     "id",

@@ -1,5 +1,7 @@
 const connection = require("../database/connection");
 
+const ORDERS_PER_PAGE = 10;
+
 module.exports = {
     createNewOrder(order) {
         return new Promise((resolve, reject) => {
