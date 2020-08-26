@@ -1,6 +1,7 @@
 const connection = require('../database/connection');
 const FirebaseModel = require('../models/FirebaseModel');
 const UserModel = require('../models/UserModel');
+const { forgottenPassword } = require('../validators/UserValidator');
 
 module.exports = {
   async index(request, response) {
@@ -17,8 +18,8 @@ module.exports = {
   },
 
   async create(request, response) {
-    const user = request.body; 
-    let firebaseUid; 
+    const user = request.body;
+    let firebaseUid;
     try {
       firebaseUid = await FirebaseModel.createNewUser(user.email, user.password);
       user.firebase = firebaseUid;
@@ -67,7 +68,7 @@ module.exports = {
 
       if (password) {
         const user = await UserModel.getUserById(id);
-        
+
         const firebaseUid = user.firebase;
 
         await FirebaseModel.changeUserPassword(firebaseUid, password);
@@ -75,9 +76,9 @@ module.exports = {
         delete newUser.password;
       }
 
-      if(email) {
+      if (email) {
         const user = await UserModel.getUserById(id);
-        
+
         const firebaseUid = user.firebase;
 
         await FirebaseModel.changeUserEmail(firebaseUid, email);
@@ -90,7 +91,21 @@ module.exports = {
       response.status(200).json({ message: "Sucesso!" });
     } catch (err) {
       console.log(err);
-      return response.status(500).json({ notification: "Internal server error while trying to update category" });
+      return response.status(500).json({ notification: "Internal server error while trying to update user" });
     }
   },
+
+  async forgottenPassword(request, response) {
+    try {
+      const { email } = request.body;
+
+      const resp = await FirebaseModel.sendPasswordChangeEmail(email);
+
+      response.status(200).json({ message: "Sucesso!" });
+    }
+    catch (err) {
+      console.log(err);
+      return response.status(500).json({ notification: err.message });
+    }
+  }
 }

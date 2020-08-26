@@ -64,6 +64,20 @@ module.exports = {
     })
   },
 
+  async sendPasswordChangeEmail(emailAddress) {
+    return new Promise((resolve, reject) => {
+      firebase.auth().sendPasswordResetEmail(emailAddress)
+      .then((result) => {
+        resolve(result);
+      })
+      .catch((error) => {
+        console.log(error);
+        const errorMessage = error;
+        reject(error);
+      });
+    })
+  },
+
   async changeUserEmail(uid, newEmail) {
     return new Promise((resolve, reject) => {
       admin.auth().updateUser(uid, {
