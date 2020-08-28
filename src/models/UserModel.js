@@ -8,13 +8,6 @@ module.exports = {
                 let users = await connection("users")
                     .where(query)
                     .select("*");
-                const userIds = users.map((user) => { return {uid: user.firebase} });
-                const userObj = await FirebaseModel.getUserEmails(userIds);
-
-                users = users.map((user, index) => {
-                    //Only works if FirebaseModel.getUserEmails returns users in the exact order of the ids.
-                    return ({...user, email: userObj[index].email})
-                })
 
                 resolve(users);
             } catch (error) {
@@ -32,9 +25,6 @@ module.exports = {
                     .select("*")
                     .first();
 
-                const userObj = await FirebaseModel.getUserEmails([{uid: uid}]);
-                const email = userObj[0].email;
-                user = { ...user, email: email };
                 resolve(user);
             } catch (error) {
                 console.log(error);
@@ -50,9 +40,6 @@ module.exports = {
                     .where("id", id)
                     .select("*")
                     .first();
-                const userObj = await FirebaseModel.getUserEmails([{uid: user.firebase}]);
-                const email = userObj[0].email
-                user = { ...user, email: email };
                 resolve(user);
             } catch (error) {
                 console.log(error);

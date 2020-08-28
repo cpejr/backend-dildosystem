@@ -4,6 +4,7 @@ exports.up = function (knex) {
         table.increments();
         table.string('name').notNullable();
         table.string('firebase').notNullable();
+        table.string('email').notNullable();
         table.enu('type', ['admin','retailer','wholesaler']).notNullable();
         table.string('cpf').notNullable();
         table.string('birthdate');

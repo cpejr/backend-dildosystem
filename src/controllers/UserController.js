@@ -24,7 +24,6 @@ module.exports = {
       firebaseUid = await FirebaseModel.createNewUser(user.email, user.password);
       user.firebase = firebaseUid;
 
-      delete user.email;
       delete user.password;
       await connection('users').insert(user);
     } catch (err) {
@@ -82,8 +81,6 @@ module.exports = {
         const firebaseUid = user.firebase;
 
         await FirebaseModel.changeUserEmail(firebaseUid, email);
-
-        delete newUser.email;
       }
 
       await UserModel.updateUser(newUser, id);
