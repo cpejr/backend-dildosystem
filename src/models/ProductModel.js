@@ -94,7 +94,6 @@ module.exports = {
         page = 1
     ) {
         return new Promise(async (resolve, reject) => {
-            console.log(page)
             try {
                 let columns = [
                     "id",
