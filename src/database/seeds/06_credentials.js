@@ -7,11 +7,11 @@ exports.seed = function(knex) {
       return knex('credentials').insert([
         
             {
-              "access_token" : "ya29.a0AfH6SMBdbtqz_KbAp0MiDap_hzLhFdLf93JjeGDu7paTe1s2D7gb1YZCA_CNUqx9FFlLHKwwbV5jaCZhGUgWVz5YQtYZ7Gled3bvJJR5LfCbjtEscOlmaQsk4D6Rs_jzq9N9IcjqOt8RIoyV8BI8bXR0GwVFxgIJ82IP",
-              "refresh_token" : "1\/\/0hUm83kYdV-VDCgYIARAAGBESNwF-L9IrnOo_SelPlwIfiKwoqB9mgW1YqCrO-AeL108szBuTvq9eJC-FLFxQjlbnRcK-0oNU5gg",
+              "access_token" : "ya29.a0AfH6SMC70MsDo4IkTK97vZi3TdV66CCAykq70mycxoNle6QH9O9jjDaa-phigc-75xg_YUUuR-gyC3uaP6ZJfOV8FiMa6tqocSCrSWhekZuIjextJgJYoM9qIalESHWmDvZtIcexfj68P4-jxB3EcD61fyej48wJG5c",
+              "refresh_token" : "1\/\/0heeHs4QZVYgACgYIARAAGBESNwF-L9IrWZfxTC8yMg3yKDz1Jr8PJXTQRHu6KRx3-yQSbpYvgDkJrhUVrJ0mlZZAKa8TUXU4rJ4",
               "scope" : "https:\/\/www.googleapis.com\/auth\/drive",
               "token_type" : "Bearer",
-              "expiry_date" : 1598619859814
+              "expiry_date" : 1598924145866
             }  
       ]);
     }); 
