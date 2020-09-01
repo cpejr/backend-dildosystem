@@ -39,7 +39,7 @@ module.exports = {
       jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
         if (err) return res({ verified: false, user: {} });
 
-        return res({ verified: true, user: user });
+        return res({ verified: true, user: user.user });
       });
     });
 
