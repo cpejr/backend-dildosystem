@@ -22,7 +22,7 @@ orderValidate.index = {
     [Segments.QUERY]: Joi.object().keys({
         byid: Joi.number().integer().optional(),
         page: Joi.number().integer().min(1).optional(),
-        byStatus: Joi.string().valid('pending', 'paid', 'mailed').optional()
+        byStatus: Joi.string().valid('pending', 'paid', 'mailed','delivered').optional()
     })
 }
 
@@ -32,7 +32,8 @@ orderValidate.update = {
     }),
     [Segments.BODY]: Joi.object().keys({
         payment_type: Joi.string().optional(),
-        order_status: Joi.string().valid('pending', 'paid', 'mailed').optional(),
+        order_status: Joi.string().valid('pending', 'paid', 'mailed','delivered').optional(),
+        track_number: Joi.string().optional()
     })
 }
 

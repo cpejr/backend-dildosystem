@@ -105,7 +105,7 @@ module.exports = {
       const query3 = connection("orders_products AS op")
         .select("op.*", "p.*")
         .whereIn("op.order_id", orders_id)
-        .join("products AS p", "op.product_id", "=", "p,id");
+        .join("products AS p", "op.product_id", "=", "p.id");
 
       const [totalCount, products] = await Promise.all([query1, query3]);
 
