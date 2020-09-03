@@ -4,13 +4,13 @@ const ProductModel = require("../models/ProductModel");
 module.exports = {
   async index(request, response) {
     try {
-      const { page, byStatus } = request.query;
+      const { page, byStatus, byid } = request.query;
       let query = byStatus ? { order_status: byStatus } : {};
-      const result = await OrderModel.getOrders(page, query);
+      const result = await OrderModel.getOrders(page, query, byid);
       
       response.setHeader("X-Total-Count", result.totalCount);
       return response.status(200).json(result.data);
-    } catch (err) {
+    } catch (err) {   
       console.log(err);
       return response.status(500).json({
         notification: "Internal server error while trying to get orders",
@@ -35,10 +35,12 @@ module.exports = {
 
   async create(request, response) {
     try {
-      let { products, paymentType } = request.body;
+      let { products, paymentType, tracktype, trackprice } = request.body;
       const user = request.session.user;
 
       const order = {
+        track_price: trackprice,
+        track_type: tracktype,
         payment_type: paymentType,
         user_id: user.id,
       };
