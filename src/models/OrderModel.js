@@ -1,3 +1,4 @@
+
 const connection = require("../database/connection");
 
 const ORDERS_PER_PAGE = 10;
@@ -50,6 +51,7 @@ module.exports = {
           .select(
             "o.*",
             "u.name",
+            "u.email",
             "u.firebase",
             "u.type",
             "u.cpf",
@@ -73,6 +75,7 @@ module.exports = {
           .select(
             "o.*",
             "u.name",
+            "u.email",
             "u.firebase",
             "u.type",
             "u.cpf",
@@ -100,8 +103,9 @@ module.exports = {
 
       //Get orders_products
       const query3 = connection("orders_products AS op")
-        .select("op.*")
-        .whereIn("op.order_id", orders_id);
+        .select("op.*", "p.*")
+        .whereIn("op.order_id", orders_id)
+        .join("products AS p", "op.product_id", "=", "p,id");
 
       const [totalCount, products] = await Promise.all([query1, query3]);
 

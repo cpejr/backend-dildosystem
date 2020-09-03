@@ -35,10 +35,12 @@ module.exports = {
 
   async create(request, response) {
     try {
-      let { products, paymentType } = request.body;
+      let { products, paymentType, tracktype, trackprice } = request.body;
       const user = request.session.user;
 
       const order = {
+        track_price: trackprice,
+        track_type: tracktype,
         payment_type: paymentType,
         user_id: user.id,
       };

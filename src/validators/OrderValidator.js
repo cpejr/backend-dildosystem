@@ -13,6 +13,8 @@ orderValidate.create = {
             .unique((a, b) => a.product_id === b.product_id && a.subproduct_id === b.subproduct_id)
             .required(),
         paymentType: Joi.string().required(),
+        trackprice: Joi.number().required(),
+        tracktype: Joi.string().required(),
     })
 }
 
