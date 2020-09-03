@@ -6,7 +6,7 @@ exports.up = function (knex) {
     table.foreign('user_id').references('id').inTable('users').onDelete('SET NULL');
     table.timestamp('created_at').defaultTo(knex.fn.now());
     table.string('payment_type').nullable();
-    table.enu('order_status', ['Aguardando Pagamento', 'Pagamento Aprovado', 'Pedido em Trânsito','Pedido Entregue']).notNullable().defaultTo('Aguardando Pagamento');
+    table.enu('order_status', ['pending', 'paid', 'mailed','delivered']).notNullable().defaultTo('pending');
     table.string('track_number').nullable();
     table.integer('track_price').notNullable();
     table.string('track_type').notNullable();
