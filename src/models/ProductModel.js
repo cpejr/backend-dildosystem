@@ -159,19 +159,10 @@ module.exports = {
           type === "retailer" ? "on_sale_client" : "on_sale_wholesaler";
         let order_reference = order_ascending === true ? "asc" : "desc";
 
-        // if (search) {
-        //   pipeline = pipeline.andWhere((qb) => {
-        //     qb.where("name", "like", `%${search}%`).orWhere(
-        //       "description",
-        //       "like",
-        //       `%${search}%`
-        //     );
-        //   });
-        // }
 
         if (search) {
           pipeline = pipeline.andWhere((qb) => {
-            const words = search.split(' ');
+            const words = search.split('%');
             words.forEach(word => {
               qb.orWhere((qb2) => {
                 qb2.where("name", "like", `%${word}%`).orWhere(
