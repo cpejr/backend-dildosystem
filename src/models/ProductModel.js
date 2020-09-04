@@ -38,7 +38,7 @@ module.exports = {
             "<=",
             connection.raw("subproducts.min_stock")
           );
-          console.log("subproducts: ", subproducts);
+        console.log("subproducts: ", subproducts);
         let productIDs = new Set();
         subproducts.forEach((subproduct) => {
           productIDs.add(subproduct.product_id);
@@ -54,17 +54,17 @@ module.exports = {
             connection.raw("products.min_stock")
           );
         let result = subproducts.map((subproduct) => {
-            let product = products.find( obj => {
-                return obj.id === subproduct.product_id;
-            })
-            const newProduct = {...product, subproduct};
-            console.log("newProduct: ", newProduct);
-            return(newProduct)
+          let product = products.find(obj => {
+            return obj.id === subproduct.product_id;
+          })
+          const newProduct = { ...product, subproduct };
+          console.log("newProduct: ", newProduct);
+          return (newProduct)
         })
         products = products.filter(
-            function(e) {
-              return productIDs.indexOf(e.id) < 0;
-            }
+          function (e) {
+            return productIDs.indexOf(e.id) < 0;
+          }
         );
         result = [...result, ...products]
         resolve(result);
@@ -159,13 +159,29 @@ module.exports = {
           type === "retailer" ? "on_sale_client" : "on_sale_wholesaler";
         let order_reference = order_ascending === true ? "asc" : "desc";
 
+        // if (search) {
+        //   pipeline = pipeline.andWhere((qb) => {
+        //     qb.where("name", "like", `%${search}%`).orWhere(
+        //       "description",
+        //       "like",
+        //       `%${search}%`
+        //     );
+        //   });
+        // }
+
         if (search) {
           pipeline = pipeline.andWhere((qb) => {
-            qb.where("name", "like", `%${search}%`).orWhere(
-              "description",
-              "like",
-              `%${search}%`
-            );
+            const words = search.split(' ');
+            words.forEach(word => {
+              qb.orWhere((qb2) => {
+                qb2.where("name", "like", `%${word}%`).orWhere(
+                  "description",
+                  "like",
+                  `%${word}%`
+                );
+              })
+            })
+
           });
         }
 
