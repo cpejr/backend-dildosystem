@@ -15,10 +15,10 @@ exports.up = function (knex) {
       table.integer('order_id').notNullable();
       table.foreign('order_id').references('id').inTable('orders').onDelete('CASCADE');
       table.integer('product_id').nullable();
-      table.foreign('product_id').references('id').inTable('products').onDelete('SET NULL');
+      table.foreign('product_id').references('id').inTable('products');
       table.integer('product_quantity').unsigned().notNullable();
       table.integer('subproduct_id').nullable();
-      table.foreign('subproduct_id').references('id').inTable('subproducts').onDelete('SET NULL');
+      table.foreign('subproduct_id').references('id').inTable('subproducts');
       table.float('price').notNullable().defaultTo(1);
     });
 };

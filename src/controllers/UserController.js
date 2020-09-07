@@ -19,6 +19,9 @@ module.exports = {
 
   async create(request, response) {
     const user = request.body;
+    if(user.type === "retailer"){
+      user.user_status = "approved";
+    };
     let firebaseUid;
     try {
       firebaseUid = await FirebaseModel.createNewUser(user.email, user.password);
