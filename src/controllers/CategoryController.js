@@ -88,4 +88,17 @@ module.exports = {
       }
   },
 
+  async getCategories(request, response) {
+    try {
+
+      const result = await CategoryModel.getCategories();
+
+      return response.status(200).json(result);
+
+    } catch (err) {
+      console.log(err);
+      return response.status(500).json({notification: "Internal error while trying to get categories"})
+    }
+  }
+
 }

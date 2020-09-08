@@ -1,4 +1,5 @@
 const connection = require("../database/connection");
+const { resolve } = require("path");
 
 module.exports = {
     createNewCategory(category) {
@@ -80,4 +81,36 @@ module.exports = {
             }
         });
     },
+
+    getCategories() {
+
+        return new Promise(async (resolve, reject) => {
+            try {
+
+                const promises = [connection("categories").select('*'), connection("subcategories").select('*')];
+
+                const result = await Promise.all(promises);
+
+                //console.log(result);
+
+                const categories = result[0].map((category) => {
+                    let fullCat = { ...category, subcategories: [] };
+                    console.log(fullCat);
+                    result[1].forEach(subcat => {
+                        if (subcat.category_id === category.id) {
+                            delete subcat.category_id;
+                            fullCat.subcategories.push(subcat);
+                        }
+                    })
+                    return fullCat;
+                });
+                
+                resolve(categories);
+
+            } catch (error) {
+                console.log(error);
+                reject(error);
+            }
+        });
+    }
 }

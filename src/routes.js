@@ -66,6 +66,7 @@ routes.put('/category/:id', authenticateToken, isAdmin, celebrate(categoryValida
 routes.put('/subcategory/:id', authenticateToken, isAdmin, celebrate(categoryValidate.updateSubcategory), CategoryController.updateSubcategory);
 routes.delete('/category/:id', authenticateToken, isAdmin, celebrate(categoryValidate.deleteCategory), CategoryController.deleteCategory);
 routes.delete('/subcategory/:id', authenticateToken, isAdmin, celebrate(categoryValidate.deleteSubcategory), CategoryController.deleteSubcategory);
+routes.get('/categories', CategoryController.getCategories)
 
 
 module.exports = routes;
