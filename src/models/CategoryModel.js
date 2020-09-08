@@ -91,11 +91,11 @@ module.exports = {
 
                 const result = await Promise.all(promises);
 
-                //console.log(result);
+
 
                 const categories = result[0].map((category) => {
                     let fullCat = { ...category, subcategories: [] };
-                    console.log(fullCat);
+                    
                     result[1].forEach(subcat => {
                         if (subcat.category_id === category.id) {
                             delete subcat.category_id;
