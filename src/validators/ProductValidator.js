@@ -64,6 +64,7 @@ productValidate.index = {
         visible: Joi.boolean().optional(),
         stock_quantity: Joi.number().optional(),
         min_stock: Joi.number().optional(),
+        category_id: Joi.number().integer().min(0).optional(),
         subcategory_id: Joi.number().integer().min(0).optional(),
         max_price: Joi.number().min(0).optional(),
         min_price: Joi.number().min(0).optional(),

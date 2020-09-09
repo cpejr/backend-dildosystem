@@ -1,18 +1,21 @@
 const ProductModel = require('../models/ProductModel');
 const SubproductModel = require('../models/SubproductModel');
+const CategoryModel = require('../models/CategoryModel');
 const { uploadFile, deleteFile } = require('../models/GoogleDriveModel');
 
 module.exports = {
   async index(request, response) {
     try {
       const filter = request.query;
-      const { max_price, min_price, order_by, order_ascending, page, search } = filter;
+      const { max_price, min_price, order_by, order_ascending, page, search, category_id } = filter;
       delete filter.max_price;
       delete filter.min_price;
       delete filter.order_by;
       delete filter.order_ascending;
       delete filter.page;
       delete filter.search;
+      delete filter.category_id;
+
       let type = "retailer";
       if (request.session)
         type = request.session.user.type;
@@ -21,7 +24,17 @@ module.exports = {
       if (type === 'admin')
         query = { ...filter };
 
-      const result = await ProductModel.getProducts(type, query, max_price, min_price, order_by, order_ascending, search, page);
+      const categories = await CategoryModel.getCategories();
+
+      let subcategories = [];
+
+      categories.forEach((cat) => {
+        if(cat.id === category_id) {
+          subcategories = cat.subcategories.map(subcat => subcat.id);
+        }
+      });
+
+      const result = await ProductModel.getProducts(type, query, max_price, min_price, order_by, order_ascending, search, subcategories, page);
 
       response.setHeader('X-Total-Count', result.totalCount);
       return response.status(200).json(result.data);

@@ -123,6 +123,7 @@ module.exports = {
     order_by,
     order_ascending,
     search,
+    subcategories,
     page = 1
   ) {
     return new Promise(async (resolve, reject) => {
@@ -177,6 +178,14 @@ module.exports = {
         }
 
         if (query) pipeline = pipeline.andWhere(query);
+
+        if(subcategories.length > 0) {
+          pipeline = pipeline.andWhere((qb) => {
+            subcategories.forEach(subcat => {
+              qb.orWhere("subcategory_id", "=", subcat)
+            })
+          })
+        }
 
         if (max_price) {
           pipeline = pipeline.andWhere((qb) => {
