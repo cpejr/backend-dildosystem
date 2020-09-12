@@ -1,6 +1,7 @@
 const ProductModel = require('../models/ProductModel');
 const SubproductModel = require('../models/SubproductModel');
 const CategoryModel = require('../models/CategoryModel');
+const ImageModel = require("../models/ImageModel");
 const { uploadFile, deleteFile } = require('../models/GoogleDriveModel');
 
 module.exports = {
@@ -116,6 +117,19 @@ module.exports = {
     } catch (err) {
       console.log(err);
       return response.status(500).json({ notification: "Internal server error while trying to get products" });
+    }
+  },
+
+  async uploadFiles(request, response){
+    try {
+      const files = request.files;
+
+      console.log(files);
+
+      return response.status(200).json(files);
+    } catch (err) {
+      console.log(err);
+      return response.status(500).json({ notification: "Internal server error while trying to upload images" });
     }
   },
 
