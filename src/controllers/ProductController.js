@@ -122,11 +122,13 @@ module.exports = {
 
   async uploadFiles(request, response){
     try {
-      const files = request.files;
+      const images = request.files;
 
-      console.log(files);
+      console.log(images);
 
-      return response.status(200).json(files);
+      const result = await ImageModel.createImages(images);
+
+      return response.status(200).json(result);
     } catch (err) {
       console.log(err);
       return response.status(500).json({ notification: "Internal server error while trying to upload images" });

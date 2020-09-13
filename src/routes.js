@@ -24,6 +24,7 @@ const orderValidate = require('./validators/OrderValidator');
 const { authenticateToken, isAdmin, authenticateOptionalToken, isAdminOrSelf } = require('./middlewares/authentication');
 const { celebrate, Segments, Joi } = require('celebrate');
 const imageUpload = require('./middlewares/imageUpload');
+const imageMultUpload = require('./middlewares/imageMultUpload');
 
 //Users
 routes.post('/user', celebrate(userValidate.create), UserController.create);
@@ -68,5 +69,7 @@ routes.delete('/category/:id', authenticateToken, isAdmin, celebrate(categoryVal
 routes.delete('/subcategory/:id', authenticateToken, isAdmin, celebrate(categoryValidate.deleteSubcategory), CategoryController.deleteSubcategory);
 routes.get('/categories', CategoryController.getCategories)
 
+//Images
+routes.post('/images', imageMultUpload('imageFiles'), ProductController.uploadFiles);
 
 module.exports = routes;

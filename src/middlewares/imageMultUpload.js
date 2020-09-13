@@ -7,7 +7,7 @@ const multerImageUploader = multer({
         if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png')
             cb(null, true);
         else cb({ error: 'File type not allowed' }, false);
-    }
+    },
 });
 
 const imageUpload = (imageName, mode = "create") => {
