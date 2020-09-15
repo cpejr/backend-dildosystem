@@ -33,8 +33,9 @@ module.exports = {
       });
     });
   },
+  
 
-  getOrders(page = 1, query, byid) {
+  getOrders(page = 1, query, byid, byuserid) {
     //  SELECT o.*,op.product_id,op.product_quantity,op.subproduct_id
     //  FROM orders o
     //  INNER JOIN orders_products op ON o.id = op.order_id
@@ -70,7 +71,33 @@ module.exports = {
           .andWhere("o.id", "=", byid)
           .limit(ORDERS_PER_PAGE)
           .offset((page - 1) * ORDERS_PER_PAGE);
-      } else {
+      } 
+      else if(byuserid > 0){
+        query2 = pipeline
+          .select(
+            "o.*",
+            "u.name",
+            "u.email",
+            "u.firebase",
+            "u.type",
+            "u.cpf",
+            "u.birthdate",
+            "u.zipcode",
+            "u.phonenumber",
+            "u.state",
+            "u.city",
+            "u.neighborhood",
+            "u.street",
+            "u.number",
+            "u.complement"
+          )
+          .join("users AS u", "u.id", "=", "o.user_id")
+          .where(query)
+          .andWhere("u.id", "=", byuserid)
+          .limit(ORDERS_PER_PAGE)
+          .offset((page - 1) * ORDERS_PER_PAGE);
+      }
+      else {
         query2 = pipeline
           .select(
             "o.*",
