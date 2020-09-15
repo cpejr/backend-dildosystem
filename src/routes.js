@@ -21,6 +21,9 @@ const subProductValidate = require('./validators/SubProductValidator');
 const OrderController = require('./controllers/OrderController');
 const orderValidate = require('./validators/OrderValidator');
 
+const CarocelController = require('./controllers/CarocelController');
+const CarocelValidate = require('./validators/CarocelValidator');
+
 const { authenticateToken, isAdmin, authenticateOptionalToken, isAdminOrSelf } = require('./middlewares/authentication');
 const { celebrate, Segments, Joi } = require('celebrate');
 const imageUpload = require('./middlewares/imageUpload');
@@ -68,5 +71,10 @@ routes.delete('/category/:id', authenticateToken, isAdmin, celebrate(categoryVal
 routes.delete('/subcategory/:id', authenticateToken, isAdmin, celebrate(categoryValidate.deleteSubcategory), CategoryController.deleteSubcategory);
 routes.get('/categories', CategoryController.getCategories)
 
+//Carocel
+routes.get('/Carocel', CarocelController.index);
+routes.post('/NewCarocel', authenticateToken, isAdmin, imageUpload('imageFile'), CarocelController.create);
+routes.put('/Carocel/:id', authenticateToken, isAdmin, celebrate(CarocelValidate.updateCarocel), CarocelController.update);
+routes.delete('/Carocel/:id', authenticateToken, isAdmin, celebrate(CarocelValidate.deleteCarocel), CarocelController.delete);
 
 module.exports = routes;
