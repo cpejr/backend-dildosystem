@@ -107,5 +107,34 @@ module.exports = {
       console.log(err);
       return response.status(500).json({ notification: err.message });
     }
+  },
+
+  async getWishList(request, response) {
+    try {
+
+      const result = await UserModel.getWish();
+
+      return response.status(200).json(result);
+
+    } catch (err) {
+      console.log(err);
+      return response.status(500).json({notification: "Internal error while trying to get wish list"})
+    }
+  },
+
+  async createWish(request, response) {
+    try {
+        const newWish = request.body;
+  
+        const [id] = await UserModel.createNewWish(newWish);
+  
+        response.status(200).json({ id });
+      } catch (err) { 
+        if (err.errno === 19)
+            return response.status(400).json({ notification: "Invalid" });
+      
+        console.log(err);
+        return response.status(500).json({ notification: "Internal server error while trying to create Wish" });
+      }
   }
 }

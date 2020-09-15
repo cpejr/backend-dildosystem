@@ -76,4 +76,33 @@ module.exports = {
         });
     },
 
+    getWish(id) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let user = await connection("wishlist")
+                    .where(id)
+                    .join("products.....")
+                    .select("*")
+                resolve(user);
+            } catch (error) {
+                console.log(error);
+                reject(error);
+            }
+        });
+    },
+
+    createNewWish(wish) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let user = await connection("wishlist")
+                    .insert(wish)
+
+                resolve(user);
+            } catch (error) {
+                console.log(error);
+                reject(error);
+            }
+        });
+    }
+
 }
