@@ -112,7 +112,9 @@ module.exports = {
   async getWishList(request, response) {
     try {
 
-      const result = await UserModel.getWish();
+      const { id } = request.params;
+
+      const result = await UserModel.getWish(id);
 
       return response.status(200).json(result);
 
@@ -124,6 +126,7 @@ module.exports = {
 
   async createWish(request, response) {
     try {
+        // const { id } = request.params;
         const newWish = request.body;
   
         const [id] = await UserModel.createNewWish(newWish);

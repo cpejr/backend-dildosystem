@@ -32,8 +32,8 @@ routes.get('/user/:id', authenticateToken, isAdmin, celebrate(userValidate.getOn
 routes.delete('/user/:id', authenticateToken, isAdminOrSelf, celebrate(userValidate.delete), UserController.delete);
 routes.put('/user/:id', authenticateOptionalToken, isAdminOrSelf, celebrate(userValidate.update), UserController.update);
 routes.post('/forgottenPassword', celebrate(userValidate.forgottenPassword), UserController.forgottenPassword);
-routes.get('/userwishlist', UserController.getWishList)
-routes.post('/userwishlist', UserController.createWish)
+routes.get('/userwishlist/:id', authenticateToken, celebrate(userValidate.wishList), UserController.getWishList)
+routes.post('/userwishlist', authenticateToken, celebrate(userValidate.wishList), UserController.createWish)
 
 //Session
 routes.post('/login', celebrate(loginValidate.signin), SessionController.signin);

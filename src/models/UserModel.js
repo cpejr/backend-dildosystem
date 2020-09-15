@@ -80,9 +80,10 @@ module.exports = {
         return new Promise(async (resolve, reject) => {
             try {
                 let user = await connection("wishlist")
-                    .where(id)
-                    .join("products.....")
-                    .select("*")
+                    .where({ user_id: id })
+                    .join("products", "wishlist.product_id", '=', 'products.id')
+                    .select('*');
+                    
                 resolve(user);
             } catch (error) {
                 console.log(error);
