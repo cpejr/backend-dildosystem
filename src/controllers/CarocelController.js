@@ -8,8 +8,7 @@ module.exports = {
 
       const result = await CarocelModel.getCarocel();
       
-      response.setHeader("X-Total-Count", result.totalCount);
-      return response.status(200).json(result.data);
+      return response.status(200).json(result);
     } catch (err) {   
       console.log(err);
       return response.status(500).json({
@@ -24,7 +23,7 @@ module.exports = {
       const position = request.body;
       const result = await CarocelModel.updateCarocel(id, position);
 
-      return response.status(200).json(result.data);
+      return response.status(200).json("Atualizado com sucesso!");
     } catch (err) {
       console.log(err);
       return response.status(500).json({
@@ -58,7 +57,7 @@ module.exports = {
       await deleteFile(carocel_item.image_id);
       response.status(200).json({ message: "Deleted Carocel_Item: " + id });
     } catch (err) {
-      console.warn(err);
+      console.warn(err);  
       return response.status(500).json({
         notification: "Internal server error while trying to delete order",
       });
