@@ -107,5 +107,54 @@ module.exports = {
       console.log(err);
       return response.status(500).json({ notification: err.message });
     }
+  },
+
+  async getWishList(request, response) {
+    try {
+
+      const { id } = request.params;
+
+      const result = await UserModel.getWish(id);
+
+      return response.status(200).json(result);
+
+    } catch (err) {
+      console.log(err);
+      return response.status(500).json({notification: "Internal error while trying to get wish list"})
+    }
+  },
+
+  async createWish(request, response) {
+    try {
+        // const { id } = request.params;
+        const newWish = request.body;
+  
+        const [id] = await UserModel.createNewWish(newWish);
+  
+        response.status(200).json({ id });
+      } catch (err) { 
+        if (err.errno === 19)
+            return response.status(400).json({ notification: "Invalid" });
+      
+        console.log(err);
+        return response.status(500).json({ notification: "Internal server error while trying to create Wish" });
+      }
+  },
+
+  async deleteAWish(request, response) {
+    try {
+      const { user_id, product_id } = request.body;
+      console.log(user_id, product_id);
+
+      const resp = await UserModel.deleteWish(product_id, user_id);
+
+      response.status(200).json({ message: "Sucess!" });
+    } catch (err) {
+      if (err.errno === 19)
+            return response.status(400).json({ notification: "Invalid" });
+      
+        console.log(err);
+        return response.status(500).json({ notification: "Internal server error while trying to delete Wish" });
+    }
   }
 }

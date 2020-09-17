@@ -76,4 +76,53 @@ module.exports = {
         });
     },
 
+    getWish(id) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let user = await connection("wishlist")
+                    .where({ user_id: id })
+                    .join("products", "wishlist.product_id", '=', 'products.id')
+                    .select('*');
+                    
+                resolve(user);
+            } catch (error) {
+                console.log(error);
+                reject(error);
+            }
+        });
+    },
+
+    createNewWish(wish) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let user = await connection("wishlist")
+                    .insert(wish)
+
+                resolve(user);
+            } catch (error) {
+                console.log(error);
+                reject(error);
+            }
+        });
+    },
+
+    deleteWish(product_id, user_id) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let user = await connection("wishlist")
+                    .where({ 
+                        user_id,
+                        product_id
+                    })
+                    .delete();
+
+                resolve(user);
+            } catch (error) {
+                console.log(error);
+                reject(error)
+            }
+        });
+
+    }
+
 }

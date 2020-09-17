@@ -70,5 +70,17 @@ userValidate.forgottenPassword = {
     })
 }
 
+userValidate.wishList = {
+    [Segments.PARAMS]: Joi.object().keys({
+        id: Joi.number().integer().min(0).required(),
+    })
+}
+
+userValidate.wishListDelete = {
+    [Segments.BODY]: Joi.object().keys({
+        user_id: Joi.number().integer().required(),
+        product_id: Joi.number().integer().required()
+    })
+}
 
 module.exports = userValidate;      
