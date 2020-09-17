@@ -4,9 +4,10 @@ const ProductModel = require("../models/ProductModel");
 module.exports = {
   async index(request, response) {
     try {
-      const { page, byStatus, byid } = request.query;
+      const { page, byStatus, byid} = request.query;
+      const {id} = request.params;
       let query = byStatus ? { order_status: byStatus } : {};
-      const result = await OrderModel.getOrders(page, query, byid);
+      const result = await OrderModel.getOrders(page, query, byid, id);
       
       response.setHeader("X-Total-Count", result.totalCount);
       return response.status(200).json(result.data);

@@ -23,6 +23,9 @@ orderValidate.index = {
         byid: Joi.number().integer().optional(),
         page: Joi.number().integer().min(1).optional(),
         byStatus: Joi.string().valid('pending', 'paid', 'mailed','delivered').optional()
+    }),
+    [Segments.PARAMS]: Joi.object().keys({
+        id: Joi.number().integer().min(0).optional(),
     })
 }
 
