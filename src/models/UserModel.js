@@ -104,6 +104,25 @@ module.exports = {
                 reject(error);
             }
         });
+    },
+
+    deleteWish(product_id, user_id) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let user = await connection("wishlist")
+                    .where({ 
+                        user_id,
+                        product_id
+                    })
+                    .delete();
+
+                resolve(user);
+            } catch (error) {
+                console.log(error);
+                reject(error)
+            }
+        });
+
     }
 
 }

@@ -33,7 +33,8 @@ routes.delete('/user/:id', authenticateToken, isAdminOrSelf, celebrate(userValid
 routes.put('/user/:id', authenticateOptionalToken, isAdminOrSelf, celebrate(userValidate.update), UserController.update);
 routes.post('/forgottenPassword', celebrate(userValidate.forgottenPassword), UserController.forgottenPassword);
 routes.get('/userwishlist/:id', authenticateToken, celebrate(userValidate.wishList), UserController.getWishList)
-routes.post('/userwishlist', authenticateToken, celebrate(userValidate.wishList), UserController.createWish)
+routes.post('/userwishlist/:id', authenticateToken, celebrate(userValidate.wishList), UserController.createWish)
+routes.delete('/userwishlist', authenticateToken, celebrate(userValidate.wishListDelete), UserController.deleteAWish );
 
 //Session
 routes.post('/login', celebrate(loginValidate.signin), SessionController.signin);

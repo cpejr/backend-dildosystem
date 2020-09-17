@@ -76,5 +76,11 @@ userValidate.wishList = {
     })
 }
 
+userValidate.wishListDelete = {
+    [Segments.BODY]: Joi.object().keys({
+        user_id: Joi.number().integer().required(),
+        product_id: Joi.number().integer().required()
+    })
+}
 
 module.exports = userValidate;      

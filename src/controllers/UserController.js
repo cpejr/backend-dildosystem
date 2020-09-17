@@ -139,5 +139,22 @@ module.exports = {
         console.log(err);
         return response.status(500).json({ notification: "Internal server error while trying to create Wish" });
       }
+  },
+
+  async deleteAWish(request, response) {
+    try {
+      const { user_id, product_id } = request.body;
+      console.log(user_id, product_id);
+
+      const resp = await UserModel.deleteWish(product_id, user_id);
+
+      response.status(200).json({ message: "Sucess!" });
+    } catch (err) {
+      if (err.errno === 19)
+            return response.status(400).json({ notification: "Invalid" });
+      
+        console.log(err);
+        return response.status(500).json({ notification: "Internal server error while trying to delete Wish" });
+    }
   }
 }
