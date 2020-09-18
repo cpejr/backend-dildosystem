@@ -5,28 +5,14 @@ const { uploadFile, deleteFile } = require('./GoogleDriveModel');
 
 module.exports = {
 
-    async createImage(image_id, product_id, subproduct_id = null) {
-        try {
-            let existing;
-            if (subproduct_id === null) {
-                existing = await connection('images').where({ product_id: product_id });
-            }
-
-            const image = { image_id, product_id, subproduct_id, index: existing ? existing.lenght : 0 };
-            await connection('images').insert(image);
-        } catch (error) {
-            console.log(error);
-        }
-    },
-
     async createImages(images, product_id, subproduct_id = null) {
         try {
             let existing;
             if (subproduct_id === null) {
                 existing = await connection('images').where({ product_id: product_id }).count("id").first();
+            } else {
+                existing = await connection('images').where({ subproduct_id: subproduct_id });
             }
-
-            console.log("Existing: ", existing);
 
             const imageArray = images.map((imageData) => {
                 const { originalname, buffer, mimetype } = imageData;
@@ -34,7 +20,7 @@ module.exports = {
                 existing["count(`id`)"] += 1;
                 return new Promise((resolve, reject) => {
                     uploadFile(buffer, originalname, mimetype).then((image_id) => {
-                        image.image_id = image_id;
+                        image.id = image_id;
                         resolve(image);
                     }).catch((error) => {
                         console.log(error);
@@ -43,10 +29,14 @@ module.exports = {
                 })
             })
 
-            await Promise.all(imageArray);
+            let result = [];
+            
+            for(let i = 0; i < imageArray.length; i++){
+                const resu = await imageArray[i];
+                result.push(resu);
+            }
 
-            console.log("ImageArray: ", imageArray)
-            await connection('images').insert(imageArray);
+            await connection('images').insert(result);
 
         } catch (error) {
             console.log(error);
