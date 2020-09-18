@@ -70,7 +70,7 @@ routes.delete('/subcategory/:id', authenticateToken, isAdmin, celebrate(category
 routes.get('/categories', CategoryController.getCategories)
 
 //Images
-routes.post('/images', imageMultUpload('imageFiles'), ProductController.uploadFiles);
-routes.delete('/image/:id', ProductController.deleteFile)
+routes.post('/images', authenticateToken, isAdmin, imageMultUpload('imageFiles'), ProductController.uploadFiles);
+routes.delete('/image/:id', authenticateToken, isAdmin, celebrate(productValidate.deleteFile), ProductController.deleteFile)
 
 module.exports = routes;
