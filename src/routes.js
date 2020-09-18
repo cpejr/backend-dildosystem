@@ -27,6 +27,7 @@ const CarocelValidate = require('./validators/CarocelValidator');
 const { authenticateToken, isAdmin, authenticateOptionalToken, isAdminOrSelf } = require('./middlewares/authentication');
 const { celebrate, Segments, Joi } = require('celebrate');
 const imageUpload = require('./middlewares/imageUpload');
+const imageMultUpload = require('./middlewares/imageMultUpload');
 
 //Users
 routes.post('/user', celebrate(userValidate.create), UserController.create);
@@ -80,5 +81,9 @@ routes.get('/Carocel', CarocelController.index);
 routes.post('/NewCarocel', authenticateToken, isAdmin, imageUpload('imageFile'), CarocelController.create);
 routes.put('/Carocel/:id', authenticateToken, isAdmin, celebrate(CarocelValidate.updateCarocel), CarocelController.update);
 routes.delete('/Carocel/:id', authenticateToken, isAdmin, celebrate(CarocelValidate.deleteCarocel), CarocelController.delete);
+
+//Images
+routes.post('/images', authenticateToken, isAdmin, imageMultUpload('imageFiles'), ProductController.uploadFiles);
+routes.delete('/image/:id', authenticateToken, isAdmin, celebrate(productValidate.deleteFile), ProductController.deleteFile)
 
 module.exports = routes;

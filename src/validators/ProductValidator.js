@@ -75,6 +75,11 @@ productValidate.index = {
     })
 }
 
+productValidate.deleteFile = {
+    [Segments.PARAMS]: Joi.object().keys({
+        id: Joi.number().required(),
+    })
+}
 
 productValidate.getProduct = {
     [Segments.PARAMS]: Joi.object().keys({
