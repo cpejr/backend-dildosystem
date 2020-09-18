@@ -1,5 +1,3 @@
-const { rejects } = require("assert");
-const { resolve } = require("path");
 const connection = require("../database/connection");
 const { uploadFile, deleteFile } = require('./GoogleDriveModel');
 
@@ -46,6 +44,7 @@ module.exports = {
     async deleteImage(image_id) {
         try {
             await connection('images').where({ id: image_id }).delete();
+            await deleteFile(image_id);
         } catch (error) {
             console.log(error);
         }

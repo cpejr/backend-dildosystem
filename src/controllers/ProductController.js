@@ -30,7 +30,7 @@ module.exports = {
       let subcategories = [];
 
       categories.forEach((cat) => {
-        if(cat.id === category_id) {
+        if (cat.id === category_id) {
           subcategories = cat.subcategories.map(subcat => subcat.id);
         }
       });
@@ -120,7 +120,7 @@ module.exports = {
     }
   },
 
-  async uploadFiles(request, response){
+  async uploadFiles(request, response) {
     try {
       const images = request.files;
 
@@ -132,6 +132,19 @@ module.exports = {
     } catch (err) {
       console.log(err);
       return response.status(500).json({ notification: "Internal server error while trying to upload images" });
+    }
+  },
+
+  async deleteFile(request, response) {
+    try {
+      const { id } = request.params;
+      console.log("Chamou delete", id);
+      await ImageModel.deleteImage(id);
+
+      return response.status(200).json({ notification: "Image deleted!" });
+    } catch (err) {
+      console.log(err);
+      return response.status(500).json({ notification: "Internal server error while trying to delete images" });
     }
   },
 
@@ -153,14 +166,14 @@ module.exports = {
       const result = {
         products: lowProducts,
         number: lowProducts ? lowProducts.length : 0
-      } 
+      }
       return response.status(200).json(result);
     }
-     catch (err) {
+    catch (err) {
       console.log(err);
       return response.status(500).json({ notification: "Internal server error while trying to get low stock products" });
     }
   }
-  
+
 }
 

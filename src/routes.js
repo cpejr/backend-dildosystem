@@ -71,5 +71,6 @@ routes.get('/categories', CategoryController.getCategories)
 
 //Images
 routes.post('/images', imageMultUpload('imageFiles'), ProductController.uploadFiles);
+routes.delete('/image/:id', ProductController.deleteFile)
 
 module.exports = routes;
