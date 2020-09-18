@@ -124,9 +124,9 @@ module.exports = {
     try {
       const images = request.files;
 
-      console.log(images);
+      const product_id = 7
 
-      const result = await ImageModel.createImages(images);
+      const result = await ImageModel.createImages(images, product_id);
 
       return response.status(200).json(result);
     } catch (err) {
