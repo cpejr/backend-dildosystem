@@ -21,8 +21,8 @@ const subProductValidate = require('./validators/SubProductValidator');
 const OrderController = require('./controllers/OrderController');
 const orderValidate = require('./validators/OrderValidator');
 
-const CarocelController = require('./controllers/CarocelController');
-const CarocelValidate = require('./validators/CarocelValidator');
+const CarouselController = require('./controllers/CarouselController');
+const CarouselValidate = require('./validators/CarouselValidator');
 
 const { authenticateToken, isAdmin, authenticateOptionalToken, isAdminOrSelf } = require('./middlewares/authentication');
 const { celebrate, Segments, Joi } = require('celebrate');
@@ -45,7 +45,7 @@ routes.post('/login', celebrate(loginValidate.signin), SessionController.signin)
 routes.get('/verify', celebrate(loginValidate.verifyToken), SessionController.verifyToken);
 
 //Product
-routes.post('/newProduct', authenticateToken, isAdmin, imageUpload('imageFile'), celebrate(productValidate.create), ProductController.create);
+routes.post('/newProduct', authenticateToken, isAdmin, imageUpload('imageFile'), imageUpload('imageFiles'), celebrate(productValidate.create), ProductController.create);
 routes.get('/products', authenticateOptionalToken, celebrate(productValidate.index), ProductController.index);
 routes.get('/product/:product_id', authenticateOptionalToken, celebrate(productValidate.getProduct), ProductController.getProduct);
 routes.put('/updateProduct/:id', authenticateToken, isAdmin, imageUpload('imageFile', 'update'), celebrate(productValidate.update), ProductController.update);
@@ -76,11 +76,11 @@ routes.delete('/category/:id', authenticateToken, isAdmin, celebrate(categoryVal
 routes.delete('/subcategory/:id', authenticateToken, isAdmin, celebrate(categoryValidate.deleteSubcategory), CategoryController.deleteSubcategory);
 routes.get('/categories', CategoryController.getCategories)
 
-//Carocel
-routes.get('/Carocel', CarocelController.index);
-routes.post('/NewCarocel', authenticateToken, isAdmin, imageUpload('imageFile'), CarocelController.create);
-routes.put('/Carocel/:id', authenticateToken, isAdmin, celebrate(CarocelValidate.updateCarocel), CarocelController.update);
-routes.delete('/Carocel/:id', authenticateToken, isAdmin, celebrate(CarocelValidate.deleteCarocel), CarocelController.delete);
+//Carousel
+routes.get('/carousel', CarouselController.index);
+routes.post('/newCarousel', authenticateToken, isAdmin, imageUpload('imageFile'), CarouselController.create);
+routes.put('/carousel/:id', authenticateToken, isAdmin, celebrate(CarouselValidate.updateCarousel), CarouselController.update);
+routes.delete('/carousel/:id', authenticateToken, isAdmin, celebrate(CarouselValidate.deleteCarousel), CarouselController.delete);
 
 //Images
 routes.post('/images', authenticateToken, isAdmin, imageMultUpload('imageFiles'), ProductController.uploadFiles);
