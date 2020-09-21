@@ -10,19 +10,26 @@ const multerImageUploader = multer({
     },
 });
 
-const imageUpload = (imageName, mode = "create") => {
+const multipleImageUpload = (singleName ,arrayName, mode = "create") => {
     return (req, res, next) => {
-        multerImageUploader.array(imageName, 10)(req, res, function (err) {
+        let config = [];
+        if (singleName){
+            config.push({name: singleName, maxCount: 1});
+        }
+        if (arrayName){
+            config.push({name: arrayName, maxCount: 10});
+        }
+        multerImageUploader.fields(config)(req, res, function (err) {
             if (err) {
                 //TODO melhorar essa mensagem de erro!
                 return res.status(500).json(err);
             }
             if (!req.files && mode === "create")
-                return res.status(400).json({ error: `${imageName} is required` });
+                return res.status(400).json({ error: `${arrayName} is required` });
 
             return next();
         });
     };
 };
 
-module.exports = imageUpload;
+module.exports = multipleImageUpload;

@@ -50,7 +50,10 @@ module.exports = {
   async create(request, response) {
     try {
       const newProduct = request.body;
-      const { originalname, buffer, mimetype } = request.file;
+      const { originalname, buffer, mimetype } = request.files.imageFile[0];
+      const images = request.files.imageFiles;
+
+      console.log(request.files)
 
       const image_id = await uploadFile(buffer, originalname, mimetype);
 
@@ -58,7 +61,9 @@ module.exports = {
 
       const [id] = await ProductModel.createNewProduct(newProduct);
 
-      response.status(200).json({ id });
+      const result = await ImageModel.createImages(images, id);
+
+      return response.status(200).json({ id });
     } catch (err) {
       console.log(err);
       return response.status(500).json({ notification: "Internal server error while trying to register the new product" });
