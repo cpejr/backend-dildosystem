@@ -102,10 +102,16 @@ module.exports = {
             "wholesaler_sale_price",
             "on_sale_wholesaler",
           ];
-        const response = await connection("products")
+        let response = await connection("products")
           .where("id", id)
           .select(columns)
           .first();
+        
+        const images = await connection("images")
+          .where("product_id", id)
+          .select(["id", "index"])
+
+        response.secondaries = images;
 
         resolve(response);
       } catch (error) {
