@@ -45,7 +45,7 @@ routes.post('/login', celebrate(loginValidate.signin), SessionController.signin)
 routes.get('/verify', celebrate(loginValidate.verifyToken), SessionController.verifyToken);
 
 //Product
-routes.post('/newProduct', authenticateToken, isAdmin, imageUpload('imageFile'), imageUpload('imageFiles'), celebrate(productValidate.create), ProductController.create);
+routes.post('/newProduct', authenticateToken, isAdmin, imageMultUpload('imageFile','imageFiles'), celebrate(productValidate.create), ProductController.create);
 routes.get('/products', authenticateOptionalToken, celebrate(productValidate.index), ProductController.index);
 routes.get('/product/:product_id', authenticateOptionalToken, celebrate(productValidate.getProduct), ProductController.getProduct);
 routes.put('/updateProduct/:id', authenticateToken, isAdmin, imageUpload('imageFile', 'update'), celebrate(productValidate.update), ProductController.update);
@@ -83,7 +83,7 @@ routes.put('/carousel/:id', authenticateToken, isAdmin, celebrate(CarouselValida
 routes.delete('/carousel/:id', authenticateToken, isAdmin, celebrate(CarouselValidate.deleteCarousel), CarouselController.delete);
 
 //Images
-routes.post('/images', authenticateToken, isAdmin, imageMultUpload('imageFiles'), ProductController.uploadFiles);
+routes.post('/images', authenticateToken, isAdmin, imageMultUpload(undefined,'imageFiles'), ProductController.uploadFiles);
 routes.delete('/image/:id', authenticateToken, isAdmin, celebrate(productValidate.deleteFile), ProductController.deleteFile)
 
 module.exports = routes;
