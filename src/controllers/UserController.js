@@ -85,7 +85,7 @@ module.exports = {
 
         await FirebaseModel.changeUserEmail(firebaseUid, email);
       }
-
+      console.log("teste do body: ", request.body);
       await UserModel.updateUser(newUser, id);
 
       response.status(200).json({ message: "Sucesso!" });
