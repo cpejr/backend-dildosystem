@@ -27,13 +27,8 @@ module.exports = {
                 })
             })
 
-            let result = [];
+            let result = await Promise.all(imageArray);
             
-            for(let i = 0; i < imageArray.length; i++){
-                const resu = await imageArray[i];
-                result.push(resu);
-            }
-
             await connection('images').insert(result);
 
         } catch (error) {

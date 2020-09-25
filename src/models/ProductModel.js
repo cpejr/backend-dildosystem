@@ -1,3 +1,4 @@
+const { index } = require("../controllers/ProductController");
 const connection = require("../database/connection");
 const ITEMS_PER_PAGE = 15;
 
@@ -106,7 +107,7 @@ module.exports = {
           .where("id", id)
           .select(columns)
           .first();
-        
+
         const images = await connection("images")
           .where("product_id", id)
           .select(["id", "index"])
@@ -134,22 +135,22 @@ module.exports = {
   ) {
     return new Promise(async (resolve, reject) => {
       try {
-        let columns = [
-          "id",
-          "name",
+        let columns = [ //Colunas padrão da busca.
+          "products.id",
+          "products.name",
           "client_price",
           "client_sale_price",
           "on_sale_client",
-          "featured",
-          "description",
-          "visible",
-          "stock_quantity",
-          "min_stock",
-          "image_id",
+          "products.featured",
+          "products.description",
+          "products.visible",
+          "products.stock_quantity",
+          "products.min_stock",
+          "products.image_id",
           "subcategory_id",
         ];
 
-        if (type === "admin" || type === "wholesaler")
+        if (type === "admin" || type === "wholesaler") //Adiciona colunas na busca dependendo do tipo de usuário.
           columns = [
             ...columns,
             "wholesaler_price",
@@ -158,6 +159,8 @@ module.exports = {
           ];
 
         let pipeline = connection("products");
+
+        //Vão determinar o preço a ser buscado dependendo do tipo de usuário.
         let reference =
           type === "retailer" ? "client_price" : "wholesaler_price";
         let reference_sale =
@@ -167,7 +170,7 @@ module.exports = {
         let order_reference = order_ascending === true ? "asc" : "desc";
 
 
-        if (search) {
+        if (search) { //Faz busca por aproximação de nome e descrição se a query existir.
           pipeline = pipeline.andWhere((qb) => {
             const words = search.split('%');
             words.forEach(word => {
@@ -185,7 +188,7 @@ module.exports = {
 
         if (query) pipeline = pipeline.andWhere(query);
 
-        if(subcategories.length > 0) {
+        if (subcategories.length > 0) { //Insere restrição de subcategoria se a query existir.
           pipeline = pipeline.andWhere((qb) => {
             subcategories.forEach(subcat => {
               qb.orWhere("subcategory_id", "=", subcat)
@@ -193,7 +196,7 @@ module.exports = {
           })
         }
 
-        if (max_price) {
+        if (max_price) { //Insere comparações de preço máximo se a query existir.
           pipeline = pipeline.andWhere((qb) => {
             qb.where((qb2) => {
               qb2
@@ -207,7 +210,7 @@ module.exports = {
           });
         }
 
-        if (min_price) {
+        if (min_price) { //Insere comparações de preço mínimo se a query existir.
           pipeline = pipeline.andWhere((qb) => {
             qb.where((qb2) => {
               qb2
@@ -228,11 +231,99 @@ module.exports = {
         }
         const totalCount = await pipeline.clone().select().count("id").first();
 
+        let spColumns = [ //Vai permitir que os campos da tabela de subprodutos sejam incluidos no join.
+          "sp.id AS spId",
+          "sp.name AS spName",
+          "sp.description AS spDescription",
+          "sp.visible AS spVisible",
+          "sp.stock_quantity AS spStockQuantity",
+          "sp.min_stock AS spMinStock",
+          "sp.image_id AS spImageId",
+          "sp.product_id AS spProductId",
+          "sp.created_at AS spCreatedAt",
+          "sp.updated_at AS spUpdatedAt"
+        ] // Renomeando todos os campos.
+
+        columns = [...columns, ...spColumns]; //Adicionando campos dos subprodutos no select.
+
         pipeline = pipeline
           .limit(ITEMS_PER_PAGE)
-          .offset((page - 1) * ITEMS_PER_PAGE);
+          .offset((page - 1) * ITEMS_PER_PAGE) //Paginação
+          .leftJoin("subproducts AS sp", "products.id", "=", "sp.product_id")
+          .select(columns)
+          .then(function (data) {
+            /////
+            function checkMultiple(id, arr) { //Identifica se o produto está aparecendo mais de uma vez no pipeline (por ter subprodutos)
+              let indexes = []; //Identificador de index dos produtos repetidos. É usado mais pra frente.
+              arr.forEach((product, index) => {
+                if (product.id === id) {
+                  indexes.push(index); //Vai inserir o index de um produto que se repete na pipeline.
+                }
+              });
 
-        const response = await pipeline.select(columns);
+              if (indexes.length > 1) {
+                return { resu: true, indexes }; //Avisa que tem mais de uma cópia. Envia os indexes delas como vetor.
+              } else {
+                return { resu: false, indexes }; //O contrário do de cima. Um indice no vetor.
+              }
+            }
+            //////
+            let result = [];
+
+            for(let aux = 0; aux < data.length; aux++){ //Percorre todos os produtos.
+              const search = checkMultiple(data[aux].id, data); //Retorna se o produto tem repetição ou não.
+              if (search.resu === true) { //Produto tem subproduto.
+                let completeProduct = {...data[aux]} //Cópia
+                //Removendo campos do subproduto da pipeline (Vão ser jogados na cópia final).
+                delete completeProduct["spId"];
+                delete completeProduct["spName"];
+                delete completeProduct["spDescription"];
+                delete completeProduct["spVisible"];
+                delete completeProduct["spStockQuantity"];
+                delete completeProduct["spMinStock"];
+                delete completeProduct["spImageId"];
+                delete completeProduct["spProductId"];
+                delete completeProduct["spCreatedAt"];
+                delete completeProduct["spUpdatedAt"];
+
+                completeProduct.subproducts = []; //Campo do produto que vai guardar vetor de subprodutos.
+                for (let i = search.indexes[0]; i < search.indexes[0] + search.indexes.length; i++){ //Usa o indexes para localizar as cópias.
+                  completeProduct.subproducts.push({ //Insere as os subprodutos no vetor dentro de produtos com os nomes certos.
+                    id: data[i].spId,
+                    name: data[i].spName,
+                    description: data[i].spDescription,
+                    visible: data[i].spVisible,
+                    stock_quantity: data[i].spStockQuantity,
+                    min_stock: data[i].spMinStock,
+                    image_id: data[i].spImageId,
+                    product_id: data[i].spProductId,
+                    created_at: data[i].spCreatedAt,
+                    updated_at: data[i].spUpdatedAt
+                  })
+                }
+                aux += search.indexes.length - 1; //Modifica o aux do for para não gerar mais de uma cópia por produto.
+                //Funciona baseando-se no principio de que o pipeline sempre gera cópias do produto com subproduto em sequência.
+                result.push(completeProduct); //Insere o produto completo no resultado.
+
+              } else { //Produto não tem subproduto.
+                //Remove os campos puxados pela pipeline do subproduto (nesse caso todos vem como null)  
+                delete data[aux].spId;
+                delete data[aux].spName;
+                delete data[aux].spDescription;
+                delete data[aux].spVisible;
+                delete data[aux].spStockQuantity;
+                delete data[aux].spMinStock;
+                delete data[aux].spImageId;
+                delete data[aux].spProductId;
+                delete data[aux].spCreatedAt;
+                delete data[aux].spUpdatedAt;
+                result.push(data[aux]); //Insere produto limpo no resultado.
+              }
+            }
+            return result; //Resultado final da pipeline.
+          });
+
+        const response = await pipeline; //Efetivamente faz a busca completa da pipeline.
         resolve({ data: response, totalCount: totalCount["count(`id`)"] });
       } catch (error) {
         console.log(error);
