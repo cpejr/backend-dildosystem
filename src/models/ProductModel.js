@@ -311,22 +311,20 @@ module.exports = {
                     const isOn1 = completeProduct.secondaries.findIndex((element) => { //Solução tosca para evitar cópias indesejadas.
                       return element.index === data[i].imgIndex;
                     })
-                    console.log("Conferiu se secundaria ja existe...", isOn1);
                     if (isOn1 < 0) {
-                      console.log("Secundaria nao existe, inserindo...")
                       completeProduct.secondaries.push({ //Insere imagem secundária no produto com os nomes dos campos certos.
                         id: data[i].imgId,
                         index: data[i].imgIndex
                       })
                     }
+                  } else { //Imagem pertence a um subproduto localizado nesse produto.
+
                   }
 
                   const isOn2 = completeProduct.subproducts.findIndex((element) => { //Solução tosca para evitar cópias indesejadas.
                     return element.id === data[i].spId;
                   })
-                  console.log("Conferiu se subproduto ja existe...", isOn2);
                   if (isOn2 < 0) {
-                    console.log("Subproduto nao existe, inserindo...")
                     completeProduct.subproducts.push({ //Insere os subprodutos no vetor dentro de produtos com os nomes certos.
                       id: data[i].spId,
                       name: data[i].spName,
@@ -348,9 +346,7 @@ module.exports = {
                 const isOn3 = result.findIndex((element) => { //Solução tosca para evitar cópias indesejadas.
                   return element.id === completeProduct.id;
                 })
-                console.log("Conferiu se produto ja existe...", isOn3);
                 if (isOn3 < 0) {
-                  console.log("Produto nao existe, inserindo...")
                   result.push(completeProduct); //Insere o produto completo no resultado.
                 }
 
