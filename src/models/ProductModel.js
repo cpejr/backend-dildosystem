@@ -174,8 +174,8 @@ module.exports = {
             const words = search.split('%');
             words.forEach(word => {
               qb.orWhere((qb2) => {
-                qb2.where("name", "like", `%${word}%`).orWhere(
-                  "description",
+                qb2.where("products.name", "like", `%${word}%`).orWhere(
+                  "products.description",
                   "like",
                   `%${word}%`
                 );
@@ -185,7 +185,12 @@ module.exports = {
           });
         }
 
-        if (query) pipeline = pipeline.andWhere(query);
+        if (query) {
+          console.log("query: ", query);
+          Object.keys(query).forEach((key)=>{
+            pipeline = pipeline.andWhere(`products.${key}`, "=", query[key]);
+          })
+        }
 
         if (subcategories.length > 0) { //Insere restrição de subcategoria se a query existir.
           pipeline = pipeline.andWhere((qb) => {
@@ -281,96 +286,99 @@ module.exports = {
             }
             //////
             let result = [];
-
-            for (let aux = 0; aux < data.length; aux++) { //Percorre todos os produtos.
-              const search = checkMultiple(data[aux].id, data); //Retorna se o produto tem repetição ou não.
-              if (search.resu === true) { //Produto está repetido.
-                let completeProduct = { ...data[aux] } //Cópia do primeiro produto encontrado.
-                //Removendo campos do subproduto da pipeline (Vão ser jogados na cópia final).
-                delete completeProduct["spId"];
-                delete completeProduct["spName"];
-                delete completeProduct["spDescription"];
-                delete completeProduct["spVisible"];
-                delete completeProduct["spStockQuantity"];
-                delete completeProduct["spMinStock"];
-                delete completeProduct["spImageId"];
-                delete completeProduct["spProductId"];
-                delete completeProduct["spCreatedAt"];
-                delete completeProduct["spUpdatedAt"];
-                //Mesma coisa para os campos de imagens secundarias.
-                delete completeProduct["imgId"];
-                delete completeProduct["imgProductId"];
-                delete completeProduct["imgSubproductId"];
-                delete completeProduct["imgIndex"];
-
-                completeProduct.subproducts = []; //Campo do produto que vai guardar vetor de subprodutos.
-                completeProduct.secondaries = []; //Campo do produto que vai guardar seu proprio vetor de imagens secundarias.
-                for (let i = search.indexes[0]; i < search.indexes[0] + search.indexes.length; i++) { //Usa o indexes para localizar as cópias.
-
-                  if (data[i].imgId !== null) { //Só vai inserir a imagem no produto final se ela não for de um subproduto
-                    const isOn1 = completeProduct.secondaries.findIndex((element) => { //Solução tosca para evitar cópias indesejadas.
-                      return element.index === data[i].imgIndex;
+            if (data.length > 0){
+              for (let aux = 0; aux < data.length; aux++) { //Percorre todos os produtos.
+                const search = checkMultiple(data[aux].id, data); //Retorna se o produto tem repetição ou não.
+                if (search.resu === true) { //Produto está repetido.
+                  let completeProduct = { ...data[aux] } //Cópia do primeiro produto encontrado.
+                  //Removendo campos do subproduto da pipeline (Vão ser jogados na cópia final).
+                  delete completeProduct["spId"];
+                  delete completeProduct["spName"];
+                  delete completeProduct["spDescription"];
+                  delete completeProduct["spVisible"];
+                  delete completeProduct["spStockQuantity"];
+                  delete completeProduct["spMinStock"];
+                  delete completeProduct["spImageId"];
+                  delete completeProduct["spProductId"];
+                  delete completeProduct["spCreatedAt"];
+                  delete completeProduct["spUpdatedAt"];
+                  //Mesma coisa para os campos de imagens secundarias.
+                  delete completeProduct["imgId"];
+                  delete completeProduct["imgProductId"];
+                  delete completeProduct["imgSubproductId"];
+                  delete completeProduct["imgIndex"];
+  
+                  completeProduct.subproducts = []; //Campo do produto que vai guardar vetor de subprodutos.
+                  completeProduct.secondaries = []; //Campo do produto que vai guardar seu proprio vetor de imagens secundarias.
+                  for (let i = search.indexes[0]; i < search.indexes[0] + search.indexes.length; i++) { //Usa o indexes para localizar as cópias.
+  
+                    if (data[i].imgId !== null) { //Só vai inserir a imagem no produto final se ela não for de um subproduto
+                      const isOn1 = completeProduct.secondaries.findIndex((element) => { //Solução tosca para evitar cópias indesejadas.
+                        return element.index === data[i].imgIndex;
+                      })
+                      if (isOn1 < 0) {
+                        completeProduct.secondaries.push({ //Insere imagem secundária no produto com os nomes dos campos certos.
+                          id: data[i].imgId,
+                          index: data[i].imgIndex
+                        })
+                      }
+                    } else { //Imagem pertence a um subproduto localizado nesse produto.
+  
+                    }
+  
+                    const isOn2 = completeProduct.subproducts.findIndex((element) => { //Solução tosca para evitar cópias indesejadas.
+                      return element.id === data[i].spId;
                     })
-                    if (isOn1 < 0) {
-                      completeProduct.secondaries.push({ //Insere imagem secundária no produto com os nomes dos campos certos.
-                        id: data[i].imgId,
-                        index: data[i].imgIndex
+                    if (isOn2 < 0) {
+                      completeProduct.subproducts.push({ //Insere os subprodutos no vetor dentro de produtos com os nomes certos.
+                        id: data[i].spId,
+                        name: data[i].spName,
+                        description: data[i].spDescription,
+                        secondaries: [],
+                        visible: data[i].spVisible,
+                        stock_quantity: data[i].spStockQuantity,
+                        min_stock: data[i].spMinStock,
+                        image_id: data[i].spImageId,
+                        product_id: data[i].spProductId,
+                        created_at: data[i].spCreatedAt,
+                        updated_at: data[i].spUpdatedAt
                       })
                     }
-                  } else { //Imagem pertence a um subproduto localizado nesse produto.
-
                   }
-
-                  const isOn2 = completeProduct.subproducts.findIndex((element) => { //Solução tosca para evitar cópias indesejadas.
-                    return element.id === data[i].spId;
+                  aux += search.indexes.length - 1; //Modifica o aux do for para não gerar mais de uma cópia por produto.
+                  //Funciona baseando-se no principio de que o pipeline sempre gera cópias do produto com subproduto em sequência.
+  
+                  const isOn3 = result.findIndex((element) => { //Solução tosca para evitar cópias indesejadas.
+                    return element.id === completeProduct.id;
                   })
-                  if (isOn2 < 0) {
-                    completeProduct.subproducts.push({ //Insere os subprodutos no vetor dentro de produtos com os nomes certos.
-                      id: data[i].spId,
-                      name: data[i].spName,
-                      description: data[i].spDescription,
-                      secondaries: [],
-                      visible: data[i].spVisible,
-                      stock_quantity: data[i].spStockQuantity,
-                      min_stock: data[i].spMinStock,
-                      image_id: data[i].spImageId,
-                      product_id: data[i].spProductId,
-                      created_at: data[i].spCreatedAt,
-                      updated_at: data[i].spUpdatedAt
-                    })
+                  if (isOn3 < 0) {
+                    result.push(completeProduct); //Insere o produto completo no resultado.
                   }
+  
+                } else { //Produto não está repetido.
+                  //Remove os campos puxados pela pipeline do subproduto (nesse caso todos vem como null)  
+                  delete data[aux].spId;
+                  delete data[aux].spName;
+                  delete data[aux].spDescription;
+                  delete data[aux].spVisible;
+                  delete data[aux].spStockQuantity;
+                  delete data[aux].spMinStock;
+                  delete data[aux].spImageId;
+                  delete data[aux].spProductId;
+                  delete data[aux].spCreatedAt;
+                  delete data[aux].spUpdatedAt;
+                  //Mesma coisa para os campos da imagem
+                  delete data[aux].imgId;
+                  delete data[aux].imgProductId;
+                  delete data[aux].imgSubproductId;
+                  delete data[aux].imgIndex;
+                  result.push(data[aux]); //Insere produto limpo no resultado.
                 }
-                aux += search.indexes.length - 1; //Modifica o aux do for para não gerar mais de uma cópia por produto.
-                //Funciona baseando-se no principio de que o pipeline sempre gera cópias do produto com subproduto em sequência.
-
-                const isOn3 = result.findIndex((element) => { //Solução tosca para evitar cópias indesejadas.
-                  return element.id === completeProduct.id;
-                })
-                if (isOn3 < 0) {
-                  result.push(completeProduct); //Insere o produto completo no resultado.
-                }
-
-              } else { //Produto não está repetido.
-                //Remove os campos puxados pela pipeline do subproduto (nesse caso todos vem como null)  
-                delete data[aux].spId;
-                delete data[aux].spName;
-                delete data[aux].spDescription;
-                delete data[aux].spVisible;
-                delete data[aux].spStockQuantity;
-                delete data[aux].spMinStock;
-                delete data[aux].spImageId;
-                delete data[aux].spProductId;
-                delete data[aux].spCreatedAt;
-                delete data[aux].spUpdatedAt;
-                //Mesma coisa para os campos da imagem
-                delete data[aux].imgId;
-                delete data[aux].imgProductId;
-                delete data[aux].imgSubproductId;
-                delete data[aux].imgIndex;
-                result.push(data[aux]); //Insere produto limpo no resultado.
               }
+              return result; //Resultado final da pipeline.
+            } else {
+              return data; //Por algum motivo não achou produtos
             }
-            return result; //Resultado final da pipeline.
           });
 
         const response = await pipeline; //Efetivamente faz a busca completa da pipeline.
