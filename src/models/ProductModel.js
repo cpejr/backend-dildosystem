@@ -186,7 +186,6 @@ module.exports = {
         }
 
         if (query) {
-          console.log("query: ", query);
           Object.keys(query).forEach((key)=>{
             pipeline = pipeline.andWhere(`products.${key}`, "=", query[key]);
           })
