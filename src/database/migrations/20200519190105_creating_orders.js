@@ -1,7 +1,7 @@
 
 exports.up = function (knex) {
   return knex.schema.createTable('orders', function (table) {
-    table.increments();
+    table.string('id').primary().notNullable();
     table.integer('user_id').notNullable();
     table.foreign('user_id').references('id').inTable('users').onDelete('SET NULL');
     table.timestamp('created_at').defaultTo(knex.fn.now());
@@ -12,12 +12,12 @@ exports.up = function (knex) {
     table.string('track_type').notNullable();
   })
     .createTable('orders_products', function (table) {
-      table.integer('order_id').notNullable();
+      table.string('order_id').notNullable();
       table.foreign('order_id').references('id').inTable('orders').onDelete('CASCADE');
-      table.integer('product_id').nullable();
+      table.string('product_id').nullable();
       table.foreign('product_id').references('id').inTable('products');
       table.integer('product_quantity').unsigned().notNullable();
-      table.integer('subproduct_id').nullable();
+      table.string('subproduct_id').nullable();
       table.foreign('subproduct_id').references('id').inTable('subproducts');
       table.float('price').notNullable().defaultTo(1);
     });

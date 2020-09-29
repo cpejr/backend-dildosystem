@@ -41,9 +41,9 @@ module.exports = {
 
       newCarousel.image_id = image_id;
 
-      const [id] = await CarouselModel.createCarousel(newCarousel);
+      await CarouselModel.createCarousel(newCarousel);
 
-      response.status(200).json({ id });
+      response.status(200).json({ id: newCarousel.id });
     } catch (err) {
       console.log(err);
       return response.status(500).json({ notification: "Internal server error while trying to register the new carousel image" });

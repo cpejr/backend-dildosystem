@@ -1,5 +1,6 @@
 const OrderModel = require("../models/OrderModel");
 const ProductModel = require("../models/ProductModel");
+const { v1: uuidv1 } = require('uuid');
 
 module.exports = {
   async index(request, response) {
@@ -36,10 +37,11 @@ module.exports = {
 
   async create(request, response) {
     try {
-      let { products, paymentType, tracktype, trackprice } = request.body;
+      let { products, paymentType, tracktype, trackprice, id } = request.body;
       const user = request.session.user;
 
       const order = {
+        id: id,
         track_price: trackprice,
         track_type: tracktype,
         payment_type: paymentType,
@@ -110,6 +112,7 @@ module.exports = {
 
       products = products.map((value) => {
         const product = {
+          id: uuidv1(),
           product_id: value.product_id,
           order_id,
           product_quantity: value.product_quantity,

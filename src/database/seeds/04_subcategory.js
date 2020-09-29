@@ -5,8 +5,9 @@ exports.seed = function(knex) {
       // Inserts seed entries
       return knex('subcategories').insert([
         {
+          id: "haushuahsuahusuhashus",
           name: "sub-generica",
-          category_id: 1
+          category_id: "testetesteteste"
         }
       ]);
     }); 
