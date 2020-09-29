@@ -6,9 +6,9 @@ module.exports = {
     try {
       const newCategory = request.body;
 
-      const [id] = await CategoryModel.createNewCategory(newCategory);
+      await CategoryModel.createNewCategory(newCategory);
 
-      response.status(200).json({ id });
+      response.status(200).json({ id: newCategory.id });
     } catch (err) {
       if (err.errno === 19)
         return response.status(400).json({ notification: "Invalid ids" });
@@ -22,9 +22,9 @@ module.exports = {
     try {
         const newSubcategory = request.body;
   
-        const [id] = await CategoryModel.createNewSubcategory(newSubcategory);
+        await CategoryModel.createNewSubcategory(newSubcategory);
   
-        response.status(200).json({ id });
+        response.status(200).json({ id: newSubcategory.id });
       } catch (err) { 
         if (err.errno === 19)
             return response.status(400).json({ notification: "Invalid ids" });

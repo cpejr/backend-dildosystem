@@ -19,11 +19,11 @@ module.exports = {
 
       newProduct.image_id = image_id;
 
-      const [id] = await ProductModel.createNewProduct(newProduct);
+      await ProductModel.createNewProduct(newProduct);
 
-      const result = await ImageModel.createImages(images, id);
+      await ImageModel.createImages(images, newProduct.id);
 
-      return response.status(200).json({ id });
+      return response.status(200).json({ id: newProduct.id });
     } catch (err) {
       console.log(err);
       return response.status(500).json({ notification: "Internal server error while trying to register the new product" });

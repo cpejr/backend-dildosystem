@@ -6,6 +6,7 @@ exports.seed = function(knex) {
       // Inserts seed entries
       return knex('products').insert([
         {
+          "id": "docim",
           "name": "doce",
           "client_price": 4,
           "client_sale_price": 3,
@@ -16,7 +17,7 @@ exports.seed = function(knex) {
           "stock_quantity": 300,
           "min_stock": 7,
           "image_id": "1SlCr7HIldc0stbxu_7sijGdE6q0CoasK",
-          "subcategory_id": 1,
+          "subcategory_id": "haushuahsuahusuhashus",
           "weight": 1,
           "height": 1,
           "width": 1,
@@ -26,6 +27,7 @@ exports.seed = function(knex) {
           "on_sale_wholesaler": 1
         },
         {
+          "id": "docim2",
           "name": "doce",
           "client_price": 4,
           "client_sale_price": 3,
@@ -36,7 +38,7 @@ exports.seed = function(knex) {
           "stock_quantity": 300,
           "min_stock": 5,
           "image_id": "1_PGas1PCM5v4mdKOkAgts1TwYP7GVUlR",
-          "subcategory_id": 1,
+          "subcategory_id": "haushuahsuahusuhashus",
           "weight": 1,
           "height": 1,
           "width": 1,

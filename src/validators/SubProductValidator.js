@@ -9,19 +9,19 @@ subProductValidate.create = {
         visible: Joi.boolean().optional(),
         stock_quantity: Joi.number().required(),
         min_stock: Joi.number().required(),
-        product_id: Joi.number().required(),
+        product_id: Joi.string().required(),
     })
 }
 
 subProductValidate.getSubproducts = {
     [Segments.PARAMS]: Joi.object().keys({
-        product_id: Joi.number().required(),
+        product_id: Joi.string().required(),
     })
 }
 
 subProductValidate.delete = {
     [Segments.PARAMS]: Joi.object().keys({
-        product_id: Joi.number().integer().min(0).required(),
+        product_id: Joi.string().required(),
     })
 }
 

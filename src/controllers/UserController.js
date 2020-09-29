@@ -129,9 +129,9 @@ module.exports = {
         // const { id } = request.params;
         const newWish = request.body;
   
-        const [id] = await UserModel.createNewWish(newWish);
+        await UserModel.createNewWish(newWish);
   
-        response.status(200).json({ id });
+        response.status(200).json({ id: newWish.id });
       } catch (err) { 
         if (err.errno === 19)
             return response.status(400).json({ notification: "Invalid" });

@@ -11,13 +11,13 @@ categoryValidate.createCategory = {
 categoryValidate.createSubcategory = {
     [Segments.BODY]: Joi.object().keys({
         name: Joi.string().required(),
-        category_id: Joi.number().integer().min(0).required(),
+        category_id: Joi.string().required(),
     })
 }
 
 categoryValidate.updateCategory = {
     [Segments.PARAMS]: Joi.object().keys({
-        id: Joi.number().integer().min(0).required(),
+        id: Joi.string().required(),
     }),
     [Segments.BODY]: Joi.object().keys({
         name: Joi.string().optional(),
@@ -26,23 +26,23 @@ categoryValidate.updateCategory = {
 
 categoryValidate.updateSubcategory = {
     [Segments.PARAMS]: Joi.object().keys({
-        id: Joi.number().integer().min(0).required(),
+        id: Joi.string().required(),
     }),
     [Segments.BODY]: Joi.object().keys({
         name: Joi.string().optional(),
-        category_id: Joi.number().integer().min(0).optional(),
+        category_id: Joi.string().optional(),
     })
 }
 
 categoryValidate.deleteCategory = {
     [Segments.PARAMS]: Joi.object().keys({
-        id: Joi.number().integer().min(0).required(),
+        id: Joi.string().required(),
     }),
 }
 
 categoryValidate.deleteSubcategory = {
     [Segments.PARAMS]: Joi.object().keys({
-        id: Joi.number().integer().min(0).required(),
+        id: Joi.string().required(),
     }),
 }
 

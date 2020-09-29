@@ -16,7 +16,7 @@ productValidate.create = {
         visible: Joi.boolean().optional(),
         stock_quantity: Joi.number().required(),
         min_stock: Joi.number().required(),
-        subcategory_id: Joi.number().integer().min(0).required(),
+        subcategory_id: Joi.string().required(),
         weight: Joi.number().min(0).max(300000), //validar
         height: Joi.number().min(0),
         width: Joi.number().min(0),
@@ -26,8 +26,8 @@ productValidate.create = {
 
 productValidate.uploadFiles = {
     [Segments.BODY]: Joi.object().keys({
-        product_id: Joi.number().required(),
-        subproduct_id: Joi.number().optional(),
+        product_id: Joi.string().required(),
+        subproduct_id: Joi.string().optional(),
     })
 }
 
@@ -45,8 +45,8 @@ productValidate.index = {
         visible: Joi.boolean().optional(),
         stock_quantity: Joi.number().optional(),
         min_stock: Joi.number().optional(),
-        category_id: Joi.number().integer().min(0).optional(),
-        subcategory_id: Joi.number().integer().min(0).optional(),
+        category_id: Joi.string().optional(),
+        subcategory_id: Joi.string().optional(),
         max_price: Joi.number().min(0).optional(),
         min_price: Joi.number().min(0).optional(),
         order_by: Joi.string().valid('price'),
@@ -58,7 +58,7 @@ productValidate.index = {
 
 productValidate.getProduct = {
     [Segments.PARAMS]: Joi.object().keys({
-        product_id: Joi.number().required(),
+        product_id: Joi.string().required(),
     })
 }
 
@@ -70,7 +70,7 @@ productValidate.getImages = {
 
 productValidate.update = {
     [Segments.PARAMS]: Joi.object().keys({
-        id: Joi.number().required(),
+        id: Joi.string().required(),
     }),
     [Segments.BODY]: Joi.object().keys({
         name: Joi.string().optional(),
@@ -85,7 +85,7 @@ productValidate.update = {
         visible: Joi.boolean().optional(),
         stock_quantity: Joi.number().optional(),
         min_stock: Joi.number().optional(),
-        subcategory_id: Joi.number().integer().min(0).optional(),
+        subcategory_id: Joi.string().optional(),
         weight: Joi.number().min(0).max(300000).optional(), //validar
         height: Joi.number().min(0).optional(),
         width: Joi.number().min(0).optional(),
@@ -95,13 +95,13 @@ productValidate.update = {
 
 productValidate.deleteFile = {
     [Segments.PARAMS]: Joi.object().keys({
-        id: Joi.number().required(),
+        id: Joi.string().required(),
     })
 }
 
 productValidate.delete = {
     [Segments.PARAMS]: Joi.object().keys({
-        product_id: Joi.number().integer().min(0).required(),
+        product_id: Joi.string().required(),
     })
 }
 

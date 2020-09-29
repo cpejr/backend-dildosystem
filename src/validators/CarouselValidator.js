@@ -7,13 +7,13 @@ CarouselValidate.updateCarousel = {
         position: Joi.number().integer().min(1).optional(),
     }),
     [Segments.PARAMS]: Joi.object().keys({
-        id: Joi.number().integer().min(0).required(),
+        id: Joi.string().required(),
     })
 }
 
 CarouselValidate.deleteCarousel = {
     [Segments.PARAMS]: Joi.object().keys({
-        id: Joi.number().integer().min(0).required(),
+        id: Joi.string().required(),
     })
 }
 

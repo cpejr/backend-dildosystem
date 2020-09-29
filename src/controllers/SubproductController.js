@@ -11,9 +11,9 @@ module.exports = {
 
       newSubproduct.image_id = image_id;
 
-      const [id] = await SubproductModel.createNewSubproduct(newSubproduct);
+      await SubproductModel.createNewSubproduct(newSubproduct);
 
-      response.status(200).json({ id });
+      response.status(200).json({ id: newSubproduct.id });
     } catch (err) {
       if (err.errno === 19)
         return response.status(400).json({ notification: "Invalid product id" })

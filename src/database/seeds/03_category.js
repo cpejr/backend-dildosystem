@@ -5,6 +5,7 @@ exports.seed = function(knex) {
       // Inserts seed entries
       return knex('categories').insert([
         {
+          id: "testetesteteste",
           name: "generica"
         }
       ]);

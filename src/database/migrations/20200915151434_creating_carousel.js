@@ -1,7 +1,7 @@
 
 exports.up = function (knex) {
     return knex.schema.createTable('carousel', function (table) {
-        table.increments();
+        table.string('id').primary().notNullable();
         table.string('image_id').notNullable();
         table.integer('position').notNullable();
 	});

@@ -5,9 +5,9 @@ let orderValidate = new Object();
 orderValidate.create = {
     [Segments.BODY]: Joi.object().keys({
         products: Joi.array().items(Joi.object().keys({
-            product_id: Joi.number().integer().min(0).required(),
+            product_id: Joi.string().required(),
             product_quantity: Joi.number().integer().min(1).required(),
-            subproduct_id: Joi.number().integer().min(0).optional(),
+            subproduct_id: Joi.string().optional(),
         }))
             .min(1)
             .unique((a, b) => a.product_id === b.product_id && a.subproduct_id === b.subproduct_id)
@@ -25,13 +25,13 @@ orderValidate.index = {
         byStatus: Joi.string().valid('pending', 'paid', 'mailed','delivered').optional()
     }),
     [Segments.PARAMS]: Joi.object().keys({
-        id: Joi.number().integer().min(0).optional(),
+        id: Joi.string().optional(),
     })
 }
 
 orderValidate.update = {
     [Segments.PARAMS]: Joi.object().keys({
-        id: Joi.number().integer().min(0).required(),
+        id: Joi.string().required(),
     }),
     [Segments.BODY]: Joi.object().keys({
         payment_type: Joi.string().optional(),
@@ -42,7 +42,7 @@ orderValidate.update = {
 
 orderValidate.delete = {
     [Segments.PARAMS]: Joi.object().keys({
-        order_id: Joi.number().integer().min(0).required(),
+        order_id: Joi.string().required(),
     })
 }
 
