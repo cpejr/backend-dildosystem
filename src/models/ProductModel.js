@@ -14,20 +14,6 @@ module.exports = {
     });
   },
 
-  updateProduct(product, product_id) {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const response = await connection("products")
-          .where({ id: product_id })
-          .update(product);
-        resolve(response);
-      } catch (error) {
-        console.log(error);
-        reject(error);
-      }
-    });
-  },
-
   getlowStock() {
     return new Promise(async (resolve, reject) => {
       try {
@@ -463,8 +449,38 @@ module.exports = {
       productPrice[product.id] = price;
     });
 
-    console.log(productPrice);
     return productPrice;
+  },
+
+  async findImages(ids){
+    try {
+      console.log("ids: ", ids);
+      const result = await connection("images AS img")
+        .select("*")
+        .whereIn("img.product_id", ids)
+        .orWhereIn("img.subproduct_id", ids);
+        //.groupBy("img.product_id");
+      
+      console.log("resultado: ", result);
+      return result;
+    } catch (err) {
+      console.log(err);
+      return [];
+    }
+  },
+
+  updateProduct(product, product_id) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const response = await connection("products")
+          .where({ id: product_id })
+          .update(product);
+        resolve(response);
+      } catch (error) {
+        console.log(error);
+        reject(error);
+      }
+    });
   },
 
   deleteProduct(product_id) {

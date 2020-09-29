@@ -118,8 +118,10 @@ module.exports = {
   async getImages(request, response) {
     try {
       let { ids } = request.params;
-
+    
+      const idVector = ids.split("-");
       
+      const result = await ProductModel.findImages(idVector);
 
       return response.status(200).json(result);
     } catch (err) {
