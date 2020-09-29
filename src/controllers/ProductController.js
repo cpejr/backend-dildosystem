@@ -3,8 +3,33 @@ const SubproductModel = require('../models/SubproductModel');
 const CategoryModel = require('../models/CategoryModel');
 const ImageModel = require("../models/ImageModel");
 const { uploadFile, deleteFile } = require('../models/GoogleDriveModel');
+const { getImages } = require('../validators/ProductValidator');
 
 module.exports = {
+
+  async create(request, response) {
+    try {
+      const newProduct = request.body;
+      const { originalname, buffer, mimetype } = request.files.imageFile[0];
+      const images = request.files.imageFiles;
+
+      console.log(request.files)
+
+      const image_id = await uploadFile(buffer, originalname, mimetype);
+
+      newProduct.image_id = image_id;
+
+      const [id] = await ProductModel.createNewProduct(newProduct);
+
+      const result = await ImageModel.createImages(images, id);
+
+      return response.status(200).json({ id });
+    } catch (err) {
+      console.log(err);
+      return response.status(500).json({ notification: "Internal server error while trying to register the new product" });
+    }
+  },
+
   async index(request, response) {
     try {
       const filter = request.query;
@@ -47,53 +72,18 @@ module.exports = {
     }
   },
 
-  async create(request, response) {
+  async getlowStock(request, response) {
     try {
-      const newProduct = request.body;
-      const { originalname, buffer, mimetype } = request.files.imageFile[0];
-      const images = request.files.imageFiles;
-
-      console.log(request.files)
-
-      const image_id = await uploadFile(buffer, originalname, mimetype);
-
-      newProduct.image_id = image_id;
-
-      const [id] = await ProductModel.createNewProduct(newProduct);
-
-      const result = await ImageModel.createImages(images, id);
-
-      return response.status(200).json({ id });
-    } catch (err) {
-      console.log(err);
-      return response.status(500).json({ notification: "Internal server error while trying to register the new product" });
-    }
-  },
-
-  async update(request, response) {
-    try {
-      const newProduct = request.body;
-
-      const { id } = request.params;
-
-      if (request.file) {
-        const { originalname, buffer, mimetype } = request.file;
-
-        const image_id = await uploadFile(buffer, originalname, mimetype);
-
-        newProduct.image_id = image_id;
-
-        const prevProduct = await ProductModel.getProductbyId(id);
-
-        await deleteFile(prevProduct.image_id);
+      const lowProducts = await ProductModel.getlowStock();
+      const result = {
+        products: lowProducts,
+        number: lowProducts ? lowProducts.length : 0
       }
-
-      await ProductModel.updateProduct(newProduct, id);
-
-      response.status(200).json({ message: "Sucesso!" });
-    } catch (err) {
+      return response.status(200).json(result);
+    }
+    catch (err) {
       console.log(err);
-      return response.status(500).json({ notification: "Internal server error while trying to update product" });
+      return response.status(500).json({ notification: "Internal server error while trying to get low stock products" });
     }
   },
 
@@ -125,13 +115,52 @@ module.exports = {
     }
   },
 
+  async getImages(request, response) {
+    try {
+      let { ids } = request.params;
+
+      
+
+      return response.status(200).json(result);
+    } catch (err) {
+      console.log(err);
+      return response.status(500).json({ notification: "Internal server error while trying to get images" });
+    }
+  },
+
+  async update(request, response) {
+    try {
+      const newProduct = request.body;
+
+      const { id } = request.params;
+
+      if (request.file) {
+        const { originalname, buffer, mimetype } = request.file;
+
+        const image_id = await uploadFile(buffer, originalname, mimetype);
+
+        newProduct.image_id = image_id;
+
+        const prevProduct = await ProductModel.getProductbyId(id);
+
+        await deleteFile(prevProduct.image_id);
+      }
+
+      await ProductModel.updateProduct(newProduct, id);
+
+      response.status(200).json({ message: "Sucesso!" });
+    } catch (err) {
+      console.log(err);
+      return response.status(500).json({ notification: "Internal server error while trying to update product" });
+    }
+  },
+
   async uploadFiles(request, response) {
     try {
       const images = request.files;
+      const {product_id, subproduct_id} = request.body;
 
-      const product_id = 7
-
-      const result = await ImageModel.createImages(images, product_id);
+      const result = await ImageModel.createImages(images, product_id, subproduct_id);
 
       return response.status(200).json(result);
     } catch (err) {
@@ -164,21 +193,6 @@ module.exports = {
       return response.status(500).json({ notification: "Internal server error while trying to delete product" });
     }
   },
-
-  async getlowStock(request, response) {
-    try {
-      const lowProducts = await ProductModel.getlowStock();
-      const result = {
-        products: lowProducts,
-        number: lowProducts ? lowProducts.length : 0
-      }
-      return response.status(200).json(result);
-    }
-    catch (err) {
-      console.log(err);
-      return response.status(500).json({ notification: "Internal server error while trying to get low stock products" });
-    }
-  }
 
 }
 

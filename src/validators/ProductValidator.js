@@ -24,29 +24,10 @@ productValidate.create = {
     })
 }
 
-
-productValidate.update = {
-    [Segments.PARAMS]: Joi.object().keys({
-        id: Joi.number().required(),
-    }),
+productValidate.uploadFiles = {
     [Segments.BODY]: Joi.object().keys({
-        name: Joi.string().optional(),
-        client_price: Joi.number().min(0).optional(),
-        client_sale_price: Joi.number().min(0).optional(),
-        wholesaler_price: Joi.number().min(0).optional(),
-        wholesaler_sale_price: Joi.number().min(0).optional(),
-        on_sale_client: Joi.boolean().optional(),
-        on_sale_wholesaler: Joi.boolean().optional(),
-        featured: Joi.boolean().optional(),
-        description: Joi.string().optional(),
-        visible: Joi.boolean().optional(),
-        stock_quantity: Joi.number().optional(),
-        min_stock: Joi.number().optional(),
-        subcategory_id: Joi.number().integer().min(0).optional(),
-        weight: Joi.number().min(0).max(300000).optional(), //validar
-        height: Joi.number().min(0).optional(),
-        width: Joi.number().min(0).optional(),
-        length: Joi.number().min(0).optional(),
+        product_id: Joi.number().required(),
+        subproduct_id: Joi.number().optional(),
     })
 }
 
@@ -75,15 +56,46 @@ productValidate.index = {
     })
 }
 
-productValidate.deleteFile = {
-    [Segments.PARAMS]: Joi.object().keys({
-        id: Joi.number().required(),
-    })
-}
-
 productValidate.getProduct = {
     [Segments.PARAMS]: Joi.object().keys({
         product_id: Joi.number().required(),
+    })
+}
+
+productValidate.getImages = {
+    [Segments.PARAMS]: Joi.object().keys({
+        ids: Joi.string().required(),
+    })
+}
+
+productValidate.update = {
+    [Segments.PARAMS]: Joi.object().keys({
+        id: Joi.number().required(),
+    }),
+    [Segments.BODY]: Joi.object().keys({
+        name: Joi.string().optional(),
+        client_price: Joi.number().min(0).optional(),
+        client_sale_price: Joi.number().min(0).optional(),
+        wholesaler_price: Joi.number().min(0).optional(),
+        wholesaler_sale_price: Joi.number().min(0).optional(),
+        on_sale_client: Joi.boolean().optional(),
+        on_sale_wholesaler: Joi.boolean().optional(),
+        featured: Joi.boolean().optional(),
+        description: Joi.string().optional(),
+        visible: Joi.boolean().optional(),
+        stock_quantity: Joi.number().optional(),
+        min_stock: Joi.number().optional(),
+        subcategory_id: Joi.number().integer().min(0).optional(),
+        weight: Joi.number().min(0).max(300000).optional(), //validar
+        height: Joi.number().min(0).optional(),
+        width: Joi.number().min(0).optional(),
+        length: Joi.number().min(0).optional(),
+    })
+}
+
+productValidate.deleteFile = {
+    [Segments.PARAMS]: Joi.object().keys({
+        id: Joi.number().required(),
     })
 }
 
