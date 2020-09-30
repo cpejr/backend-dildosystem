@@ -172,7 +172,7 @@ module.exports = {
         }
 
         if (query) {
-          Object.keys(query).forEach((key)=>{
+          Object.keys(query).forEach((key) => {
             pipeline = pipeline.andWhere(`products.${key}`, "=", query[key]);
           })
         }
@@ -271,7 +271,7 @@ module.exports = {
             }
             //////
             let result = [];
-            if (data.length > 0){
+            if (data.length > 0) {
               for (let aux = 0; aux < data.length; aux++) { //Percorre todos os produtos.
                 const search = checkMultiple(data[aux].id, data); //Retorna se o produto tem repetição ou não.
                 if (search.resu === true) { //Produto está repetido.
@@ -287,16 +287,19 @@ module.exports = {
                   delete completeProduct["spProductId"];
                   delete completeProduct["spCreatedAt"];
                   delete completeProduct["spUpdatedAt"];
+
+
                   //Mesma coisa para os campos de imagens secundarias.
                   delete completeProduct["imgId"];
                   delete completeProduct["imgProductId"];
                   delete completeProduct["imgSubproductId"];
                   delete completeProduct["imgIndex"];
-  
+
+
                   completeProduct.subproducts = []; //Campo do produto que vai guardar vetor de subprodutos.
                   completeProduct.secondaries = []; //Campo do produto que vai guardar seu proprio vetor de imagens secundarias.
                   for (let i = search.indexes[0]; i < search.indexes[0] + search.indexes.length; i++) { //Usa o indexes para localizar as cópias.
-  
+
                     if (data[i].imgId !== null) { //Só vai inserir a imagem no produto final se ela não for de um subproduto
                       const isOn1 = completeProduct.secondaries.findIndex((element) => { //Solução tosca para evitar cópias indesejadas.
                         return element.index === data[i].imgIndex;
@@ -308,9 +311,9 @@ module.exports = {
                         })
                       }
                     } else { //Imagem pertence a um subproduto localizado nesse produto.
-  
+
                     }
-  
+
                     const isOn2 = completeProduct.subproducts.findIndex((element) => { //Solução tosca para evitar cópias indesejadas.
                       return element.id === data[i].spId;
                     })
@@ -332,16 +335,36 @@ module.exports = {
                   }
                   aux += search.indexes.length - 1; //Modifica o aux do for para não gerar mais de uma cópia por produto.
                   //Funciona baseando-se no principio de que o pipeline sempre gera cópias do produto com subproduto em sequência.
-  
+
                   const isOn3 = result.findIndex((element) => { //Solução tosca para evitar cópias indesejadas.
                     return element.id === completeProduct.id;
                   })
                   if (isOn3 < 0) {
+                    //No caso de um produto mais de uma imagem secundaria, mas nao ter subprodutos.
+                    if (completeProduct["subproducts"].length === 0) delete completeProduct["subproducts"];
+                    //No caso de um produto mais de um subproduto, mas nao ter secundarias.
+                    if (completeProduct["secondaries"].length === 0) delete completeProduct["secondaries"];
                     result.push(completeProduct); //Insere o produto completo no resultado.
                   }
-  
+
                 } else { //Produto não está repetido.
-                  //Remove os campos puxados pela pipeline do subproduto (nesse caso todos vem como null)  
+                  //Remove os campos puxados pela pipeline do subproduto (nesse caso todos vem como null)
+                  data[aux].subproducts = [];
+                  data[aux].secondaries = [];
+                  if (data[aux].spId !== null) { //Testa e trata o caso especial de so existir um subproduto.
+                    data[aux].subproducts.push({
+                      id: data[aux].spId,
+                      name: data[aux].spName,
+                      description: data[aux].spDescription,
+                      visible: data[aux].spVisible,
+                      stock_quantity: data[aux].spStockQuantity,
+                      min_stock: data[aux].spMinStock,
+                      image_id: data[aux].spImageId,
+                      product_id: data[aux].spProductId,
+                      created_at: data[aux].spCreatedAt,
+                      updated_at: data[aux].spUpdatedAt,
+                    })
+                  }
                   delete data[aux].spId;
                   delete data[aux].spName;
                   delete data[aux].spDescription;
@@ -352,11 +375,25 @@ module.exports = {
                   delete data[aux].spProductId;
                   delete data[aux].spCreatedAt;
                   delete data[aux].spUpdatedAt;
+                  //Nao precisa desse vetor no resultado se nao tiver subprodutos
+                  if (data[aux].subproducts.length === 0) delete data[aux].subproducts;
+
+                  if (data[aux].imgId !== null) { //Testa e trata o caso especial de so existir uma imagem secundaria.
+                    data[aux].secondaries.push({
+                      id: data[aux].imgId,
+                      product_id: data[aux].imgProductId,
+                      subproduct_id: data[aux].imgSubproductId,
+                      index: data[aux].imgIndex,
+                    })
+                  }
                   //Mesma coisa para os campos da imagem
                   delete data[aux].imgId;
                   delete data[aux].imgProductId;
                   delete data[aux].imgSubproductId;
                   delete data[aux].imgIndex;
+                  //Nao precisa desse vetor no resultado se nao tiver subprodutos
+                  if (data[aux].secondaries.length === 0) delete data[aux].secondaries;
+
                   result.push(data[aux]); //Insere produto limpo no resultado.
                 }
               }
@@ -452,15 +489,15 @@ module.exports = {
     return productPrice;
   },
 
-  async findImages(ids){
+  async findImages(ids) {
     try {
       console.log("ids: ", ids);
       const result = await connection("images AS img")
         .select("*")
         .whereIn("img.product_id", ids)
         .orWhereIn("img.subproduct_id", ids);
-        //.groupBy("img.product_id");
-      
+      //.groupBy("img.product_id");
+
       console.log("resultado: ", result);
       return result;
     } catch (err) {
