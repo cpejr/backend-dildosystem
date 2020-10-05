@@ -147,6 +147,9 @@ exports.deleteFile = function deleteFile(fileId) {
         if (err) {
           // Handle error
           console.log(err);
+          if (err.response.status === 404) {
+            resolve();
+          }
           reject(err);
         } else {
           resolve();
