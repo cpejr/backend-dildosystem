@@ -39,7 +39,7 @@ module.exports = {
     try {
       let { products, paymentType, tracktype, trackprice, id } = request.body;
       const user = request.session.user;
-      console.log("productsreq", products);
+
       const order = {
         id: id,
         track_price: trackprice,
@@ -60,13 +60,11 @@ module.exports = {
         }
         else products_id.push(value.product_id);
       });
-      console.log("productsid", products_id);
-      console.log("subproductsid", subproducts_id);
+
       const stock = await ProductModel.getProductsQuantity(
         products_id,
         subproducts_id
       );
-      console.log("stock", stock); 
       let out_of_stock = [];
       let not_found = [];
 
@@ -93,7 +91,6 @@ module.exports = {
           return false;
         }
       });
-      console.log("notfound", not_found); 
       
       if (not_found.length > 0)
         return response.status(400).json({
@@ -114,8 +111,6 @@ module.exports = {
       );
 
       let [order_id, prices] = await Promise.all([orderPromise, pricesPromise]);
-      console.log("prices", prices);
-      console.log("orderid", order_id); 
        
       products = products.map((value) => {
         const product = {
