@@ -12,6 +12,7 @@ exports.up = function (knex) {
     table.string('track_type').notNullable();
   })
     .createTable('orders_products', function (table) {
+      table.string('id').primary().notNullable();
       table.string('order_id').notNullable();
       table.foreign('order_id').references('id').inTable('orders').onDelete('CASCADE');
       table.string('product_id').nullable();

@@ -8,7 +8,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       connection("orders")
         .insert(order)
-        .then((response) => resolve(response))
+        .then((response) => resolve(order.id))
         .catch((error) => {
           console.log(error);
           reject(error);
@@ -47,7 +47,7 @@ module.exports = {
       const query1 = pipeline.select().clone().count("o.id").first();
       let query2 = [];
       //Get order
-      if (byid > 0) {
+      if (byid != undefined) {
         query2 = pipeline
           .select(
             "o.*",
@@ -68,11 +68,11 @@ module.exports = {
           )
           .join("users AS u", "u.id", "=", "o.user_id")
           .where(query)
-          .andWhere("o.id", "=", byid)
+          .andWhere("o.user_id", "=", byid)
           .limit(ORDERS_PER_PAGE)
           .offset((page - 1) * ORDERS_PER_PAGE);
       } 
-      else if(byuserid > 0){
+      else if(byuserid != undefined){
         query2 = pipeline
           .select(
             "o.*",
