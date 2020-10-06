@@ -29,6 +29,33 @@ module.exports = {
         });
     },
 
+    getSubproductbyId(id) {
+        return new Promise(async (resolve, reject) => {
+          try {
+            let columns = [
+              "id",
+              "name",
+              "description",
+              "visible",
+              "stock_quantity",
+              "min_stock",
+              "image_id",
+              "product_id",
+            ];
+           
+            let response = await connection("subproducts")
+              .where("id", id)
+              .select(columns)
+              .first();
+    
+            resolve(response);
+          } catch (error) {
+            console.log(error);
+            reject(error);
+          }
+        });
+      },
+
     deleteSubProduct(product_id) {
         return new Promise(async (resolve, reject) => {
             try {
