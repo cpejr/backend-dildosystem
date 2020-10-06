@@ -1,6 +1,5 @@
 const SubproductModel = require('../models/SubproductModel');
-const ImageModel = require('../models/ImageModel');
-const { uploadFile, deleteFile } = require('../models/GoogleDriveModel');
+const { uploadFile } = require('../models/GoogleDriveModel');
 
 module.exports = {
   async create(request, response) {
@@ -41,46 +40,6 @@ module.exports = {
     } catch (err) {
       console.log(err.errno);
       return response.status(500).json({ notification: "Internal server error while trying to get subproducts" });
-    }
-  },
-
-  async deleteFile(request, response) {
-    try {
-      const { id } = request.params;
-      console.log("Chamou delete", id);
-      await ImageModel.deleteImage(id);
-
-      return response.status(200).json({ notification: "Image deleted!" });
-    } catch (err) {
-      console.log(err);
-      return response.status(500).json({ notification: "Internal server error while trying to delete images" });
-    }
-  },
-
-  async update(request, response) {
-    try {
-      const newSubProduct = request.body;
-
-      const { id } = request.params;
-
-      if (request.file) {
-        const { originalname, buffer, mimetype } = request.file;
-
-        const image_id = await uploadFile(buffer, originalname, mimetype);
-
-        newSubProduct.image_id = image_id;
-
-        const prevSubProduct = await SubproductModel.getSubproductbyId(id);
-
-        await deleteFile(prevSubProduct.image_id);
-      }
-
-      await SubproductModel.updateSubproduct(newSubProduct, id);
-
-      response.status(200).json({ message: "Sucesso!" });
-    } catch (err) {
-      console.log(err);
-      return response.status(500).json({ notification: "Internal server error while trying to update subproduct" });
     }
   },
 
