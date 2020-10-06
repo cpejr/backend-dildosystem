@@ -159,7 +159,7 @@ module.exports = {
 
   async uploadFiles(request, response) {
     try {
-      const images = request.files;
+      const images = request.files.imageFiles;
       const {product_id, subproduct_id} = request.body;
 
       const result = await ImageModel.createImages(images, product_id, subproduct_id);

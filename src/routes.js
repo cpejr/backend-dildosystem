@@ -85,7 +85,7 @@ routes.put('/carousel/:id', authenticateToken, isAdmin, celebrate(CarouselValida
 routes.delete('/carousel/:id', authenticateToken, isAdmin, celebrate(CarouselValidate.deleteCarousel), CarouselController.delete);
 
 //Images
-routes.post('/images', authenticateToken, isAdmin, celebrate(productValidate.uploadFiles), imageMultUpload(undefined,'imageFiles'), ProductController.uploadFiles);
+routes.post('/images', authenticateToken, isAdmin, imageMultUpload(undefined,'imageFiles'), celebrate(productValidate.uploadFiles), ProductController.uploadFiles);
 routes.delete('/image/:id', authenticateToken, isAdmin, celebrate(productValidate.deleteFile), ProductController.deleteFile)
 routes.get('/image/:ids', celebrate(productValidate.getImages), ProductController.getImages)
 
