@@ -57,14 +57,14 @@ module.exports = {
             "u.type",
             "u.cpf",
             "u.birthdate",
-            "u.zipcode",
+            //"u.zipcode",
             "u.phonenumber",
-            "u.state",
-            "u.city",
-            "u.neighborhood",
-            "u.street",
-            "u.number",
-            "u.complement"
+            // "u.state",
+            // "u.city",
+            // "u.neighborhood",
+            // "u.street",
+            // "u.number",
+            // "u.complement"
           )
           .join("users AS u", "u.id", "=", "o.user_id")
           .where(query)
@@ -82,14 +82,14 @@ module.exports = {
             "u.type",
             "u.cpf",
             "u.birthdate",
-            "u.zipcode",
+            // "u.zipcode",
             "u.phonenumber",
-            "u.state",
-            "u.city",
-            "u.neighborhood",
-            "u.street",
-            "u.number",
-            "u.complement"
+            // "u.state",
+            // "u.city",
+            // "u.neighborhood",
+            // "u.street",
+            // "u.number",
+            // "u.complement"
           )
           .join("users AS u", "u.id", "=", "o.user_id")
           .where(query)
@@ -107,14 +107,14 @@ module.exports = {
             "u.type",
             "u.cpf",
             "u.birthdate",
-            "u.zipcode",
+            //"u.zipcode",
             "u.phonenumber",
-            "u.state",
-            "u.city",
-            "u.neighborhood",
-            "u.street",
-            "u.number",
-            "u.complement"
+            // "u.state",
+            // "u.city",
+            // "u.neighborhood",
+            // "u.street",
+            // "u.number",
+            // "u.complement"
           )
           .join("users AS u", "u.id", "=", "o.user_id")
           .where(query)
@@ -148,28 +148,28 @@ module.exports = {
         user.type = order.type;
         user.cpf = order.cpf;
         user.birthdate = order.birthdate;
-        user.zipcode = order.zipcode;
+        //user.zipcode = order.zipcode;
         user.phonenumber = order.phonenumber;
-        user.state = order.state;
-        user.city = order.city;
-        user.neighborhood = order.neighborhood;
-        user.street = order.street;
-        user.number = order.number;
-        user.complement = order.complement;
+        // user.state = order.state;
+        // user.city = order.city;
+        // user.neighborhood = order.neighborhood;
+        // user.street = order.street;
+        // user.number = order.number;
+        // user.complement = order.complement;
 
         delete order.name;
         delete order.email;
         delete order.type;
         delete order.cpf;
         delete order.birthdate;
-        delete order.zipcode;
+        //delete order.zipcode;
         delete order.phonenumber;
-        delete order.state;
-        delete order.city;
-        delete order.neighborhood;
-        delete order.street;
-        delete order.number;
-        delete order.complement;
+        // delete order.state;
+        // delete order.city;
+        // delete order.neighborhood;
+        // delete order.street;
+        // delete order.number;
+        // delete order.complement;
 
         order.user = user;
 
