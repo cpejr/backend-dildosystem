@@ -15,6 +15,7 @@ orderValidate.create = {
         paymentType: Joi.string().required(),
         trackprice: Joi.number().required(),
         tracktype: Joi.string().required(),
+        address_id: Joi.string().required()
     })
 }
 
@@ -26,6 +27,15 @@ orderValidate.index = {
     }),
     [Segments.PARAMS]: Joi.object().keys({
         id: Joi.string().optional(),
+    })
+}
+
+orderValidate.getOne = {
+    [Segments.PARAMS]: Joi.object().keys({
+        id: Joi.string().required()
+    }),
+    [Segments.QUERY]: Joi.object().keys({
+        order_id: Joi.string().required()
     })
 }
 
