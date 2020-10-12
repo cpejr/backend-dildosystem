@@ -61,8 +61,11 @@ module.exports = {
       ? authHeader.split(" ")
       : [undefined, undefined];
 
-    if (!token && !scheme)
+    if (!token && !scheme) {
+      const user = {}
+      request.session = user; 
       return next();
+    }
 
     if (!token || token === null)
       return response.status(401).json({ error: "No token provided" });

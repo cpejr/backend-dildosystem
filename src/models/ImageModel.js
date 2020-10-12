@@ -9,7 +9,7 @@ module.exports = {
             if (subproduct_id === null) {
                 existing = await connection('images').where({ product_id: product_id }).count("id").first();
             } else {
-                existing = await connection('images').where({ subproduct_id: subproduct_id });
+                existing = await connection('images').where({ subproduct_id: subproduct_id }).count("id").first();
             }
 
             const imageArray = images.map((imageData) => {

@@ -44,7 +44,7 @@ module.exports = {
             return obj.id === subproduct.product_id;
           })
           const newProduct = { ...product, subproduct };
-          console.log("newProduct: ", newProduct);
+          //console.log("newProduct: ", newProduct);
           return (newProduct)
         })
         products = products.filter(
@@ -489,9 +489,10 @@ module.exports = {
     return productPrice;
   },
 
-  async findImages(ids) {
+  async findImages(ids, isAdmin) {
     try {
       console.log("ids: ", ids);
+
       const result = await connection("images AS img")
         .select("*")
         .whereIn("img.product_id", ids)

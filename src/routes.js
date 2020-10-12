@@ -88,6 +88,6 @@ routes.delete('/carousel/:id', authenticateToken, isAdmin, celebrate(CarouselVal
 //Images
 routes.post('/images', authenticateToken, isAdmin, imageMultUpload(undefined,'imageFiles'), celebrate(productValidate.uploadFiles), ProductController.uploadFiles);
 routes.delete('/image/:id', authenticateToken, isAdmin, celebrate(productValidate.deleteFile), ProductController.deleteFile)
-routes.get('/image/:ids', celebrate(productValidate.getImages), ProductController.getImages)
+routes.get('/images/:ids', authenticateOptionalToken, celebrate(productValidate.getImages), ProductController.getImages)
 
 module.exports = routes;
