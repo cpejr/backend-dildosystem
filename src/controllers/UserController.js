@@ -3,11 +3,24 @@ const FirebaseModel = require('../models/FirebaseModel');
 const UserModel = require('../models/UserModel');
 const { forgottenPassword } = require('../validators/UserValidator');
 
+const Email = require('../mail/mail.js')
+
 module.exports = {
   async index(request, response) {
     const { user_status } = request.query;
     let query = user_status ? { user_status } : {};
     const users = await UserModel.getUsers(query);
+
+    const data = {
+      to: 'ohnitiv300@gmail.com',
+      subject: 'Testeeeeee',
+      text: 'OI TO FUNCIONADO!',
+    }
+
+    Email.sendEmail(data);
+
+
+
     return response.json(users);
   },
 
@@ -29,6 +42,16 @@ module.exports = {
 
       delete user.password;
       await connection('users').insert(user);
+
+      // const data = {
+      //   to: 'ohnitiv300@gmail.com',
+      //   subject: 'Testeeeeee',
+      //   text: 'OI TO FUNCIONADO!',
+      //   attachments: 'none'
+      // }
+
+      // Email.sendEmail(data);
+      
     } catch (err) {
 
       if (firebaseUid)
