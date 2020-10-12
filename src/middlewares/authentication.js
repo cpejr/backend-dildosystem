@@ -63,7 +63,7 @@ module.exports = {
 
     if (!token && !scheme) {
       const user = {}
-      request.session = user; 
+      request.session = {user: user}; 
       return next();
     }
 
