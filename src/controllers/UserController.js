@@ -17,7 +17,12 @@ module.exports = {
       text: 'OI TO FUNCIONADO!',
     }
 
-    Email.sendEmail(data);
+    // Email.orderStatusMail(data);
+
+    Email.resgisterMail(data);
+    Email.orderStatusMail(data);
+    Email.retailerAprovalMail(data);
+    Email.orderReceiviedMail(data);
 
 
 
@@ -43,14 +48,13 @@ module.exports = {
       delete user.password;
       await connection('users').insert(user);
 
-      // const data = {
-      //   to: 'ohnitiv300@gmail.com',
-      //   subject: 'Testeeeeee',
-      //   text: 'OI TO FUNCIONADO!',
-      //   attachments: 'none'
-      // }
+      const data = {
+        to: user.email,
+        subject: 'Bem Vindo',
+        text: 'Loja Casulus'
+      }
 
-      // Email.sendEmail(data);
+      Email.resgisterMail(data);
       
     } catch (err) {
 

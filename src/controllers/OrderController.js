@@ -2,6 +2,8 @@ const OrderModel = require("../models/OrderModel");
 const ProductModel = require("../models/ProductModel");
 const { v1: uuidv1 } = require('uuid');
 
+const Email = require('../mail/mail.js')
+
 module.exports = {
   async index(request, response) {
     try {
@@ -25,6 +27,15 @@ module.exports = {
       const { id } = request.params;
       const fields = request.body;
       const result = await OrderModel.updateOrder(id, fields);
+
+      const data = {
+        to: user.email,
+        subject: 'Bem Vindo',
+        text: 'Loja Casulus',
+        order_status: fields
+      }
+
+      Email.orderStatusMail(data)
 
       return response.status(200).json(result.data);
     } catch (err) {
@@ -128,6 +139,16 @@ module.exports = {
       await OrderModel.createProductOrder(products);
 
       response.status(200).json({ order_id });
+
+      const dataMail = {
+        to: user.email,
+        subject: 'Bem Vindo',
+        text: 'Loja Casulus'
+      }
+
+      Email.orderReceiviedMail(dataMail);
+
+
     } catch (err) {
       if (err.errno === 19)
         return response.status(400).json({ notification: "Invalid ids" });

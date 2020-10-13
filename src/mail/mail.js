@@ -1,6 +1,7 @@
 require('dotenv').config();
 
 const nodemailer = require("nodemailer");
+const nodemailerExpressHandlebars = require('nodemailer-express-handlebars');
 const hbs = require('nodemailer-express-handlebars');
 const path = require('path');
 
@@ -36,7 +37,7 @@ module.exports = {
       to: data.to,
       subject: data.subject,
       text: data.text,
-      template: 'teste',
+      template: 'register',
       attachments: [{
         filename: 'logoCasulus.png',
         path: path.join(__dirname, '/images/logoCasulus.png'),
@@ -74,7 +75,7 @@ module.exports = {
       to: data.to,
       subject: data.subject,
       text: data.text,
-      template: 'teste',
+      template: 'register',
       attachments: [{
         filename: 'logoCasulus.png',
         path: path.join(__dirname, '/images/logoCasulus.png'),
@@ -89,6 +90,11 @@ module.exports = {
         filename: 'ladys-legs2.jpg',
         path: path.join(__dirname, '/images/ladys-legs2.jpg'),
         cid: 'testImage2'
+      },
+      {
+        filename: 'isnta-icon.jpg',
+        path: path.join(__dirname, '/images/insta-icon.jpg'),
+        cid: 'instaIcon'
       }
     ]
     };
@@ -125,6 +131,11 @@ module.exports = {
         filename: 'ladys-legs2.jpg',
         path: path.join(__dirname, '/images/ladys-legs2.jpg'),
         cid: 'testImage2'
+      },
+      {
+        filename: 'isnta-icon.jpg',
+        path: path.join(__dirname, '/images/insta-icon.jpg'),
+        cid: 'instaIcon'
       }
     ]
     };
@@ -150,7 +161,12 @@ module.exports = {
         filename: 'logoCasulus.png',
         path: path.join(__dirname, '/images/logoCasulus.png'),
         cid: 'logoCasulus'
-      }]};
+      },
+      {
+        filename: 'isnta-icon.jpg',
+        path: path.join(__dirname, '/images/insta-icon.jpg'),
+        cid: 'instaIcon'
+      }],};
    
     const mailSent = await transporter.sendMail(config, (err, info) => {
       if(err){
@@ -164,6 +180,26 @@ module.exports = {
   },
 
   async orderStatusMail(data) {
+
+    let order_status = 'Entregue a transportadora.'
+
+    if(data.order_status === 'paid'){
+      order_status = 'Pago.'
+    }
+    if(data.order_status === 'pending'){
+      order_status = 'Aguardando aprovação.'
+    }
+    if(data.order_status === 'mailed'){
+      order_status = 'Entregue a transportadora.'
+    }
+    if(data.order_status === 'delivered'){
+      order_status = 'O seu pedido chegou!'
+    }
+    else {
+      order_status = 'Em andamento.'
+    }
+    
+
     const config = {
       from: `Loja Casulus <${process.env.EMAIL_LOGIN}>`,
       to: data.to,
@@ -174,7 +210,13 @@ module.exports = {
         filename: 'logoCasulus.png',
         path: path.join(__dirname, '/images/logoCasulus.png'),
         cid: 'logoCasulus'
-      }]};
+      },
+      {
+        filename: 'isnta-icon.jpg',
+        path: path.join(__dirname, '/images/insta-icon.jpg'),
+        cid: 'instaIcon'
+      }],
+      context: { order_status }};
    
     const mailSent = await transporter.sendMail(config, (err, info) => {
       if(err){
