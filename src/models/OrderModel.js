@@ -59,6 +59,13 @@ module.exports = {
             "u.birthdate",
             //"u.zipcode",
             "u.phonenumber",
+            "a.zipcode",
+            "a.state",
+            "a.city",
+            "a.neighborhood",
+            "a.street",
+            "a.number",
+            "a.complement",
             // "u.state",
             // "u.city",
             // "u.neighborhood",
@@ -67,6 +74,7 @@ module.exports = {
             // "u.complement"
           )
           .join("users AS u", "u.id", "=", "o.user_id")
+          .join("address AS a", "a.id", "=", connection.raw("address_id"))
           .where(query)
           .andWhere("o.user_id", "=", byid)
           .limit(ORDERS_PER_PAGE)
@@ -84,6 +92,13 @@ module.exports = {
             "u.birthdate",
             // "u.zipcode",
             "u.phonenumber",
+            "a.zipcode",
+            "a.state",
+            "a.city",
+            "a.neighborhood",
+            "a.street",
+            "a.number",
+            "a.complement",
             // "u.state",
             // "u.city",
             // "u.neighborhood",
@@ -92,6 +107,7 @@ module.exports = {
             // "u.complement"
           )
           .join("users AS u", "u.id", "=", "o.user_id")
+          .join("address AS a", "a.id", "=", connection.raw("address_id"))
           .where(query)
           .andWhere("u.id", "=", byuserid)
           .limit(ORDERS_PER_PAGE)
@@ -109,6 +125,13 @@ module.exports = {
             "u.birthdate",
             //"u.zipcode",
             "u.phonenumber",
+            "a.zipcode",
+            "a.state",
+            "a.city",
+            "a.neighborhood",
+            "a.street",
+            "a.number",
+            "a.complement",
             // "u.state",
             // "u.city",
             // "u.neighborhood",
@@ -117,6 +140,7 @@ module.exports = {
             // "u.complement"
           )
           .join("users AS u", "u.id", "=", "o.user_id")
+          .join("address AS a", "a.id", "=", connection.raw("address_id"))
           .where(query)
           .limit(ORDERS_PER_PAGE)
           .offset((page - 1) * ORDERS_PER_PAGE);
