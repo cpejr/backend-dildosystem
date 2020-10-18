@@ -33,7 +33,7 @@ module.exports = {
       });
     });
   },
-  
+
 
   getOrders(page = 1, query, byid, byuserid) {
     //  SELECT o.*,op.product_id,op.product_quantity,op.subproduct_id
@@ -79,8 +79,8 @@ module.exports = {
           .andWhere("o.user_id", "=", byid)
           .limit(ORDERS_PER_PAGE)
           .offset((page - 1) * ORDERS_PER_PAGE);
-      } 
-      else if(byuserid != undefined){
+      }
+      else if (byuserid != undefined) {
         query2 = pipeline
           .select(
             "o.*",
@@ -217,41 +217,41 @@ module.exports = {
     });
   },
 
-  getOne(id, order_id){
-    return new Promise(async(resolve, reject) => {
-      
+  getOne(id, order_id) {
+    return new Promise(async (resolve, reject) => {
+
       const query1 = connection("orders")
         .select(
-        "orders.*",
-        "a.zipcode",
-        "a.state",
-        "a.city",
-        "a.neighborhood",
-        "a.street",
-        "a.number",
-        "a.complement",
+          "orders.*",
+          "a.zipcode",
+          "a.state",
+          "a.city",
+          "a.neighborhood",
+          "a.street",
+          "a.number",
+          "a.complement",
         )
         .where("orders.id", "=", order_id)
         .andWhere("orders.user_id", "=", id)
         .join("address AS a", "a.id", "=", connection.raw("orders.address_id"))
         .first();
-      
+
       const query2 = connection("users AS u")
         .select(
-        "u.id AS order_user_id",  
-        "u.name",
-        "u.email",
-        "u.type",
-        "u.cpf",
-        "u.birthdate",
-        "u.phonenumber",
+          "u.id AS order_user_id",
+          "u.name",
+          "u.email",
+          "u.type",
+          "u.cpf",
+          "u.birthdate",
+          "u.phonenumber",
         )
         .where("order_user_id", id)
         .first();
-        
+
       const query3 = connection("orders_products AS op")
         .join("products AS p", "op.product_id", "=", "p.id")
-        .select("op.*", "p.*")  
+        .select("op.*", "p.*")
         .where("op.order_id", order_id);
 
       const [order, user, products] = await Promise.all([query1, query2, query3])
@@ -261,7 +261,7 @@ module.exports = {
         ...user,
         products
       }
-      
+
       resolve(result);
     }
     )
