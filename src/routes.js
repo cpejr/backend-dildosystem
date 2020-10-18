@@ -63,6 +63,7 @@ routes.put('/updateSubproduct/:id', authenticateToken, isAdmin, imageUpload('ima
 routes.post('/newOrder', authenticateToken, celebrate(orderValidate.create), generateId, OrderController.create);
 routes.get('/orders', authenticateToken, isAdmin,celebrate(orderValidate.index), OrderController.index);
 routes.get('/orders/:id', authenticateToken, isAdminOrSelf,celebrate(orderValidate.index), OrderController.index);
+routes.get('/order/:id', authenticateToken, isAdminOrSelf,celebrate(orderValidate.getOne), OrderController.getOne);
 routes.put('/order/:id', authenticateToken, isAdmin, celebrate(orderValidate.update), OrderController.update);
 routes.delete('/order/:order_id', authenticateToken, isAdmin, celebrate(orderValidate.delete), OrderController.delete);
 
@@ -87,6 +88,6 @@ routes.delete('/carousel/:id', authenticateToken, isAdmin, celebrate(CarouselVal
 //Images
 routes.post('/images', authenticateToken, isAdmin, imageMultUpload(undefined,'imageFiles'), celebrate(productValidate.uploadFiles), ProductController.uploadFiles);
 routes.delete('/image/:id', authenticateToken, isAdmin, celebrate(productValidate.deleteFile), ProductController.deleteFile)
-routes.get('/image/:ids', celebrate(productValidate.getImages), ProductController.getImages)
+routes.get('/images/:ids', authenticateOptionalToken, celebrate(productValidate.getImages), ProductController.getImages)
 
 module.exports = routes;

@@ -4,6 +4,7 @@ const CategoryModel = require('../models/CategoryModel');
 const ImageModel = require("../models/ImageModel");
 const { uploadFile, deleteFile } = require('../models/GoogleDriveModel');
 const { getImages } = require('../validators/ProductValidator');
+const { isAdmin } = require('../middlewares/authentication');
 
 module.exports = {
 
@@ -117,11 +118,14 @@ module.exports = {
 
   async getImages(request, response) {
     try {
-      let { ids } = request.params;
+      let { ids } = request.params; //Coloque ids de produtos e subprodutos no params
+      let { user } = request.session;
     
-      const idVector = ids.split("-");
+      let isAdmin = (user && user.type === "admin") ? true : false;
+
+      const idVector = ids.split("-*-"); //Atenção aqui!! Tem que ser separados por esta string!
       
-      const result = await ProductModel.findImages(idVector);
+      const result = await ProductModel.findImages(idVector, isAdmin);
 
       return response.status(200).json(result);
     } catch (err) {

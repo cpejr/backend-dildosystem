@@ -1,6 +1,7 @@
 const OrderModel = require("../models/OrderModel");
 const ProductModel = require("../models/ProductModel");
 const { v1: uuidv1 } = require('uuid');
+const { getOne } = require("./UserController");
 
 const Email = require('../mail/mail.js')
 
@@ -18,6 +19,22 @@ module.exports = {
       console.log(err);
       return response.status(500).json({
         notification: "Internal server error while trying to get orders",
+      });
+    }
+  },
+
+  async getOne(request, response){
+    try{
+      const {id} = request.params;
+      const {order_id} = request.query;
+      const result = await OrderModel.getOne(id, order_id);
+
+      response.status(200).json(result);
+    }
+    catch(err){
+      console.log(err);
+      return response.status(500).json({
+        notification: "Internal server error while trying to get one order",
       });
     }
   },
@@ -59,7 +76,7 @@ module.exports = {
 
   async create(request, response) {
     try {
-      let { products, paymentType, tracktype, trackprice, id } = request.body;
+      let { products, paymentType, tracktype, trackprice, id, address_id } = request.body;
       const user = request.session.user;
 
       console.log('esse eh o products: ', products)
@@ -70,6 +87,7 @@ module.exports = {
         track_type: tracktype,
         payment_type: paymentType,
         user_id: user.id,
+        address_id: address_id
       };
 
       let products_id = [];

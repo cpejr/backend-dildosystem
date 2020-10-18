@@ -10,14 +10,7 @@ userValidate.create = {
         type: Joi.string().valid("retailer", "wholesaler").required(),
         cpf: Joi.string().required(),
         birthdate: Joi.string().optional(),
-        zipcode: Joi.string().optional(),
         phonenumber: Joi.string().optional(),
-        state: Joi.string().optional(),
-        city: Joi.string().optional(),
-        neighborhood: Joi.string().optional(),
-        street: Joi.string().optional(),
-        number: Joi.string().optional(),
-        complement: Joi.string().optional(),
     })
 }
 
@@ -45,14 +38,7 @@ userValidate.update = {
         type: Joi.string().valid("retailer", "wholesaler").optional(),
         cpf: Joi.string().optional(),
         birthdate: Joi.string().optional(),
-        zipcode: Joi.string().optional(),
         phonenumber: Joi.string().optional(),
-        state: Joi.string().optional(),
-        city: Joi.string().optional(),
-        neighborhood: Joi.string().optional(),
-        street: Joi.string().optional(),
-        number: Joi.string().optional(),
-        complement: Joi.string().optional(),
         user_status: Joi.string().valid('pending', 'approved', 'refused').optional(),
     })
     
