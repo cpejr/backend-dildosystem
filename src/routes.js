@@ -98,8 +98,8 @@ routes.get('/images/:ids', authenticateOptionalToken, celebrate(productValidate.
 
 
 //Address
-routes.get('/carousel', AddressController.index);
-routes.post('/newAddress', authenticateToken, isAdmin, generateId, AddressController.createAddress);
+routes.get('/address', AddressController.index);
+routes.post('/address', authenticateToken, isAdmin, generateId, AddressController.createAddress);
 routes.put('/address/:id', authenticateToken, isAdmin, celebrate(addressValidate.update), AddressController.updateAddress);
 routes.delete('/address/:id', authenticateToken, isAdmin, celebrate(addressValidate.delete), AddressController.deleteAddress);
 
