@@ -70,6 +70,7 @@ module.exports = {
   },
 
   async resgisterMail(data) {
+    const user_name = data.user_name
     const config = {
       from: `Loja Casulus <${process.env.EMAIL_LOGIN}>`,
       to: data.to,
@@ -95,8 +96,8 @@ module.exports = {
         filename: 'isnta-icon.jpg',
         path: path.join(__dirname, '/images/insta-icon.jpg'),
         cid: 'instaIcon'
-      }
-    ]
+      }],
+    context: { user_name }
     };
    
     const mailSent = await transporter.sendMail(config, (err, info) => {
@@ -151,6 +152,10 @@ module.exports = {
   },
 
   async orderReceiviedMail(data) {
+    const user_name = data.user_name
+    const order_number = data.id
+    const products = data.products.data[0].products
+    const { zipcode, state, city, neighborhood, street, number, complement }= data.products.data[0].user
     const config = {
       from: `Loja Casulus <${process.env.EMAIL_LOGIN}>`,
       to: data.to,
@@ -166,7 +171,8 @@ module.exports = {
         filename: 'isnta-icon.jpg',
         path: path.join(__dirname, '/images/insta-icon.jpg'),
         cid: 'instaIcon'
-      }],};
+      }],
+      context: { user_name, order_number, products, zipcode, state, city, neighborhood, street, number, complement }};
    
     const mailSent = await transporter.sendMail(config, (err, info) => {
       if(err){

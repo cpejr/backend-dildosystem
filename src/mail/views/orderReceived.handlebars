@@ -5,6 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        h1 {
+            text-align: center;
+        }
+    </style>
 </head>
 
 <body style="margin: 0; padding: 0;">
@@ -19,20 +24,69 @@
                 <td bgcolor="#ffffff" style="padding: 40px 30px 40px 30px;">
                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
                         <tr>
-                            <h1 style="color: black; font-family: Arial, sans-serif; padding-left: 140px">
+                            <h1 style="color: black; font-family: Arial, sans-serif;">
                                 Obrigado pelo seu pedido!
                             </h1>
                         </tr>
                         <tr>
-                            <td style="color: black; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 30px 0;">
-                                <h4>Olá, estamos aguardando a aprovação do pagamento para darmos andamento ao seu pedido.</h4>
+                            <td
+                                style="color: black; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 30px 0;">
+                                <h4>Olá {{user_name}}, estamos aguardando a aprovação do pagamento para darmos andamento
+                                    ao seu pedido.</h4>
                                 <div>Você pode acompanhar seu pedido no nosso site.</div>
                             </td>
                         </tr>
                         <tr>
                             <table border="0" cellpadding="0" cellspacing="0" width="100%">
                                 <tr>
-                                    {{!-- <td width="260" valign="top">
+                                <tr>
+                                    <td
+                                        style="color: black; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 30px 0;">
+
+                                        <div>Número do pedido:<h4>{{ order_number }}</h4>
+                                        </div>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="260" valign="top">
+                                        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                            <h3>RECEBER</h3>
+                                            <span>{{ user_name }}</span>
+                                            <p>
+                                                Rua {{street}}, {{ number }} - {{ complement }} <br>
+                                                {{ neighborhood }} - {{ city }} - {{ state }} <br>
+                                                CEP {{ zipcode }}
+                                            </p>
+                                            <tr>
+                                                <td
+                                                    style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 25px 0 0 0;">
+
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+
+                                {{#each products}}
+                                {{#if name}}
+                                <tr>
+                                    <td
+                                        style="color: black; font-family: Arial, sans-serif; font-size: 18px; line-height: 20px; padding: 25px 0 0 0; text-align: left;">
+                                        <div>
+                                            {{name}}
+                                        </div>
+                                        <div style="color: grey;">
+                                            {{product_quantity}} un. R$ {{client_sale_price}}
+                                        </div>
+                                    </td>
+
+
+                                </tr>
+                                {{/if}}
+                                {{/each}}
+
+                                {{!-- <td width="260" valign="top">
                                         <table border="0" cellpadding="0" cellspacing="0" width="100%">
                                             <tr>
                                                 <td>
@@ -65,38 +119,38 @@
                                             </tr>
                                         </table>
                                     </td> --}}
-                                </tr>
-                            </table>
                         </tr>
                     </table>
-                </td>
-            </tr>
-            <tr>
-                <td bgcolor="#ffffff" style="padding: 30px 30px 30px 30px;">
-                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                        <tr>
-                            <td width="75%">
-                                &reg; Loja Casulus 2020<br />
-                                Siga-nos nas redes socials
-                            </td>
-                            <td align="right">
-                                <table border="0" cellpadding="0" cellspacing="0">
-                                    <tr>
-                                        <td>
-                                            <a href="https://instagram.com/casulus.sex?igshid=uu3iopzygl54">
-                                                <img src="cid:instaIcon" alt="Instagram" width="38" height="38"
-                                                    style="display: block;" border="0" />
-                                            </a>
-                                        </td>
-                                        <td style="font-size: 0; line-height: 0;" width="20">&nbsp;</td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
             </tr>
         </table>
+        </td>
+        </tr>
+        <tr>
+            <td bgcolor="#ffffff" style="padding: 30px 30px 30px 30px;">
+                <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                    <tr>
+                        <td width="75%">
+                            &reg; Loja Casulus 2020<br />
+                            Siga-nos nas redes socials
+                        </td>
+                        <td align="right">
+                            <table border="0" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td>
+                                        <a href="https://instagram.com/casulus.sex?igshid=uu3iopzygl54">
+                                            <img src="cid:instaIcon" alt="Instagram" width="38" height="38"
+                                                style="display: block;" border="0" />
+                                        </a>
+                                    </td>
+                                    <td style="font-size: 0; line-height: 0;" width="20">&nbsp;</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
     </table>
 </body>
 

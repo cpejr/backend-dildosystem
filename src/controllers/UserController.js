@@ -15,6 +15,9 @@ module.exports = {
       to: 'ohnitiv300@gmail.com',
       subject: 'Testeeeeee',
       text: 'OI TO FUNCIONADO!',
+      user_name: 'user-name',
+      id: '123456789',
+      order_status: 'mailed',
     }
 
     // Email.orderStatusMail(data);
@@ -51,7 +54,8 @@ module.exports = {
       const data = {
         to: user.email,
         subject: 'Bem Vindo',
-        text: 'Loja Casulus'
+        text: 'Loja Casulus',
+        user_name: user.name
       }
 
       Email.resgisterMail(data);

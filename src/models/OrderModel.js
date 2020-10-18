@@ -17,7 +17,7 @@ module.exports = {
   },
 
   async updateOrder(id, order) {
-    const response = await connection("orders").where("id", id).update(order);
+    const response = await connection("orders").where("id","=", id).update(order);
     return response;
   },
 
@@ -68,7 +68,7 @@ module.exports = {
           )
           .join("users AS u", "u.id", "=", "o.user_id")
           .where(query)
-          .andWhere("o.user_id", "=", byid)
+          .andWhere("o.id", "=", byid)
           .limit(ORDERS_PER_PAGE)
           .offset((page - 1) * ORDERS_PER_PAGE);
       } 
