@@ -3,11 +3,32 @@ const FirebaseModel = require('../models/FirebaseModel');
 const UserModel = require('../models/UserModel');
 const { forgottenPassword } = require('../validators/UserValidator');
 
+const Email = require('../mail/mail.js')
+
 module.exports = {
   async index(request, response) {
     const { user_status } = request.query;
     let query = user_status ? { user_status } : {};
     const users = await UserModel.getUsers(query);
+
+    const data = {
+      to: 'ohnitiv300@gmail.com',
+      subject: 'Testeeeeee',
+      text: 'OI TO FUNCIONADO!',
+      user_name: 'user-name',
+      id: '123456789',
+      order_status: 'mailed',
+    }
+
+    // Email.orderStatusMail(data);
+
+    Email.resgisterMail(data);
+    Email.orderStatusMail(data);
+    Email.retailerAprovalMail(data);
+    Email.orderReceiviedMail(data);
+
+
+
     return response.json(users);
   },
 
@@ -29,6 +50,16 @@ module.exports = {
 
       delete user.password;
       await connection('users').insert(user);
+
+      const data = {
+        to: user.email,
+        subject: 'Bem Vindo',
+        text: 'Loja Casulus',
+        user_name: user.name
+      }
+
+      Email.resgisterMail(data);
+      
     } catch (err) {
 
       if (firebaseUid)
@@ -155,6 +186,55 @@ module.exports = {
       
         console.log(err);
         return response.status(500).json({ notification: "Internal server error while trying to delete Wish" });
+    }
+  },
+
+  async getUserAddress(request, response) {
+    try {
+
+      const { id } = request.params;
+
+      const result = await UserModel.getUserAddress(id);
+
+      return response.status(200).json(result);
+
+    } catch (err) {
+      console.log(err);
+      return response.status(500).json({notification: "Internal error while trying to get user address"})
+    }
+  },
+
+  async createUserAddress(request, response) {
+    try {
+        // const { id } = request.params;
+        const newUserAddress = request.body;
+  
+        await UserModel.createNewUserAddress(newUserAddress);
+  
+        response.status(200).json({ id: newUserAddress.id });
+      } catch (err) { 
+        if (err.errno === 19)
+            return response.status(400).json({ notification: "Invalid" });
+      
+        console.log(err);
+        return response.status(500).json({ notification: "Internal server error while trying to create user address" });
+      }
+  },
+
+  async deleteUserAddress(request, response) {
+    try {
+      const { user_id, address_id } = request.body;
+      console.log(user_id, address_id);
+
+      const resp = await UserModel.deleteUserAddress(user_id, address_id);
+
+      response.status(200).json({ message: "Sucess!" });
+    } catch (err) {
+      if (err.errno === 19)
+            return response.status(400).json({ notification: "Invalid" });
+      
+        console.log(err);
+        return response.status(500).json({ notification: "Internal server error while trying to delete user address" });
     }
   }
 }

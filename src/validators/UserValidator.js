@@ -59,6 +59,10 @@ userValidate.forgottenPassword = {
 userValidate.wishList = {
     [Segments.PARAMS]: Joi.object().keys({
         id: Joi.string().required(),
+    }),
+    [Segments.BODY]: Joi.object().keys({
+        user_id: Joi.string().required(),
+        product_id: Joi.string().required()
     })
 }
 
@@ -66,6 +70,19 @@ userValidate.wishListDelete = {
     [Segments.BODY]: Joi.object().keys({
         user_id: Joi.string().required(),
         product_id: Joi.string().required()
+    })
+}
+
+userValidate.userAddress = {
+    [Segments.PARAMS]: Joi.object().keys({
+        id: Joi.string().required(),
+    })
+}
+
+userValidate.userAddressDelete = {
+    [Segments.BODY]: Joi.object().keys({
+        user_id: Joi.string().required(),
+        address_id: Joi.string().required()
     })
 }
 

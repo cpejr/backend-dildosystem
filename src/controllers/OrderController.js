@@ -3,6 +3,8 @@ const ProductModel = require("../models/ProductModel");
 const { v1: uuidv1 } = require('uuid');
 const { getOne } = require("./UserController");
 
+const Email = require('../mail/mail.js')
+
 module.exports = {
   async index(request, response) {
     try {
@@ -41,7 +43,27 @@ module.exports = {
     try {
       const { id } = request.params;
       const fields = request.body;
+      console.log('id do param: ', id);
+      console.log('fields do body: ', fields);
       const result = await OrderModel.updateOrder(id, fields);
+      console.log('esse eh o result babe: ', result)
+      const ord = await OrderModel.getOrders(1, {}, id );
+      
+      console.log(ord);
+
+      const data = {
+        // to: ord.data[0].user.email,
+        to: 'ohnitiv300@gmail.com',
+        subject: 'Bem Vindo',
+        text: 'Loja Casulus',
+        order_status: fields,
+        products: ord,
+        user_name: ord.data[0].user.name,
+        id: ord.data[0].id
+      }
+
+      Email.orderStatusMail(data)
+      Email.orderReceiviedMail(data)
 
       return response.status(200).json(result.data);
     } catch (err) {
@@ -56,6 +78,8 @@ module.exports = {
     try {
       let { products, paymentType, tracktype, trackprice, id, address_id } = request.body;
       const user = request.session.user;
+
+      console.log('esse eh o products: ', products)
 
       const order = {
         id: id,
@@ -146,6 +170,17 @@ module.exports = {
       await OrderModel.createProductOrder(products);
 
       response.status(200).json({ order_id });
+
+      const dataMail = {
+        to: user.email,
+        subject: 'Bem Vindo',
+        text: 'Loja Casulus',
+        order_number: id
+      }
+
+      Email.orderReceiviedMail(dataMail);
+
+
     } catch (err) {
       if (err.errno === 19)
         return response.status(400).json({ notification: "Invalid ids" });
@@ -168,6 +203,21 @@ module.exports = {
       return response.status(500).json({
         notification: "Internal server error while trying to delete order",
       });
+    }
+  },
+
+  async getOrderAddress(request, response) {
+    try {
+
+      const { id } = request.params;
+
+      const result = await OrderModel.getOrderAddressAddress(id);
+
+      return response.status(200).json(result);
+
+    } catch (err) {
+      console.log(err);
+      return response.status(500).json({notification: "Internal error while trying to get order address"})
     }
   },
 };

@@ -123,6 +123,54 @@ module.exports = {
             }
         });
 
+    },
+
+    getUserAddress(id) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let user_address = await connection("users_address")
+                    .where({ user_id: id })
+                    .join("address", "users_address.address_id", '=', 'address.id')
+                    .select('*');
+                    
+                resolve(user_address);
+            } catch (error) {
+                console.log(error);
+                reject(error);
+            }
+        });
+    },
+
+    createNewUserAddress(user_address) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let user = await connection("users_address")
+                    .insert(user_address)
+
+                resolve(user);
+            } catch (error) {
+                console.log(error);
+                reject(error);
+            }
+        });
+    },
+
+    deleteUserAddress(user_id, address_id) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let user = await connection("users_address")
+                    .where({ 
+                        user_id,
+                        address_id
+                    })
+                    .delete();
+                resolve(user);
+            } catch (error) {
+                console.log(error);
+                reject(error)
+            }
+        });
+
     }
 
 }

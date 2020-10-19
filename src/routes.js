@@ -1,6 +1,9 @@
 const express = require('express');
 const routes = express.Router();
 
+const AddressController = require('./controllers/AddressController');
+const addressValidate = require('./validators/AddressValidator');
+
 const UserController = require('./controllers/UserController');
 const userValidate = require('./validators/UserValidator');
 
@@ -37,9 +40,12 @@ routes.get('/user/:id', authenticateToken, isAdmin, celebrate(userValidate.getOn
 routes.delete('/user/:id', authenticateToken, isAdminOrSelf, celebrate(userValidate.delete), UserController.delete);
 routes.put('/user/:id', authenticateOptionalToken, isAdminOrSelf, celebrate(userValidate.update), UserController.update);
 routes.post('/forgottenPassword', celebrate(userValidate.forgottenPassword), UserController.forgottenPassword);
-routes.get('/userwishlist/:id', authenticateToken, celebrate(userValidate.wishList), UserController.getWishList)
-routes.post('/userwishlist/:id', authenticateToken, celebrate(userValidate.wishList), generateId, UserController.createWish)
+routes.get('/userwishlist/:id', authenticateToken, celebrate(userValidate.wishList), UserController.getWishList);
+routes.post('/userwishlist/:id', authenticateToken, celebrate(userValidate.wishList), generateId, UserController.createWish);
 routes.delete('/userwishlist', authenticateToken, celebrate(userValidate.wishListDelete), UserController.deleteAWish );
+routes.get('/useraddress/:id', authenticateToken, celebrate(userValidate.userAddress), UserController.getUserAddress);
+routes.post('/useraddress/:id', authenticateToken, celebrate(userValidate.userAddress), generateId, UserController.createUserAddress);
+routes.delete('/useraddress', authenticateToken, celebrate(userValidate.userAddressDelete), UserController.deleteUserAddress );
 
 //Session
 routes.post('/login', celebrate(loginValidate.signin), SessionController.signin);
@@ -89,5 +95,12 @@ routes.delete('/carousel/:id', authenticateToken, isAdmin, celebrate(CarouselVal
 routes.post('/images', authenticateToken, isAdmin, imageMultUpload(undefined,'imageFiles'), celebrate(productValidate.uploadFiles), ProductController.uploadFiles);
 routes.delete('/image/:id', authenticateToken, isAdmin, celebrate(productValidate.deleteFile), ProductController.deleteFile)
 routes.get('/images/:ids', authenticateOptionalToken, celebrate(productValidate.getImages), ProductController.getImages)
+
+
+//Address
+routes.get('/address', AddressController.index);
+routes.post('/address', authenticateToken, isAdmin, generateId, AddressController.createAddress);
+routes.put('/address/:id', authenticateToken, isAdmin, celebrate(addressValidate.update), AddressController.updateAddress);
+routes.delete('/address/:id', authenticateToken, isAdmin, celebrate(addressValidate.delete), AddressController.deleteAddress);
 
 module.exports = routes;

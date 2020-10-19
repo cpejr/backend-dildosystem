@@ -133,6 +133,10 @@ module.exports = {
           "products.min_stock",
           "products.image_id",
           "subcategory_id",
+          "products.weight",
+          "products.height",
+          "products.width",
+          "products.length"
         ];
 
         if (type === "admin" || type === "wholesaler") //Adiciona colunas na busca dependendo do tipo de usuário.
