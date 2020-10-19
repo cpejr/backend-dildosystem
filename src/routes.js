@@ -99,8 +99,8 @@ routes.get('/images/:ids', authenticateOptionalToken, celebrate(productValidate.
 
 //Address
 routes.get('/address', AddressController.index);
-routes.post('/address', authenticateToken, isAdmin, generateId, AddressController.createAddress);
-routes.put('/address/:id', authenticateToken, isAdmin, celebrate(addressValidate.update), AddressController.updateAddress);
-routes.delete('/address/:id', authenticateToken, isAdmin, celebrate(addressValidate.delete), AddressController.deleteAddress);
+routes.post('/address', authenticateToken, generateId, AddressController.createAddress);
+routes.put('/address/:id', authenticateToken, celebrate(addressValidate.update), AddressController.updateAddress);
+routes.delete('/address/:id', authenticateToken, celebrate(addressValidate.delete), AddressController.deleteAddress);
 
 module.exports = routes;

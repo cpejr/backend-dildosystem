@@ -1,6 +1,7 @@
 const { deleteAddress } = require("../models/AddressModel");
 const AddressModel = require("../models/AddressModel");
 
+
 module.exports = {
     async index(request, response) {
         try {
@@ -33,7 +34,7 @@ module.exports = {
         try {
             const newAddress = request.body;
 
-            await AddressModel.createNewAddress(newAddress);
+            await AddressModel.createNewAddress(newAddress, request.session.user.id);
 
             response.status(200).json({ id: newAddress.id });
         } catch (err) {
