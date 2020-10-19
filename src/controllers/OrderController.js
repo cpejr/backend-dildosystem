@@ -205,4 +205,19 @@ module.exports = {
       });
     }
   },
+
+  async getOrderAddress(request, response) {
+    try {
+
+      const { id } = request.params;
+
+      const result = await OrderModel.getOrderAddressAddress(id);
+
+      return response.status(200).json(result);
+
+    } catch (err) {
+      console.log(err);
+      return response.status(500).json({notification: "Internal error while trying to get order address"})
+    }
+  },
 };
