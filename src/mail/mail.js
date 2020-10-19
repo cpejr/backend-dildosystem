@@ -155,7 +155,7 @@ module.exports = {
     const user_name = data.user_name
     const order_number = data.id
     const products = data.products.data[0].products
-    const { zipcode, state, city, neighborhood, street, number, complement }= data.products.data[0].user
+    const { zipcode, state, city, neighborhood, street, number, complement }= data.products.data[0]
     const config = {
       from: `Loja Casulus <${process.env.EMAIL_LOGIN}>`,
       to: data.to,

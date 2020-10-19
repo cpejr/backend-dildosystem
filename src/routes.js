@@ -2,7 +2,7 @@ const express = require('express');
 const routes = express.Router();
 
 const AddressController = require('./controllers/AddressController');
-const addressValidate = require('./validators/AddressValidatorValidator');
+const addressValidate = require('./validators/AddressValidator');
 
 const UserController = require('./controllers/UserController');
 const userValidate = require('./validators/UserValidator');
