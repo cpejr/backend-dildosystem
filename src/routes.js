@@ -36,7 +36,7 @@ const { generateId } = require('./middlewares/idGenerator');
 //Users
 routes.post('/user', celebrate(userValidate.create), generateId, UserController.create);
 routes.get('/users', authenticateToken, isAdmin, celebrate(userValidate.index), UserController.index);
-routes.get('/user/:id', authenticateToken, isAdmin, celebrate(userValidate.getOne), UserController.getOne);
+routes.get('/user/:id', authenticateToken, isAdminOrSelf, celebrate(userValidate.getOne), UserController.getOne);
 routes.delete('/user/:id', authenticateToken, isAdminOrSelf, celebrate(userValidate.delete), UserController.delete);
 routes.put('/user/:id', authenticateOptionalToken, isAdminOrSelf, celebrate(userValidate.update), UserController.update);
 routes.post('/forgottenPassword', celebrate(userValidate.forgottenPassword), UserController.forgottenPassword);
