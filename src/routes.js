@@ -32,6 +32,8 @@ const { celebrate, Segments, Joi } = require('celebrate');
 const imageUpload = require('./middlewares/imageUpload');
 const imageMultUpload = require('./middlewares/imageMultUpload');
 const { generateId } = require('./middlewares/idGenerator');
+const { resolve } = require('path');
+const CieloController = require('./controllers/CieloController');
 
 //Users
 routes.post('/user', celebrate(userValidate.create), generateId, UserController.create);
@@ -72,6 +74,9 @@ routes.get('/orders/:id', authenticateToken, isAdminOrSelf,celebrate(orderValida
 routes.get('/order/:id', authenticateToken, isAdminOrSelf,celebrate(orderValidate.getOne), OrderController.getOne);
 routes.put('/order/:id', authenticateToken, isAdmin, celebrate(orderValidate.update), OrderController.update);
 routes.delete('/order/:order_id', authenticateToken, isAdmin, celebrate(orderValidate.delete), OrderController.delete);
+
+//Cielo API
+routes.post('/cielo', CieloController.print);
 
 //GoogleDrive
 routes.get('/validateCredentials', DriveController.validateCredentials)
