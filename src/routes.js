@@ -32,11 +32,13 @@ const { celebrate, Segments, Joi } = require('celebrate');
 const imageUpload = require('./middlewares/imageUpload');
 const imageMultUpload = require('./middlewares/imageMultUpload');
 const { generateId } = require('./middlewares/idGenerator');
+const { resolve } = require('path');
+const CieloController = require('./controllers/CieloController');
 
 //Users
 routes.post('/user', celebrate(userValidate.create), generateId, UserController.create);
 routes.get('/users', authenticateToken, isAdmin, celebrate(userValidate.index), UserController.index);
-routes.get('/user/:id', authenticateToken, isAdmin, celebrate(userValidate.getOne), UserController.getOne);
+routes.get('/user/:id', authenticateToken, isAdminOrSelf, celebrate(userValidate.getOne), UserController.getOne);
 routes.delete('/user/:id', authenticateToken, isAdminOrSelf, celebrate(userValidate.delete), UserController.delete);
 routes.put('/user/:id', authenticateOptionalToken, isAdminOrSelf, celebrate(userValidate.update), UserController.update);
 routes.post('/forgottenPassword', celebrate(userValidate.forgottenPassword), UserController.forgottenPassword);
@@ -73,6 +75,9 @@ routes.get('/order/:id', authenticateToken, isAdminOrSelf,celebrate(orderValidat
 routes.put('/order/:id', authenticateToken, isAdmin, celebrate(orderValidate.update), OrderController.update);
 routes.delete('/order/:order_id', authenticateToken, isAdmin, celebrate(orderValidate.delete), OrderController.delete);
 
+//Cielo API
+routes.post('/cielo', CieloController.print);
+
 //GoogleDrive
 routes.get('/validateCredentials', DriveController.validateCredentials)
 
@@ -99,8 +104,8 @@ routes.get('/images/:ids', authenticateOptionalToken, celebrate(productValidate.
 
 //Address
 routes.get('/address', AddressController.index);
-routes.post('/address', authenticateToken, isAdmin, generateId, AddressController.createAddress);
-routes.put('/address/:id', authenticateToken, isAdmin, celebrate(addressValidate.update), AddressController.updateAddress);
-routes.delete('/address/:id', authenticateToken, isAdmin, celebrate(addressValidate.delete), AddressController.deleteAddress);
+routes.post('/address', authenticateToken, generateId, AddressController.createAddress);
+routes.put('/address/:id', authenticateToken, celebrate(addressValidate.update), AddressController.updateAddress);
+routes.delete('/address/:id', authenticateToken, celebrate(addressValidate.delete), AddressController.deleteAddress);
 
 module.exports = routes;
