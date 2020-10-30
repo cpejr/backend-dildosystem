@@ -19,9 +19,11 @@ module.exports = {
 
   async update(request, response) {
     try {
-      const { id } = request.params;
-      const position = request.body;
-      const result = await CarouselModel.updateCarousel(id, position);
+      const info = request.body;
+  
+        const result = await CarouselModel.updateCarousel(info.info);
+
+       
 
       return response.status(200).json("Atualizado com sucesso!");
     } catch (err) {

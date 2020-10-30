@@ -93,7 +93,7 @@ routes.get('/categories', CategoryController.getCategories)
 //Carousel
 routes.get('/carousel', CarouselController.index);
 routes.post('/newCarousel', authenticateToken, isAdmin, imageUpload('imageFile'), generateId, CarouselController.create);
-routes.put('/carousel/:id', authenticateToken, isAdmin, celebrate(CarouselValidate.updateCarousel), CarouselController.update);
+routes.put('/carousel', authenticateToken, isAdmin, celebrate(CarouselValidate.updateCarousel), CarouselController.update);
 routes.delete('/carousel/:id', authenticateToken, isAdmin, celebrate(CarouselValidate.deleteCarousel), CarouselController.delete);
 
 //Images

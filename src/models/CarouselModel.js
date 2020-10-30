@@ -16,20 +16,25 @@ module.exports = {
     });
   },
 
-  updateCarousel(id, fields) {
+  updateCarousel(info) {
     return new Promise(async (resolve, reject) => {
-      try {
-        const response = await connection("carousel")
-          .where({ id: id })
-          .update(fields);
+      let response;
+      
+        try {
 
-        resolve(response);
-      } catch (error) {
-        console.log(error);
-        reject(error);
-      }
-    });
-  },
+          info.forEach(async element => { 
+            response = await connection("carousel")
+            .where({ id: element.id })
+            .update({position: element.position});
+        });
+  
+          resolve(response);
+        } catch (error) {
+          console.log(error);
+          reject(error);
+        }
+  });
+},
 
   getCarousel() {
     return new Promise(async (resolve, reject) => {
