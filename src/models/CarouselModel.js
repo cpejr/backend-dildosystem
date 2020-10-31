@@ -4,9 +4,13 @@ module.exports = {
   createCarousel(newCarousel) {
     return new Promise(async (resolve, reject) => {
       try {
-        let quant = await connection("carousel").count("*").first();
-        console.log(quant["count(*)"]);
-        newCarousel.position = quant["count(*)"] + 1;
+        let quant = await connection("carousel").count("position").first();
+        if(process.env.NODE_ENV == "production"){
+           quant = parseInt(quant.count) + 1;
+        }else{
+          quant = parseInt(quant["count(*)"]) + 1;
+        }
+        newCarousel.position = number;
         const response = await connection("carousel").insert(newCarousel);
         resolve(response);
       } catch (error) {

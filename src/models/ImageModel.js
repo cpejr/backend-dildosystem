@@ -14,8 +14,18 @@ module.exports = {
 
             const imageArray = images.map((imageData) => {
                 const { originalname, buffer, mimetype } = imageData;
-                let image = { product_id, subproduct_id, index: existing ? existing["count(`id`)"] : 0 };
+                let image;
+                if(process.env.NODE_ENV == "production"){
+                    quant = parseInt(quant.count) + 1;
+
+                    image = { product_id, subproduct_id, index: existing ? existing.count : 0 };
+                existing.count += 1;
+                 }else{
+                   image = { product_id, subproduct_id, index: existing ? existing["count(`id`)"] : 0 };
                 existing["count(`id`)"] += 1;
+                 }
+
+                 
                 return new Promise((resolve, reject) => {
                     uploadFile(buffer, originalname, mimetype).then((image_id) => {
                         image.id = image_id;
