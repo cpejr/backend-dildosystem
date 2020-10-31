@@ -253,7 +253,7 @@ module.exports = {
           .leftJoin("images AS img", function () { //Vai dar join em imagens usando ids dos produtos e dos subprodutos.
             this
               .on("products.id", "=", "img.product_id")
-              .orOn("spId", "=", "img.subproduct_id");
+              .orOn("sp.id", "=", "img.subproduct_id");
           }) //Essse joins geram muitas cópias de cada produto. A função .then a seguir organiza o resultado final.
           .select(columns)
           .then(function (data) {
@@ -408,7 +408,11 @@ module.exports = {
           });
 
         const response = await pipeline; //Efetivamente faz a busca completa da pipeline.
-        resolve({ data: response, totalCount: totalCount["count(`id`)"] });
+        if(process.env.NODE_ENV == "production"){
+          resolve({ data: response, totalCount: totalCount.count });
+       }else{
+        resolve({ data: response, totalCount: totalCount["count(*)"]});
+       }
       } catch (error) {
         console.log(error);
         reject(error);
