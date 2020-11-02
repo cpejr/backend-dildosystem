@@ -222,7 +222,14 @@ module.exports = {
             `case when ${reference_on_sale} = true then ${reference_sale} else ${reference} end ${order_reference} `
           ); //VERIFY WHEN CHANGE DATABASE YOU DICK!
         }
-        const totalCount = await pipeline.clone().select().count("id").first();
+
+        let totalCount; 
+
+        if(process.env.NODE_ENV == "production"){
+          totalCount = await pipeline.clone().select().count("id").first();
+       }else{
+        totalCount = await pipeline.clone().select().count("*").first();
+       }
 
         let spColumns = [ //Vai permitir que os campos da tabela de subprodutos sejam incluidos no join.
           "sp.id AS spId",
