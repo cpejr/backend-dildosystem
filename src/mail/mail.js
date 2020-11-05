@@ -105,7 +105,7 @@ module.exports = {
         console.log('Error: ', err)
       }
       else {
-        console.log('Message sent!!!')
+        console.log('Message sent!!! (Bem vindo cara usuário)')
       }
     })
     
@@ -146,7 +146,7 @@ module.exports = {
         console.log('Error: ', err)
       }
       else {
-        console.log('Message sent!!!')
+        console.log('Message sent!!! (Aprovado como varejista)')
       }
     })
   },
@@ -179,7 +179,7 @@ module.exports = {
         console.log('Error: ', err)
       }
       else {
-        console.log('Message sent!!!')
+        console.log('Message sent!!! (seu pedido foi created)')
       }
     })
     
@@ -229,7 +229,7 @@ module.exports = {
         console.log('Error: ', err)
       }
       else {
-        console.log('Message sent!!!')
+        console.log('Message sent!!! (atualizando teu pedido)')
       }
     })
   }

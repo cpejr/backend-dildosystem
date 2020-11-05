@@ -11,24 +11,6 @@ module.exports = {
     let query = user_status ? { user_status } : {};
     const users = await UserModel.getUsers(query);
 
-    const data = {
-      to: 'ohnitiv300@gmail.com',
-      subject: 'Testeeeeee',
-      text: 'OI TO FUNCIONADO!',
-      user_name: 'user-name',
-      id: '123456789',
-      order_status: 'mailed',
-    }
-
-    // Email.orderStatusMail(data);
-
-    Email.resgisterMail(data);
-    Email.orderStatusMail(data);
-    Email.retailerAprovalMail(data);
-    Email.orderReceiviedMail(data);
-
-
-
     return response.json(users);
   },
 
@@ -116,8 +98,22 @@ module.exports = {
 
         await FirebaseModel.changeUserEmail(firebaseUid, email);
       }
-      console.log("teste do body: ", request.body);
+
+      // console.log("teste do body: ", request.body);
       await UserModel.updateUser(newUser, id);
+
+      //email logic
+      const user_ = await UserModel.getUserById(id)
+      if(user_.type === "retailer" && user_.user_status === "approved"){
+        const data = {
+          to: user_.email,
+          subject: 'Bem Vindo',
+          text: 'Loja Casulus',
+          user_name: user_.name
+        }
+
+        Email.retailerAprovalMail(data)
+      }
 
       response.status(200).json({ message: "Sucesso!" });
     } catch (err) {
@@ -175,7 +171,7 @@ module.exports = {
   async deleteAWish(request, response) {
     try {
       const { user_id, product_id } = request.body;
-      console.log(user_id, product_id);
+      // console.log(user_id, product_id);
 
       const resp = await UserModel.deleteWish(product_id, user_id);
 
