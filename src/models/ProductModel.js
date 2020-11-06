@@ -223,13 +223,13 @@ module.exports = {
           ); //VERIFY WHEN CHANGE DATABASE YOU DICK!
         }
 
-        let totalCount; 
+        let totalCount;
 
-        if(process.env.NODE_ENV == "production"){
+        if (process.env.NODE_ENV == "production") {
           totalCount = await pipeline.clone().select().count("id").first();
-       }else{
-        totalCount = await pipeline.clone().select().count("*").first();
-       }
+        } else {
+          totalCount = await pipeline.clone().select().count("*").first();
+        }
 
         let spColumns = [ //Vai permitir que os campos da tabela de subprodutos sejam incluidos no join.
           "sp.id AS spId",
@@ -415,11 +415,11 @@ module.exports = {
           });
 
         const response = await pipeline; //Efetivamente faz a busca completa da pipeline.
-        if(process.env.NODE_ENV == "production"){
+        if (process.env.NODE_ENV == "production") {
           resolve({ data: response, totalCount: totalCount.count });
-       }else{
-        resolve({ data: response, totalCount: totalCount["count(`id`)"]});
-       }
+        } else {
+          resolve({ data: response, totalCount: totalCount["count(*)"] });
+        }
       } catch (error) {
         console.log(error);
         reject(error);
