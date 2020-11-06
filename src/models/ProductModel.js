@@ -418,7 +418,7 @@ module.exports = {
         if(process.env.NODE_ENV == "production"){
           resolve({ data: response, totalCount: totalCount.count });
        }else{
-        resolve({ data: response, totalCount: totalCount["count(*)"]});
+        resolve({ data: response, totalCount: totalCount["count(`id`)"]});
        }
       } catch (error) {
         console.log(error);
