@@ -9,7 +9,7 @@ module.exports = {
           quant = await connection("carousel").count("position").first();
            quant = parseInt(quant.count) + 1;
         }else{
-          quant = await connection("carousel").count("position").first();
+          quant = await connection("carousel").count("*").first();
           quant = parseInt(quant["count(*)"]) + 1;
         }
         newCarousel.position = quant;
