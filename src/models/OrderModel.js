@@ -212,8 +212,12 @@ module.exports = {
       Object.keys(result).forEach((value, index) => {
         finalResult[index] = result[value];
       });
-
+      if(process.env.NODE_ENV == "production"){
+        resolve({ data: finalResult, totalCount: totalCount.count });
+     }else{
       resolve({ data: finalResult, totalCount: totalCount["count(`o`.`id`)"] });
+     }
+      
     });
   },
 

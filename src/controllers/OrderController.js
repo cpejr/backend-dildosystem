@@ -43,17 +43,16 @@ module.exports = {
     try {
       const { id } = request.params;
       const fields = request.body;
-      console.log('id do param: ', id);
-      console.log('fields do body: ', fields);
+      // console.log('id do param: ', id);
+      // console.log('fields do body: ', fields);
       const result = await OrderModel.updateOrder(id, fields);
-      console.log('esse eh o result babe: ', result)
+      // console.log('esse eh o result babe: ', result)
       const ord = await OrderModel.getOrders(1, {}, id );
       
-      console.log(ord);
+      // console.log(ord);
 
       const data = {
-        // to: ord.data[0].user.email,
-        to: 'ohnitiv300@gmail.com',
+        to: ord.data[0].user.email,
         subject: 'Bem Vindo',
         text: 'Loja Casulus',
         order_status: fields,
@@ -63,7 +62,7 @@ module.exports = {
       }
 
       Email.orderStatusMail(data)
-      Email.orderReceiviedMail(data)
+      // Email.orderReceiviedMail(data)
 
       return response.status(200).json(result.data);
     } catch (err) {
@@ -79,7 +78,7 @@ module.exports = {
       let { products, paymentType, tracktype, trackprice, id, address_id } = request.body;
       const user = request.session.user;
 
-      console.log('esse eh o products: ', products)
+      // console.log('esse eh o products: ', products)
 
       const order = {
         id: id,

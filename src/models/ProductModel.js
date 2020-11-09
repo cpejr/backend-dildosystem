@@ -222,7 +222,14 @@ module.exports = {
             `case when ${reference_on_sale} = true then ${reference_sale} else ${reference} end ${order_reference} `
           ); //VERIFY WHEN CHANGE DATABASE YOU DICK!
         }
-        const totalCount = await pipeline.clone().select().count("id").first();
+
+        let totalCount;
+
+        if (process.env.NODE_ENV == "production") {
+          totalCount = await pipeline.clone().select().count("id").first();
+        } else {
+          totalCount = await pipeline.clone().select().count("*").first();
+        }
 
         let spColumns = [ //Vai permitir que os campos da tabela de subprodutos sejam incluidos no join.
           "sp.id AS spId",
@@ -253,7 +260,7 @@ module.exports = {
           .leftJoin("images AS img", function () { //Vai dar join em imagens usando ids dos produtos e dos subprodutos.
             this
               .on("products.id", "=", "img.product_id")
-              .orOn("spId", "=", "img.subproduct_id");
+              .orOn("sp.id", "=", "img.subproduct_id");
           }) //Essse joins geram muitas cópias de cada produto. A função .then a seguir organiza o resultado final.
           .select(columns)
           .then(function (data) {
@@ -408,7 +415,11 @@ module.exports = {
           });
 
         const response = await pipeline; //Efetivamente faz a busca completa da pipeline.
-        resolve({ data: response, totalCount: totalCount["count(`id`)"] });
+        if (process.env.NODE_ENV == "production") {
+          resolve({ data: response, totalCount: totalCount.count });
+        } else {
+          resolve({ data: response, totalCount: totalCount["count(*)"] });
+        }
       } catch (error) {
         console.log(error);
         reject(error);

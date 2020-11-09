@@ -4,9 +4,15 @@ module.exports = {
   createCarousel(newCarousel) {
     return new Promise(async (resolve, reject) => {
       try {
-        let quant = await connection("carousel").count("*").first();
-        console.log(quant["count(*)"]);
-        newCarousel.position = quant["count(*)"] + 1;
+        let quant;
+        if(process.env.NODE_ENV == "production"){
+          quant = await connection("carousel").count("position").first();
+           quant = parseInt(quant.count) + 1;
+        }else{
+          quant = await connection("carousel").count("*").first();
+          quant = parseInt(quant["count(*)"]) + 1;
+        }
+        newCarousel.position = quant;
         const response = await connection("carousel").insert(newCarousel);
         resolve(response);
       } catch (error) {
@@ -16,20 +22,25 @@ module.exports = {
     });
   },
 
-  updateCarousel(id, fields) {
+  updateCarousel(info) {
     return new Promise(async (resolve, reject) => {
-      try {
-        const response = await connection("carousel")
-          .where({ id: id })
-          .update(fields);
+      let response;
+      
+        try {
 
-        resolve(response);
-      } catch (error) {
-        console.log(error);
-        reject(error);
-      }
-    });
-  },
+          info.forEach(async element => { 
+            response = await connection("carousel")
+            .where({ id: element.id })
+            .update({position: element.position});
+        });
+  
+          resolve(response);
+        } catch (error) {
+          console.log(error);
+          reject(error);
+        }
+  });
+},
 
   getCarousel() {
     return new Promise(async (resolve, reject) => {
