@@ -10,7 +10,7 @@ const multerImageUploader = multer({
     },
 });
 
-const multipleImageUpload = (singleName ,arrayName, mode = "create") => {
+const multipleImageUpload = (singleName, arrayName, mode = "create") => {
     return (req, res, next) => {
         let config = [];
         if (singleName){
