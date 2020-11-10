@@ -1,52 +1,32 @@
 
-exports.seed = function(knex) {
+exports.seed = function (knex) {
   // Deletes ALL existing entries
   return knex('products').del()
     .then(function () {
       // Inserts seed entries
       return knex('products').insert([
         {
-          "id": "docim",
-          "name": "doce",
-          "client_price": 4,
-          "client_sale_price": 3,
-          "on_sale_client": 1,
-          "featured": 0,
-          "description": "um doce muito gostoso",
-          "visible": 1,
-          "stock_quantity": 300,
-          "min_stock": 7,
-          "image_id": "1SlCr7HIldc0stbxu_7sijGdE6q0CoasK",
-          "subcategory_id": "haushuahsuahusuhashus",
-          "weight": 1,
-          "height": 1,
-          "width": 1,
-          "length": 1,
-          "wholesaler_price": 3,
-          "wholesaler_sale_price": 2,
-          "on_sale_wholesaler": 1
-        },
-        {
-          "id": "docim2",
-          "name": "doce",
-          "client_price": 4,
-          "client_sale_price": 3,
-          "on_sale_client": 1,
-          "featured": 0,
-          "description": "um doce muito gostoso",
-          "visible": 0,
-          "stock_quantity": 300,
-          "min_stock": 5,
-          "image_id": "1_PGas1PCM5v4mdKOkAgts1TwYP7GVUlR",
-          "subcategory_id": "haushuahsuahusuhashus",
-          "weight": 1,
-          "height": 1,
-          "width": 1,
-          "length": 1,
-          "wholesaler_price": 3,
-          "wholesaler_sale_price": 2,
-          "on_sale_wholesaler": 0
+          "id": "2731ad60-22ee-11eb-8cbc-d1e65e7dd5b2",
+          "name": "Super Egg",
+          "client_price": 10,
+          "client_sale_price": 9,
+          "on_sale_client": false,
+          "wholesaler_price": 9,
+          "wholesaler_sale_price": 8,
+          "on_sale_wholesaler": true,
+          "best_seller": true,
+          "release": false,
+          "description": "Não é apenas um ovo, é um SUPER ovo",
+          "visible": true,
+          "stock_quantity": 50,
+          "min_stock": 20,
+          "image_id": "1tBfe6CrL-qcNLoyX5-i9nMVCtFXVCyRC",
+          "subcategory_id": "91c45040-22e1-11eb-8d75-214996dae135",
+          "weight": 3,
+          "height": 50,
+          "width": 50,
+          "length": 50
         }
       ]);
-    }); 
+    });
 };
