@@ -29,7 +29,7 @@ module.exports = {
                         image.id = image_id;
                         resolve(image);
                     }).catch((error) => {
-                        console.log(error);
+                        console.err(error);
                         reject(error);
                     })
                 })
@@ -40,7 +40,7 @@ module.exports = {
             await connection('images').insert(result);
 
         } catch (error) {
-            console.log(error);
+            console.err(error);
         }
     },
 
@@ -49,7 +49,7 @@ module.exports = {
             await connection('images').where({ id: image_id }).delete();
             await deleteFile(image_id);
         } catch (error) {
-            console.log(error);
+            console.err(error);
         }
     }
 

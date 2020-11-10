@@ -9,7 +9,7 @@ module.exports = {
                 const response = await connection("address").select("*");
                 resolve(response);
             } catch (error) {
-                console.log(error);
+                console.err(error);
                 reject(error);
             }
         });
@@ -24,7 +24,7 @@ module.exports = {
                     .first();
                 resolve(address);
             } catch (error) {
-                console.log(error);
+                console.err(error);
                 reject(error);
             }
         });
@@ -44,7 +44,7 @@ module.exports = {
                 await connection("users_address").insert(user_address_relation)
                 resolve(response);
             } catch (error) {
-                console.log(error);
+                console.err(error);
                 reject(error);
             }
         });
@@ -58,7 +58,7 @@ module.exports = {
                     .delete();
                 resolve(response);
             } catch (error) {
-                console.log(error);
+                console.err(error);
                 reject(error);
             }
         });
@@ -72,7 +72,7 @@ module.exports = {
                     .update(address);
                 resolve(response);
             } catch (error) {
-                console.log(error);
+                console.err(error);
                 reject(error);
             }
         });

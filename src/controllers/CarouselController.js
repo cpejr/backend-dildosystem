@@ -10,7 +10,7 @@ module.exports = {
       
       return response.status(200).json(result);
     } catch (err) {   
-      console.log(err);
+      console.err(err);
       return response.status(500).json({
         notification: "Internal server error while trying to get orders",
       });
@@ -27,7 +27,7 @@ module.exports = {
 
       return response.status(200).json("Atualizado com sucesso!");
     } catch (err) {
-      console.log(err);
+      console.err(err);
       return response.status(500).json({
         notification: "Internal server error while trying to update order",
       });
@@ -47,7 +47,7 @@ module.exports = {
 
       response.status(200).json({ id: newCarousel.id });
     } catch (err) {
-      console.log(err);
+      console.err(err);
       return response.status(500).json({ notification: "Internal server error while trying to register the new carousel image" });
     }
   },
