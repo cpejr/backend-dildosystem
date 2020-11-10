@@ -8,7 +8,7 @@ module.exports = {
         const response = await connection("products").insert(product);
         resolve(response);
       } catch (error) {
-        console.log(error);
+        console.err(error);
         reject(error);
       }
     });
@@ -24,13 +24,13 @@ module.exports = {
             "<=",
             connection.raw("subproducts.min_stock")
           );
-        console.log("subproducts: ", subproducts);
+        //console.log("subproducts: ", subproducts);
         let productIDs = new Set();
         subproducts.forEach((subproduct) => {
           productIDs.add(subproduct.product_id);
         });
         productIDs = Array.from(productIDs);
-        console.log("productIDs: ", productIDs);
+        //console.log("productIDs: ", productIDs);
         let products = await connection("products")
           .select()
           .whereIn("products.id", productIDs)
@@ -55,7 +55,7 @@ module.exports = {
         result = [...result, ...products]
         resolve(result);
       } catch (error) {
-        console.log(error);
+        console.err(error);
         reject(error);
       }
     });
@@ -102,7 +102,7 @@ module.exports = {
 
         resolve(response);
       } catch (error) {
-        console.log(error);
+        console.err(error);
         reject(error);
       }
     });
@@ -423,7 +423,7 @@ module.exports = {
           resolve({ data: response, totalCount: totalCount["count(*)"] });
         }
       } catch (error) {
-        console.log(error);
+        console.err(error);
         reject(error);
       }
     });
@@ -508,7 +508,7 @@ module.exports = {
 
   async findImages(ids, isAdmin) {
     try {
-      console.log("ids: ", ids);
+      //console.log("ids: ", ids);
 
       const result = await connection("images AS img")
         .select("*")
@@ -516,10 +516,10 @@ module.exports = {
         .orWhereIn("img.subproduct_id", ids);
       //.groupBy("img.product_id");
 
-      console.log("resultado: ", result);
+      //console.log("resultado: ", result);
       return result;
     } catch (err) {
-      console.log(err);
+      console.err(err);
       return [];
     }
   },
@@ -532,7 +532,7 @@ module.exports = {
           .update(product);
         resolve(response);
       } catch (error) {
-        console.log(error);
+        console.err(error);
         reject(error);
       }
     });
@@ -546,7 +546,7 @@ module.exports = {
           .delete();
         resolve(response);
       } catch (error) {
-        console.log(error);
+        console.err(error);
         reject(error);
       }
     });
