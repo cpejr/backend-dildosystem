@@ -21,7 +21,7 @@ module.exports = {
         return response.status(400).json({ notification: "Invalid product id" })
 
 
-      console.log(err);
+      console.err(err);
       return response.status(500).json({ notification: "Internal server error while trying to register the new subproduct" });
     }
   },
@@ -40,7 +40,7 @@ module.exports = {
       const result = await SubproductModel.getSubproductsbyProductId(product_id, query);
       response.status(200).json(result);
     } catch (err) {
-      console.log(err.errno);
+      console.err(err.errno);
       return response.status(500).json({ notification: "Internal server error while trying to get subproducts" });
     }
   },
@@ -67,7 +67,7 @@ module.exports = {
 
       response.status(200).json({ message: "Sucesso!" });
     } catch (err) {
-      console.log(err);
+      console.err(err);
       return response.status(500).json({ notification: "Internal server error while trying to update subproduct" });
     }
   },

@@ -70,7 +70,7 @@ module.exports = {
 
       response.status(200).json({ message: "Sucesso!" });
     } catch (err) {
-      console.log(err);
+      console.err(err);
       return response.status(500).json({ notification: "Internal server error while trying to delete user" });
     }
   },
@@ -117,7 +117,7 @@ module.exports = {
 
       response.status(200).json({ message: "Sucesso!" });
     } catch (err) {
-      console.log(err);
+      console.err(err);
       return response.status(500).json({ notification: "Internal server error while trying to update user" });
     }
   },
@@ -131,7 +131,7 @@ module.exports = {
       response.status(200).json({ message: "Sucesso!" });
     }
     catch (err) {
-      console.log(err);
+      console.err(err);
       return response.status(500).json({ notification: err.message });
     }
   },
@@ -146,7 +146,7 @@ module.exports = {
       return response.status(200).json(result);
 
     } catch (err) {
-      console.log(err);
+      console.err(err);
       return response.status(500).json({notification: "Internal error while trying to get wish list"})
     }
   },
@@ -163,7 +163,7 @@ module.exports = {
         if (err.errno === 19)
             return response.status(400).json({ notification: "Invalid" });
       
-        console.log(err);
+        console.err(err);
         return response.status(500).json({ notification: "Internal server error while trying to create Wish" });
       }
   },
@@ -180,7 +180,7 @@ module.exports = {
       if (err.errno === 19)
             return response.status(400).json({ notification: "Invalid" });
       
-        console.log(err);
+        console.err(err);
         return response.status(500).json({ notification: "Internal server error while trying to delete Wish" });
     }
   },
@@ -195,7 +195,7 @@ module.exports = {
       return response.status(200).json(result);
 
     } catch (err) {
-      console.log(err);
+      console.err(err);
       return response.status(500).json({notification: "Internal error while trying to get user address"})
     }
   },
@@ -212,7 +212,7 @@ module.exports = {
         if (err.errno === 19)
             return response.status(400).json({ notification: "Invalid" });
       
-        console.log(err);
+        console.err(err);
         return response.status(500).json({ notification: "Internal server error while trying to create user address" });
       }
   },
@@ -229,7 +229,7 @@ module.exports = {
       if (err.errno === 19)
             return response.status(400).json({ notification: "Invalid" });
       
-        console.log(err);
+        console.err(err);
         return response.status(500).json({ notification: "Internal server error while trying to delete user address" });
     }
   }

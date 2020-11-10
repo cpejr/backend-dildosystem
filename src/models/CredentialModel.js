@@ -7,7 +7,7 @@ module.exports = {
                 const response = await connection("credentials").select("*").first();
                 resolve(response);
             } catch (error) {
-                console.log(error);
+                console.err(error);
                 reject(error);
             }
         });
@@ -27,7 +27,7 @@ module.exports = {
                     .update(credentials);
                 resolve(response);
             } catch (error) {
-                console.log(error);
+                console.err(error);
                 reject(error);
             }
         });
@@ -42,7 +42,7 @@ function createCredentials(credentials) {
             const response = await connection("credentials").insert(credentials);
             resolve(response);
         } catch (error) {
-            console.log(error);
+            console.err(error);
             reject(error);
         }
     });

@@ -8,7 +8,7 @@ module.exports = {
                 const response = await connection("subproducts").insert(subproduct);
                 resolve(response);
             } catch (error) {
-                console.log(error);
+                console.err(error);
                 reject(error);
             }
         });
@@ -23,7 +23,7 @@ module.exports = {
                     .select("*");
                 resolve(response);
             } catch (error) {
-                console.log(error);
+                console.err(error);
                 reject(error);
             }
         });
@@ -50,7 +50,7 @@ module.exports = {
     
             resolve(response);
           } catch (error) {
-            console.log(error);
+            console.err(error);
             reject(error);
           }
         });
@@ -114,7 +114,7 @@ module.exports = {
                     .delete();
                 resolve(response);
             } catch (error) {
-                console.log(error);
+                console.err(error);
                 reject(error);
             }
         });
@@ -128,7 +128,7 @@ module.exports = {
                     .delete();
                 resolve(response);
             } catch (error) {
-                console.log(error);
+                console.err(error);
                 reject(error);
             }
         });
@@ -142,7 +142,7 @@ module.exports = {
                     .update(subproduct);
                 resolve(response);
             } catch (error) {
-                console.log(error);
+                console.err(error);
                 reject(error);
             }
         });

@@ -10,7 +10,7 @@ module.exports = {
         .insert(order)
         .then((response) => resolve(order.id))
         .catch((error) => {
-          console.log(error);
+          console.err(error);
           reject(error);
         });
     });
@@ -285,17 +285,17 @@ module.exports = {
                   resolve(result);
                 })
                 .catch((err) => {
-                  console.log(err);
+                  console.err(err);
                   reject(err);
                 });
             })
             .catch((err) => {
-              console.log(err);
+              console.err(err);
               reject(err);
             });
         })
         .catch((err) => {
-          console.log(err);
+          console.err(err);
           reject(err);
         });
     });

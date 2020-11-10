@@ -16,7 +16,7 @@ module.exports = {
       response.setHeader("X-Total-Count", result.totalCount);
       return response.status(200).json(result.data);
     } catch (err) {   
-      console.log(err);
+      console.err(err);
       return response.status(500).json({
         notification: "Internal server error while trying to get orders",
       });
@@ -32,7 +32,7 @@ module.exports = {
       response.status(200).json(result);
     }
     catch(err){
-      console.log(err);
+      console.err(err);
       return response.status(500).json({
         notification: "Internal server error while trying to get one order",
       });
@@ -66,7 +66,7 @@ module.exports = {
 
       return response.status(200).json(result.data);
     } catch (err) {
-      console.log(err);
+      console.err(err);
       return response.status(500).json({
         notification: "Internal server error while trying to update order",
       });
@@ -215,7 +215,7 @@ module.exports = {
       return response.status(200).json(result);
 
     } catch (err) {
-      console.log(err);
+      console.err(err);
       return response.status(500).json({notification: "Internal error while trying to get order address"})
     }
   },
