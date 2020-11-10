@@ -18,7 +18,8 @@ exports.up = function (knex) {
       table.float('wholesaler_sale_price').nullable();
       table.boolean('on_sale_client').notNullable().defaultTo(false);
       table.boolean('on_sale_wholesaler').nullable().defaultTo(false);
-      table.boolean('featured').notNullable().defaultTo(false);
+      table.boolean('best_seller').notNullable().defaultTo(false);
+      table.boolean('release').notNullable().defaultTo(false);
       table.string('description').nullable();
       table.boolean('visible').notNullable().defaultTo(false);
       table.integer('stock_quantity').notNullable().defaultTo(0).unsigned();
