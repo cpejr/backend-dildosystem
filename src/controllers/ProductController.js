@@ -22,7 +22,9 @@ module.exports = {
 
       await ProductModel.createNewProduct(newProduct);
 
-      await ImageModel.createImages(images, newProduct.id);
+      if(images){
+        await ImageModel.createImages(images, newProduct.id);
+      }
 
       return response.status(200).json({ id: newProduct.id });
     } catch (err) {

@@ -11,7 +11,6 @@ module.exports = {
             } else {
                 existing = await connection('images').where({ subproduct_id: subproduct_id }).count("id").first();
             }
-            console.log("Existing: ", existing);
 
             const imageArray = images.map((imageData) => {
                 const { originalname, buffer, mimetype } = imageData;
@@ -19,14 +18,11 @@ module.exports = {
                 if (process.env.NODE_ENV == "production") {
                     existing.count = parseInt(existing.count);
                     existing.count = existing.count + 1;
-                    console.log("Existing!: ",existing);
                     image = { product_id, subproduct_id, index: existing ? existing.count : 0 };
                 } else {
                     image = { product_id, subproduct_id, index: existing ? existing["count(`id`)"] : 0 };
                     existing["count(`id`)"] += 1;
                 }
-
-                console.log("Image: ", image);
 
                 return new Promise((resolve, reject) => {
                     uploadFile(buffer, originalname, mimetype).then((image_id) => {
