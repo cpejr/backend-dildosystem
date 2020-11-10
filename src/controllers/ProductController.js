@@ -14,7 +14,7 @@ module.exports = {
       const { originalname, buffer, mimetype } = request.files.imageFile[0];
       const images = request.files.imageFiles;
 
-      console.log(request.files)
+      //console.log(request.files)
 
       const image_id = await uploadFile(buffer, originalname, mimetype);
 
@@ -26,7 +26,7 @@ module.exports = {
 
       return response.status(200).json({ id: newProduct.id });
     } catch (err) {
-      console.log(err);
+      console.err(err);
       return response.status(500).json({ notification: "Internal server error while trying to register the new product" });
     }
   },
@@ -62,13 +62,13 @@ module.exports = {
       });
 
       const result = await ProductModel.getProducts(type, query, max_price, min_price, order_by, order_ascending, search, subcategories, page);
-      console.log("teste: ", result);
+      //console.log("teste: ", result);
       response.setHeader('X-Total-Count', result.totalCount);
       return response.status(200).json(result.data);
 
 
     } catch (err) {
-      console.log(err);
+      console.err(err);
       return response.status(500).json({ notification: "Internal server error while trying to get products" });
     }
   },
@@ -83,7 +83,7 @@ module.exports = {
       return response.status(200).json(result);
     }
     catch (err) {
-      console.log(err);
+      console.err(err);
       return response.status(500).json({ notification: "Internal server error while trying to get low stock products" });
     }
   },
@@ -111,7 +111,7 @@ module.exports = {
       return response.status(200).json(data);
 
     } catch (err) {
-      console.log(err);
+      console.err(err);
       return response.status(500).json({ notification: "Internal server error while trying to get products" });
     }
   },
@@ -129,7 +129,7 @@ module.exports = {
 
       return response.status(200).json(result);
     } catch (err) {
-      console.log(err);
+      console.err(err);
       return response.status(500).json({ notification: "Internal server error while trying to get images" });
     }
   },
@@ -156,7 +156,7 @@ module.exports = {
 
       response.status(200).json({ message: "Sucesso!" });
     } catch (err) {
-      console.log(err);
+      console.err(err);
       return response.status(500).json({ notification: "Internal server error while trying to update product" });
     }
   },
@@ -170,7 +170,7 @@ module.exports = {
 
       return response.status(200).json(result);
     } catch (err) {
-      console.log(err);
+      console.err(err);
       return response.status(500).json({ notification: "Internal server error while trying to upload images" });
     }
   },
@@ -178,12 +178,11 @@ module.exports = {
   async deleteFile(request, response) {
     try {
       const { id } = request.params;
-      console.log("Chamou delete", id);
       await ImageModel.deleteImage(id);
 
       return response.status(200).json({ notification: "Image deleted!" });
     } catch (err) {
-      console.log(err);
+      console.err(err);
       return response.status(500).json({ notification: "Internal server error while trying to delete images" });
     }
   },
