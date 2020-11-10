@@ -2,20 +2,30 @@ const OrderModel = require("../models/OrderModel");
 const ProductModel = require("../models/ProductModel");
 const { v1: uuidv1 } = require('uuid');
 const { getOne } = require("./UserController");
+const { default: ShortUniqueId } = require('short-unique-id');
 
 const Email = require('../mail/mail.js')
+
+const uid = new ShortUniqueId({
+  dictionary: [
+    '0', '1', '2', '3',
+    '4', '5', '6', '7',
+    '8', '9', 'A', 'B',
+    'C', 'D', 'E', 'F',
+  ],
+});
 
 module.exports = {
   async index(request, response) {
     try {
-      const { page, byStatus, byid} = request.query;
-      const {id} = request.params;
+      const { page, byStatus, byid } = request.query;
+      const { id } = request.params;
       let query = byStatus ? { order_status: byStatus } : {};
       const result = await OrderModel.getOrders(page, query, byid, id);
-      
+
       response.setHeader("X-Total-Count", result.totalCount);
       return response.status(200).json(result.data);
-    } catch (err) {   
+    } catch (err) {
       console.log(err);
       return response.status(500).json({
         notification: "Internal server error while trying to get orders",
@@ -23,15 +33,15 @@ module.exports = {
     }
   },
 
-  async getOne(request, response){
-    try{
-      const {id} = request.params;
-      const {order_id} = request.query;
+  async getOne(request, response) {
+    try {
+      const { id } = request.params;
+      const { order_id } = request.query;
       const result = await OrderModel.getOne(id, order_id);
 
       response.status(200).json(result);
     }
-    catch(err){
+    catch (err) {
       console.log(err);
       return response.status(500).json({
         notification: "Internal server error while trying to get one order",
@@ -47,8 +57,8 @@ module.exports = {
       // console.log('fields do body: ', fields);
       const result = await OrderModel.updateOrder(id, fields);
       // console.log('esse eh o result babe: ', result)
-      const ord = await OrderModel.getOrders(1, {}, id );
-      
+      const ord = await OrderModel.getOrders(1, {}, id);
+
       // console.log(ord);
 
       const data = {
@@ -75,8 +85,9 @@ module.exports = {
 
   async create(request, response) {
     try {
-      let { products, paymentType, tracktype, trackprice, id, address_id } = request.body;
+      let { products, paymentType, tracktype, trackprice, address_id } = request.body;
       const user = request.session.user;
+      let id = uid.randomUUID(10);
 
       // console.log('esse eh o products: ', products)
 
@@ -94,9 +105,9 @@ module.exports = {
       let completesubproducts = [];
 
       products.forEach((value) => {
-        if(value.subproduct_id){ 
-          subproducts_id.push(value.subproduct_id); 
-          completesubproducts.push({product_id: value.product_id, subproduct_id: value.subproduct_id}); 
+        if (value.subproduct_id) {
+          subproducts_id.push(value.subproduct_id);
+          completesubproducts.push({ product_id: value.product_id, subproduct_id: value.subproduct_id });
 
         }
         else products_id.push(value.product_id);
@@ -132,7 +143,7 @@ module.exports = {
           return false;
         }
       });
-      
+
       if (not_found.length > 0)
         return response.status(400).json({
           notification: "Some items were not found or are not available",
@@ -152,7 +163,7 @@ module.exports = {
       );
 
       let [order_id, prices] = await Promise.all([orderPromise, pricesPromise]);
-       
+
       products = products.map((value) => {
         const product = {
           id: uuidv1(),
@@ -174,7 +185,7 @@ module.exports = {
         to: user.email,
         subject: 'Bem Vindo',
         text: 'Loja Casulus',
-        order_number: id
+        order_number: id,
       }
 
       Email.orderReceiviedMail(dataMail);
@@ -216,7 +227,7 @@ module.exports = {
 
     } catch (err) {
       console.log(err);
-      return response.status(500).json({notification: "Internal error while trying to get order address"})
+      return response.status(500).json({ notification: "Internal error while trying to get order address" })
     }
   },
 };

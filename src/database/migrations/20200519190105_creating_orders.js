@@ -8,9 +8,9 @@ exports.up = function (knex) {
     table.foreign('address_id').references('id').inTable('address').onDelete('SET NULL');
     table.timestamp('created_at').defaultTo(knex.fn.now());
     table.string('payment_type').nullable();
-    table.enu('order_status', ['pending', 'paid', 'mailed','delivered']).notNullable().defaultTo('pending');
+    table.enu('order_status', ['pending', 'paid', 'mailed', 'delivered']).notNullable().defaultTo('pending');
     table.string('track_number').nullable();
-    table.integer('track_price').notNullable();
+    table.float('track_price').notNullable();
     table.string('track_type').notNullable();
   })
     .createTable('orders_products', function (table) {
