@@ -44,17 +44,17 @@ routes.put('/user/:id', authenticateOptionalToken, isAdminOrSelf, celebrate(user
 routes.post('/forgottenPassword', celebrate(userValidate.forgottenPassword), UserController.forgottenPassword);
 routes.get('/userwishlist/:id', authenticateToken, celebrate(userValidate.wishList), UserController.getWishList);
 routes.post('/userwishlist/:id', authenticateToken, celebrate(userValidate.wishList), generateId, UserController.createWish);
-routes.delete('/userwishlist', authenticateToken, celebrate(userValidate.wishListDelete), UserController.deleteAWish );
+routes.delete('/userwishlist', authenticateToken, celebrate(userValidate.wishListDelete), UserController.deleteAWish);
 routes.get('/useraddress/:id', authenticateToken, celebrate(userValidate.userAddress), UserController.getUserAddress);
 routes.post('/useraddress/:id', authenticateToken, celebrate(userValidate.userAddress), generateId, UserController.createUserAddress);
-routes.delete('/useraddress', authenticateToken, celebrate(userValidate.userAddressDelete), UserController.deleteUserAddress );
+routes.delete('/useraddress', authenticateToken, celebrate(userValidate.userAddressDelete), UserController.deleteUserAddress);
 
 //Session
 routes.post('/login', celebrate(loginValidate.signin), SessionController.signin);
 routes.get('/verify', celebrate(loginValidate.verifyToken), SessionController.verifyToken);
 
 //Product
-routes.post('/newProduct', authenticateToken, isAdmin, imageMultUpload('imageFile','imageFiles'), celebrate(productValidate.create), generateId, ProductController.create);
+routes.post('/newProduct', authenticateToken, isAdmin, imageMultUpload('imageFile', 'imageFiles'), celebrate(productValidate.create), generateId, ProductController.create);
 routes.get('/products', authenticateOptionalToken, celebrate(productValidate.index), ProductController.index);
 routes.get('/product/:product_id', authenticateOptionalToken, celebrate(productValidate.getProduct), ProductController.getProduct);
 routes.put('/updateProduct/:id', authenticateToken, isAdmin, imageUpload('imageFile', 'update'), celebrate(productValidate.update), ProductController.update);
@@ -68,10 +68,10 @@ routes.delete('/subproducts/:product_id', authenticateToken, isAdmin, celebrate(
 routes.put('/updateSubproduct/:id', authenticateToken, isAdmin, imageUpload('imageFile', 'update'), celebrate(subProductValidate.update), SubproductController.update);
 
 //Orders
-routes.post('/newOrder', authenticateToken, celebrate(orderValidate.create), generateId, OrderController.create);
-routes.get('/orders', authenticateToken, isAdmin,celebrate(orderValidate.index), OrderController.index);
-routes.get('/orders/:id', authenticateToken, isAdminOrSelf,celebrate(orderValidate.index), OrderController.index);
-routes.get('/order/:id', authenticateToken, isAdminOrSelf,celebrate(orderValidate.getOne), OrderController.getOne);
+routes.post('/newOrder', authenticateToken, celebrate(orderValidate.create), OrderController.create);
+routes.get('/orders', authenticateToken, isAdmin, celebrate(orderValidate.index), OrderController.index);
+routes.get('/orders/:id', authenticateToken, isAdminOrSelf, celebrate(orderValidate.index), OrderController.index);
+routes.get('/order/:id', authenticateToken, isAdminOrSelf, celebrate(orderValidate.getOne), OrderController.getOne);
 routes.put('/order/:id', authenticateToken, isAdmin, celebrate(orderValidate.update), OrderController.update);
 routes.delete('/order/:order_id', authenticateToken, isAdmin, celebrate(orderValidate.delete), OrderController.delete);
 
@@ -97,7 +97,7 @@ routes.put('/carousel', authenticateToken, isAdmin, celebrate(CarouselValidate.u
 routes.delete('/carousel/:id', authenticateToken, isAdmin, celebrate(CarouselValidate.deleteCarousel), CarouselController.delete);
 
 //Images
-routes.post('/images', authenticateToken, isAdmin, imageMultUpload(undefined,'imageFiles'), celebrate(productValidate.uploadFiles), ProductController.uploadFiles);
+routes.post('/images', authenticateToken, isAdmin, imageMultUpload(undefined, 'imageFiles'), celebrate(productValidate.uploadFiles), ProductController.uploadFiles);
 routes.delete('/image/:id', authenticateToken, isAdmin, celebrate(productValidate.deleteFile), ProductController.deleteFile)
 routes.get('/images/:ids', authenticateOptionalToken, celebrate(productValidate.getImages), ProductController.getImages)
 
