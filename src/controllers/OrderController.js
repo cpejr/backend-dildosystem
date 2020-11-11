@@ -16,6 +16,7 @@ const uid = new ShortUniqueId({
 });
 
 module.exports = {
+
   async index(request, response) {
     try {
       const { page, byStatus, byid } = request.query;
@@ -26,7 +27,7 @@ module.exports = {
       response.setHeader("X-Total-Count", result.totalCount);
       return response.status(200).json(result.data);
 
-    } catch (err) {   
+    } catch (err) {
       console.error(err);
 
       return response.status(500).json({
@@ -43,7 +44,7 @@ module.exports = {
 
       response.status(200).json(result);
     }
-    catch(err){
+    catch (err) {
       console.error(err);
 
       return response.status(500).json({
@@ -82,6 +83,19 @@ module.exports = {
       console.error(err);
       return response.status(500).json({
         notification: "Internal server error while trying to update order",
+      });
+    }
+  },
+
+  async initiate(request, response) {
+    try {
+      const id = uid.randomUUID(10);
+
+      return response.status(200).json(id);
+    } catch (err) {
+      console.error(err);
+      return response.status(500).json({
+        notification: "Internal server error while trying to initiate order",
       });
     }
   },
@@ -230,7 +244,7 @@ module.exports = {
 
     } catch (err) {
       console.error(err);
-      return response.status(500).json({notification: "Internal error while trying to get order address"})
+      return response.status(500).json({ notification: "Internal error while trying to get order address" })
     }
   },
 };
