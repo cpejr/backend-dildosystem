@@ -32,7 +32,7 @@ orderValidate.index = {
 
 orderValidate.getOne = {
     [Segments.PARAMS]: Joi.object().keys({
-        id: Joi.string().required()
+        id: Joi.string().optional()
     }),
     [Segments.QUERY]: Joi.object().keys({
         order_id: Joi.string().required()

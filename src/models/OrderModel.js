@@ -224,7 +224,7 @@ module.exports = {
   getOne(id, order_id) {
     return new Promise(async (resolve, reject) => {
 
-      const query1 = connection("orders")
+      const query1 = await connection("orders")
         .select(
           "orders.*",
           "a.zipcode",
@@ -236,7 +236,6 @@ module.exports = {
           "a.complement",
         )
         .where("orders.id", "=", order_id)
-        .andWhere("orders.user_id", "=", id)
         .join("address AS a", "a.id", "=", connection.raw("orders.address_id"))
         .first();
 
@@ -250,7 +249,7 @@ module.exports = {
           "u.birthdate",
           "u.phonenumber",
         )
-        .where("order_user_id", id)
+        .where("u.id", query1.user_id)
         .first();
 
       const query3 = connection("orders_products AS op")
@@ -262,7 +261,7 @@ module.exports = {
 
       let result = {
         ...order,
-        ...user,
+        user,
         products
       }
 
