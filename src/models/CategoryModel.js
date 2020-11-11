@@ -8,7 +8,7 @@ module.exports = {
                 const response = await connection("categories").insert(category);
                 resolve(response);
             } catch (error) {
-                console.err(error);
+                console.error(error);
                 reject(error);
             }
         });
@@ -20,7 +20,7 @@ module.exports = {
                 const response = await connection("subcategories").insert(subcategory);
                 resolve(response);
             } catch (error) {
-                console.err(error);
+                console.error(error);
                 reject(error);
             }
         });
@@ -34,7 +34,7 @@ module.exports = {
                     .update(category);
                 resolve(response);
             } catch (error) {
-                console.err(error);
+                console.error(error);
                 reject(error);
             }
         });
@@ -48,7 +48,7 @@ module.exports = {
                     .update(subcategory);
                 resolve(response);
             } catch (error) {
-                console.err(error);
+                console.error(error);
                 reject(error);
             }
         });
@@ -62,7 +62,7 @@ module.exports = {
                     .del();
                 resolve(response);
             } catch (error) {
-                console.err(error);
+                console.error(error);
                 reject(error);
             }
         });
@@ -76,7 +76,7 @@ module.exports = {
                     .del();
                 resolve(response);
             } catch (error) {
-                console.err(error);
+                console.error(error);
                 reject(error);
             }
         });
@@ -108,7 +108,7 @@ module.exports = {
                 resolve(categories);
 
             } catch (error) {
-                console.err(error);
+                console.error(error);
                 reject(error);
             }
         });

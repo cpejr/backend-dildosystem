@@ -11,7 +11,7 @@ module.exports = {
             return response.status(200).json(result);
 
         } catch (err) {
-            console.err(err);
+            console.error(err);
             return response.status(500).json({ notification: "Internal error while trying to get addresses" })
         }
     },
@@ -25,7 +25,7 @@ module.exports = {
             if (err.errno === 19)
                 return response.status(400).json({ notification: "Invalid ids" });
 
-            console.err(err);
+            console.error(err);
             return response.status(500).json({ notification: "Internal server error while trying to get the address" });
         }
     },
@@ -41,7 +41,7 @@ module.exports = {
             if (err.errno === 19)
                 return response.status(400).json({ notification: "Invalid ids" });
 
-            console.err(err);
+            console.error(err);
             return response.status(500).json({ notification: "Internal server error while trying to register the new address" });
         }
     },
@@ -55,7 +55,7 @@ module.exports = {
 
             response.status(200).json({ message: "Sucesso!" });
         } catch (err) {
-            console.err(err);
+            console.error(err);
             return response.status(500).json({ notification: "Internal server error while trying to update address" });
         }
     },
@@ -68,7 +68,7 @@ module.exports = {
 
             response.status(200).json({ message: "Sucesso!" });
         } catch (err) {
-            console.err(err);
+            console.error(err);
             return response.status(500).json({ notification: "Internal server error while trying to delete address" });
         }
     },

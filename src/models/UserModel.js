@@ -11,7 +11,7 @@ module.exports = {
 
                 resolve(users);
             } catch (error) {
-                console.err(error);
+                console.error(error);
                 reject(error);
             }
         });
@@ -27,7 +27,7 @@ module.exports = {
 
                 resolve(user);
             } catch (error) {
-                console.err(error);
+                console.error(error);
                 reject(error);
             }
         });
@@ -42,7 +42,7 @@ module.exports = {
                     .first();
                 resolve(user);
             } catch (error) {
-                console.err(error);
+                console.error(error);
                 reject(error);
             }
         });
@@ -56,7 +56,7 @@ module.exports = {
                     .delete();
                 resolve(response);
             } catch (error) {
-                console.err(error);
+                console.error(error);
                 reject(error);
             }
         });
@@ -70,7 +70,7 @@ module.exports = {
                     .update(user);
                 resolve(response);
             } catch (error) {
-                console.err(error);
+                console.error(error);
                 reject(error);
             }
         });
@@ -86,7 +86,7 @@ module.exports = {
                     
                 resolve(user);
             } catch (error) {
-                console.err(error);
+                console.error(error);
                 reject(error);
             }
         });
@@ -100,7 +100,7 @@ module.exports = {
 
                 resolve(user);
             } catch (error) {
-                console.err(error);
+                console.error(error);
                 reject(error);
             }
         });
@@ -118,7 +118,7 @@ module.exports = {
 
                 resolve(user);
             } catch (error) {
-                console.err(error);
+                console.error(error);
                 reject(error)
             }
         });
@@ -135,7 +135,7 @@ module.exports = {
                     
                 resolve(user_address);
             } catch (error) {
-                console.err(error);
+                console.error(error);
                 reject(error);
             }
         });
@@ -149,7 +149,7 @@ module.exports = {
 
                 resolve(user);
             } catch (error) {
-                console.err(error);
+                console.error(error);
                 reject(error);
             }
         });
@@ -166,7 +166,7 @@ module.exports = {
                     .delete();
                 resolve(user);
             } catch (error) {
-                console.err(error);
+                console.error(error);
                 reject(error)
             }
         });

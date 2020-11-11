@@ -129,7 +129,7 @@ exports.uploadFile = function uploadFile(buffer, name, mimeType) {
     }, function (err, res) {
       if (err) {
         // Handle error
-        console.err(err);
+        console.error(err);
         reject(err);
       } else {
         resolve(res.data.id)
@@ -146,7 +146,7 @@ exports.deleteFile = function deleteFile(fileId) {
       function(err, res) {
         if (err) {
           // Handle error
-          console.err(err);
+          console.error(err);
           if (err.response.status === 404) {
             resolve();
           }

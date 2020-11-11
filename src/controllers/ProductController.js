@@ -28,7 +28,7 @@ module.exports = {
 
       return response.status(200).json({ id: newProduct.id });
     } catch (err) {
-      console.err(err);
+      console.error(err);
       return response.status(500).json({ notification: "Internal server error while trying to register the new product" });
     }
   },
@@ -70,7 +70,7 @@ module.exports = {
 
 
     } catch (err) {
-      console.err(err);
+      console.error(err);
       return response.status(500).json({ notification: "Internal server error while trying to get products" });
     }
   },
@@ -85,7 +85,7 @@ module.exports = {
       return response.status(200).json(result);
     }
     catch (err) {
-      console.err(err);
+      console.error(err);
       return response.status(500).json({ notification: "Internal server error while trying to get low stock products" });
     }
   },
@@ -113,7 +113,7 @@ module.exports = {
       return response.status(200).json(data);
 
     } catch (err) {
-      console.err(err);
+      console.error(err);
       return response.status(500).json({ notification: "Internal server error while trying to get products" });
     }
   },
@@ -131,7 +131,7 @@ module.exports = {
 
       return response.status(200).json(result);
     } catch (err) {
-      console.err(err);
+      console.error(err);
       return response.status(500).json({ notification: "Internal server error while trying to get images" });
     }
   },
@@ -158,7 +158,7 @@ module.exports = {
 
       response.status(200).json({ message: "Sucesso!" });
     } catch (err) {
-      console.err(err);
+      console.error(err);
       return response.status(500).json({ notification: "Internal server error while trying to update product" });
     }
   },
@@ -172,7 +172,7 @@ module.exports = {
 
       return response.status(200).json(result);
     } catch (err) {
-      console.err(err);
+      console.error(err);
       return response.status(500).json({ notification: "Internal server error while trying to upload images" });
     }
   },
@@ -184,7 +184,7 @@ module.exports = {
 
       return response.status(200).json({ notification: "Image deleted!" });
     } catch (err) {
-      console.err(err);
+      console.error(err);
       return response.status(500).json({ notification: "Internal server error while trying to delete images" });
     }
   },

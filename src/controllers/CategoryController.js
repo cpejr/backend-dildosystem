@@ -13,7 +13,7 @@ module.exports = {
       if (err.errno === 19)
         return response.status(400).json({ notification: "Invalid ids" });
       
-      console.err(err);
+      console.error(err);
       return response.status(500).json({ notification: "Internal server error while trying to register the new category" });
     }
   },
@@ -29,7 +29,7 @@ module.exports = {
         if (err.errno === 19)
             return response.status(400).json({ notification: "Invalid ids" });
       
-        console.err(err);
+        console.error(err);
         return response.status(500).json({ notification: "Internal server error while trying to register the new Subcategory" });
       }
   },
@@ -43,7 +43,7 @@ module.exports = {
 
         response.status(200).json({ message: "Sucesso!" });
       } catch (err) {
-        console.err(err);
+        console.error(err);
         return response.status(500).json({ notification: "Internal server error while trying to update category" });
       }
   },
@@ -57,7 +57,7 @@ module.exports = {
 
         response.status(200).json({ message: "Sucesso!" });
       } catch (err) {
-        console.err(err);
+        console.error(err);
         return response.status(500).json({ notification: "Internal server error while trying to update subcategory" });
       }
   },
@@ -70,7 +70,7 @@ module.exports = {
 
         response.status(200).json({ message: "Sucesso!" });
       } catch (err) {
-        console.err(err);
+        console.error(err);
         return response.status(500).json({ notification: "Internal server error while trying to delete category" });
       }
   },
@@ -83,7 +83,7 @@ module.exports = {
 
         response.status(200).json({ message: "Sucesso!" });
       } catch (err) {
-        console.err(err);
+        console.error(err);
         return response.status(500).json({ notification: "Internal server error while trying to delete subcategory" });
       }
   },
@@ -96,7 +96,7 @@ module.exports = {
       return response.status(200).json(result);
 
     } catch (err) {
-      console.err(err);
+      console.error(err);
       return response.status(500).json({notification: "Internal error while trying to get categories"})
     }
   }

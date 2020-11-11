@@ -8,7 +8,7 @@ module.exports = {
         const response = await connection("products").insert(product);
         resolve(response);
       } catch (error) {
-        console.err(error);
+        console.error(error);
         reject(error);
       }
     });
@@ -55,7 +55,7 @@ module.exports = {
         result = [...result, ...products]
         resolve(result);
       } catch (error) {
-        console.err(error);
+        console.error(error);
         reject(error);
       }
     });
@@ -102,7 +102,7 @@ module.exports = {
 
         resolve(response);
       } catch (error) {
-        console.err(error);
+        console.error(error);
         reject(error);
       }
     });
@@ -423,7 +423,7 @@ module.exports = {
           resolve({ data: response, totalCount: totalCount["count(*)"] });
         }
       } catch (error) {
-        console.err(error);
+        console.error(error);
         reject(error);
       }
     });
@@ -519,7 +519,7 @@ module.exports = {
       //console.log("resultado: ", result);
       return result;
     } catch (err) {
-      console.err(err);
+      console.error(err);
       return [];
     }
   },
@@ -532,7 +532,7 @@ module.exports = {
           .update(product);
         resolve(response);
       } catch (error) {
-        console.err(error);
+        console.error(error);
         reject(error);
       }
     });
@@ -546,7 +546,7 @@ module.exports = {
           .delete();
         resolve(response);
       } catch (error) {
-        console.err(error);
+        console.error(error);
         reject(error);
       }
     });

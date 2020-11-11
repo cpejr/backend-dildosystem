@@ -16,7 +16,7 @@ module.exports = {
         const response = await connection("carousel").insert(newCarousel);
         resolve(response);
       } catch (error) {
-        console.err(error);
+        console.error(error);
         reject(error);
       }
     });
@@ -36,7 +36,7 @@ module.exports = {
   
           resolve(response);
         } catch (error) {
-          console.err(error);
+          console.error(error);
           reject(error);
         }
   });
@@ -48,7 +48,7 @@ module.exports = {
         const response = await connection("carousel").select("*");
         resolve(response);
       } catch (error) {
-        console.err(error);
+        console.error(error);
         reject(error);
       }
     });
@@ -84,7 +84,7 @@ module.exports = {
 
         resolve(item);
       } catch (error) {
-        console.err(error);
+        console.error(error);
         reject(error);
       }
     });

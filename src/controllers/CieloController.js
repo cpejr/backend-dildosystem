@@ -5,7 +5,7 @@ module.exports = {
       console.log(data);
       return response.status(200).json({message: 'ok!'})
     } catch (error) {
-      console.err(error);
+      console.error(error);
       return response.status(500).json({message: 'Internal server error'})
     }
   }
