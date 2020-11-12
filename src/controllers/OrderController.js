@@ -87,7 +87,7 @@ module.exports = {
     }
   },
 
-  async initiate(request, response) {
+  async initialize(request, response) {
     try {
       const id = uid.randomUUID(10);
 

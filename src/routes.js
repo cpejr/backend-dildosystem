@@ -72,7 +72,7 @@ routes.post('/newOrder', authenticateToken, celebrate(orderValidate.create), Ord
 routes.get('/orders', authenticateToken, isAdmin, celebrate(orderValidate.index), OrderController.index);
 routes.get('/orders/:id', authenticateToken, isAdminOrSelf, celebrate(orderValidate.index), OrderController.index);
 routes.get('/order/:id', authenticateToken, isAdminOrSelf, celebrate(orderValidate.getOne), OrderController.getOne);
-routes.get('/initiateOrder', authenticateToken, OrderController.initiate);
+routes.get('/initializeOrder', authenticateToken, OrderController.initialize);
 routes.put('/order/:id', authenticateToken, isAdmin, celebrate(orderValidate.update), OrderController.update);
 routes.delete('/order/:order_id', authenticateToken, isAdmin, celebrate(orderValidate.delete), OrderController.delete);
 
