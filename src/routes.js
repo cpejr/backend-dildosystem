@@ -68,7 +68,9 @@ routes.delete('/subproducts/:product_id', authenticateToken, isAdmin, celebrate(
 routes.put('/updateSubproduct/:id', authenticateToken, isAdmin, imageUpload('imageFile', 'update'), celebrate(subProductValidate.update), SubproductController.update);
 
 //Orders
+routes.post('/cielo', celebrate(orderValidate.createMock), OrderController.createMock);
 routes.post('/newOrder', authenticateToken, celebrate(orderValidate.create), OrderController.create);
+
 routes.get('/orders', authenticateToken, isAdmin, celebrate(orderValidate.index), OrderController.index);
 routes.get('/orders/:id', authenticateToken, isAdminOrSelf, celebrate(orderValidate.index), OrderController.index);
 routes.get('/order/:id', authenticateToken, isAdminOrSelf, celebrate(orderValidate.getOne), OrderController.getOne);
@@ -77,7 +79,7 @@ routes.put('/order/:id', authenticateToken, isAdmin, celebrate(orderValidate.upd
 routes.delete('/order/:order_id', authenticateToken, isAdmin, celebrate(orderValidate.delete), OrderController.delete);
 
 //Cielo API
-routes.post('/cielo', CieloController.print);
+
 
 //GoogleDrive
 routes.get('/validateCredentials', DriveController.validateCredentials)

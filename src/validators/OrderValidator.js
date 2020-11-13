@@ -2,6 +2,15 @@ const { Segments, Joi } = require('celebrate');
 
 let orderValidate = new Object();
 
+orderValidate.createMock = {
+    [Segments.BODY]: Joi.object().keys({
+        order_number: Joi.string().required(),
+        shipping_name: Joi.string().required(),
+        shipping_price: Joi.number().required(),
+        payment_method_type: Joi.number().required(),
+    }).unknown(true)
+}
+
 orderValidate.create = {
     [Segments.BODY]: Joi.object().keys({
         products: Joi.array().items(Joi.object().keys({
@@ -23,7 +32,7 @@ orderValidate.index = {
     [Segments.QUERY]: Joi.object().keys({
         byid: Joi.string().optional(),
         page: Joi.number().integer().min(1).optional(),
-        byStatus: Joi.string().valid('pending', 'paid', 'mailed','delivered').optional()
+        byStatus: Joi.string().valid('pending', 'paid', 'mailed', 'delivered').optional()
     }),
     [Segments.PARAMS]: Joi.object().keys({
         id: Joi.string().optional(),
@@ -45,7 +54,7 @@ orderValidate.update = {
     }),
     [Segments.BODY]: Joi.object().keys({
         payment_type: Joi.string().optional(),
-        order_status: Joi.string().valid('pending', 'paid', 'mailed','delivered').optional(),
+        order_status: Joi.string().valid('pending', 'paid', 'mailed', 'delivered').optional(),
         track_number: Joi.string().allow("").optional()
     })
 }

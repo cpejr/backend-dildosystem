@@ -4,7 +4,8 @@ const { v1: uuidv1 } = require('uuid');
 const { getOne } = require("./UserController");
 const { default: ShortUniqueId } = require('short-unique-id');
 
-const Email = require('../mail/mail.js')
+const Email = require('../mail/mail.js');
+const { createMock } = require("../validators/OrderValidator");
 
 const uid = new ShortUniqueId({
   dictionary: [
@@ -96,6 +97,49 @@ module.exports = {
       console.error(err);
       return response.status(500).json({
         notification: "Internal server error while trying to initiate order",
+      });
+    }
+  },
+
+  async createMock(request, response) {
+    try {
+      const { order_number, shipping_name, shipping_price, payment_method_type } = request.body;
+
+      let payment_type;
+
+      switch (payment_method_type) {
+        case 1:
+          payment_type = "cartao_credito";
+          break;
+        case 2:
+          payment_type = "boleto";
+          break;
+        case 3:
+          payment_type = "debito_online";
+          break;
+        case 4:
+          payment_type = "cartao_debito";
+          break;
+        case 5:
+          payment_type = "QRcode";
+          break;
+      }
+
+      const mock = {
+        order_id: order_number,
+        payment_type,
+        track_type: shipping_name,
+        track_price: shipping_price
+      };
+
+      await OrderModel.createMockOrder(mock);
+
+      return response.status(200).json({ message: 'Ok!' })
+
+    } catch (error) {
+      return response.status(500).json({
+        notification:
+          "Internal server error while trying to register the data of the ongoing new order",
       });
     }
   },

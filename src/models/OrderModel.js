@@ -4,6 +4,18 @@ const connection = require("../database/connection");
 const ORDERS_PER_PAGE = 10;
 
 module.exports = {
+  createMockOrder(mock) {
+    return new Promise((resolve, reject) => {
+      connection("mock_orders")
+        .insert(mock)
+        .then((response) => resolve(mock.order_id))
+        .catch((error) => {
+          console.error(error);
+          reject(error);
+        })
+    });
+  },
+
   createNewOrder(order) {
     return new Promise((resolve, reject) => {
       connection("orders")
@@ -17,7 +29,7 @@ module.exports = {
   },
 
   async updateOrder(id, order) {
-    const response = await connection("orders").where("id","=", id).update(order);
+    const response = await connection("orders").where("id", "=", id).update(order);
     return response;
   },
 
@@ -212,12 +224,12 @@ module.exports = {
       Object.keys(result).forEach((value, index) => {
         finalResult[index] = result[value];
       });
-      if(process.env.NODE_ENV == "production"){
+      if (process.env.NODE_ENV == "production") {
         resolve({ data: finalResult, totalCount: totalCount.count });
-     }else{
-      resolve({ data: finalResult, totalCount: totalCount["count(`o`.`id`)"] });
-     }
-      
+      } else {
+        resolve({ data: finalResult, totalCount: totalCount["count(`o`.`id`)"] });
+      }
+
     });
   },
 
