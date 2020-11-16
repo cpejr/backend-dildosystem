@@ -166,9 +166,9 @@ module.exports = {
 
   async create(request, response) {
     try {
-      let { products, paymentType, tracktype, trackprice, address_id } = request.body;
+      let { id, products, paymentType, tracktype, trackprice, address_id } = request.body;
       const user = request.session.user;
-      let id = uid.randomUUID(10);
+      //let id = uid.randomUUID(10);
 
       // console.log('esse eh o products: ', products)
 
@@ -260,7 +260,12 @@ module.exports = {
 
       await OrderModel.createProductOrder(products);
 
-      response.status(200).json({ order_id });
+      const returnOrder = OrderModel.getOne(user.id, order_id);
+      const deleteMock = OrderModel.deleteMockOrder(order_id);
+
+      const promises = await Promise.all([returnOrder, deleteMock])
+
+      response.status(200).json(promises[0]);
 
       const dataMail = {
         to: user.email,

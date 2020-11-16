@@ -19,6 +19,7 @@ orderValidate.getMock = {
 
 orderValidate.create = {
     [Segments.BODY]: Joi.object().keys({
+        id: Joi.string().required(),
         products: Joi.array().items(Joi.object().keys({
             product_id: Joi.string().required(),
             product_quantity: Joi.number().integer().min(1).required(),
@@ -31,7 +32,8 @@ orderValidate.create = {
         trackprice: Joi.number().required(),
         tracktype: Joi.string().required(),
         address_id: Joi.string().required()
-    })
+    }),
+
 }
 
 orderValidate.index = {

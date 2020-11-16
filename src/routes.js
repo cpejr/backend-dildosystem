@@ -68,11 +68,12 @@ routes.get('/subproducts/:product_id', authenticateOptionalToken, celebrate(subP
 routes.delete('/subproducts/:product_id', authenticateToken, isAdmin, celebrate(subProductValidate.delete), SubproductController.delete);
 routes.put('/updateSubproduct/:id', authenticateToken, isAdmin, imageUpload('imageFile', 'update'), celebrate(subProductValidate.update), SubproductController.update);
 
-//Orders
+//Mock Orders
 routes.post('/cielo', celebrate(orderValidate.createMock), OrderController.createMock);
-routes.post('/newOrder', authenticateToken, celebrate(orderValidate.create), OrderController.create);
 routes.get('/mockOrder/:id', authenticateToken, celebrate(orderValidate.getMock), OrderController.getMock)
 
+//Orders
+routes.post('/newOrder', authenticateToken, celebrate(orderValidate.create), OrderController.create);
 routes.get('/orders', authenticateToken, isAdmin, celebrate(orderValidate.index), OrderController.index);
 routes.get('/orders/:id', authenticateToken, isAdminOrSelf, celebrate(orderValidate.index), OrderController.index);
 routes.get('/order/:id', authenticateToken, isAdminOrSelf, celebrate(orderValidate.getOne), OrderController.getOne);

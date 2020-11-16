@@ -20,13 +20,22 @@ module.exports = {
     return new Promise((resolve, reject) => {
       connection("mock_orders")
         .select('*')
-        .where('mock_orders.order_id', '=', orderId)
+        .where('mock_orders.order_id', orderId)
         .first()
         .then((response) => resolve(response))
         .catch((error) => {
           console.log(error);
           reject(error);
         })
+    })
+  },
+
+  deleteMockOrder(orderId) {
+    return new Promise((resolve, reject) => {
+      connection("mock_orders")
+        .where("mock_orders.order_id", orderId)
+        .delete()
+        .then((response) => resolve({ Message: `Mock order ${orderId} deleted!` }))
     })
   },
 
@@ -276,7 +285,7 @@ module.exports = {
           "u.birthdate",
           "u.phonenumber",
         )
-        .where("order_user_id", id)
+        .where("u.id", id)
         .first();
 
       const query3 = connection("orders_products AS op")
