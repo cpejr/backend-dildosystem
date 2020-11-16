@@ -11,6 +11,12 @@ orderValidate.createMock = {
     }).unknown(true)
 }
 
+orderValidate.getMock = {
+    [Segments.PARAMS]: Joi.object().keys({
+        id: Joi.string().required()
+    })
+}
+
 orderValidate.create = {
     [Segments.BODY]: Joi.object().keys({
         products: Joi.array().items(Joi.object().keys({

@@ -16,6 +16,20 @@ module.exports = {
     });
   },
 
+  getMockOrder(orderId) {
+    return new Promise((resolve, reject) => {
+      connection("mock_orders")
+        .select('*')
+        .where('mock_orders.order_id', '=', orderId)
+        .first()
+        .then((response) => resolve(response))
+        .catch((error) => {
+          console.log(error);
+          reject(error);
+        })
+    })
+  },
+
   createNewOrder(order) {
     return new Promise((resolve, reject) => {
       connection("orders")

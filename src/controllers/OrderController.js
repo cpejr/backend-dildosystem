@@ -147,6 +147,23 @@ module.exports = {
     }
   },
 
+  async getMock(request, response) {
+    try {
+      const orderId = request.params.id;
+      //const userId = request.session.user.id;
+
+      const mockOrder = await OrderModel.getMockOrder(orderId);
+
+      return response.status(200).json(mockOrder);
+    } catch (error) {
+      console.log(error)
+      return response.status(500).json({
+        notification:
+          "Internal server error while trying to get the data of the ongoing new order",
+      });
+    }
+  },
+
   async create(request, response) {
     try {
       let { products, paymentType, tracktype, trackprice, address_id } = request.body;

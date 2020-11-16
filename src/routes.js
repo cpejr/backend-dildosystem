@@ -34,6 +34,7 @@ const imageMultUpload = require('./middlewares/imageMultUpload');
 const { generateId } = require('./middlewares/idGenerator');
 const { resolve } = require('path');
 const CieloController = require('./controllers/CieloController');
+const authentication = require('./middlewares/authentication');
 
 //Users
 routes.post('/user', celebrate(userValidate.create), generateId, UserController.create);
@@ -70,6 +71,7 @@ routes.put('/updateSubproduct/:id', authenticateToken, isAdmin, imageUpload('ima
 //Orders
 routes.post('/cielo', celebrate(orderValidate.createMock), OrderController.createMock);
 routes.post('/newOrder', authenticateToken, celebrate(orderValidate.create), OrderController.create);
+routes.get('/mockOrder/:id', authenticateToken, celebrate(orderValidate.getMock), OrderController.getMock)
 
 routes.get('/orders', authenticateToken, isAdmin, celebrate(orderValidate.index), OrderController.index);
 routes.get('/orders/:id', authenticateToken, isAdminOrSelf, celebrate(orderValidate.index), OrderController.index);
