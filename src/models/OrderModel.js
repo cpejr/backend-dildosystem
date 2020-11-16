@@ -301,7 +301,12 @@ module.exports = {
         products
       }
 
-      resolve(result);
+      if (order && user && products) {
+        resolve(result);
+      } else {
+        reject({ message: "Some of the data could not be fetched. This order doesn't exist for this user." })
+      }
+
     }
     )
   },
