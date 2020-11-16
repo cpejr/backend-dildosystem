@@ -166,7 +166,7 @@ module.exports = {
 
   async create(request, response) {
     try {
-      let { id, products, paymentType, tracktype, trackprice, address_id } = request.body;
+      let { id, products, payment_type, track_type, track_price, address_id } = request.body;
       const user = request.session.user;
       //let id = uid.randomUUID(10);
 
@@ -174,9 +174,9 @@ module.exports = {
 
       const order = {
         id: id,
-        track_price: trackprice,
-        track_type: tracktype,
-        payment_type: paymentType,
+        track_price: track_price,
+        track_type: track_type,
+        payment_type: payment_type,
         user_id: user.id,
         address_id: address_id
       };
