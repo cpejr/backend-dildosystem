@@ -103,7 +103,10 @@ module.exports = {
 
   async createMock(request, response) {
     try {
-      const { order_number, shipping_name, shipping_price, payment_method_type } = request.body;
+      let { order_number, shipping_name, shipping_price, payment_method_type } = request.body;
+
+      const dashIndex = shipping_name.indexOf("-");
+      shipping_name = shipping_name.substring(0, dashIndex - 1);
 
       let payment_type;
 
