@@ -4,6 +4,41 @@ const connection = require("../database/connection");
 const ORDERS_PER_PAGE = 10;
 
 module.exports = {
+  createMockOrder(mock) {
+    return new Promise((resolve, reject) => {
+      connection("mock_orders")
+        .insert(mock)
+        .then((response) => resolve(mock.order_id))
+        .catch((error) => {
+          console.error(error);
+          reject(error);
+        })
+    });
+  },
+
+  getMockOrder(orderId) {
+    return new Promise((resolve, reject) => {
+      connection("mock_orders")
+        .select('*')
+        .where('mock_orders.order_id', orderId)
+        .first()
+        .then((response) => resolve(response))
+        .catch((error) => {
+          console.log(error);
+          reject(error);
+        })
+    })
+  },
+
+  deleteMockOrder(orderId) {
+    return new Promise((resolve, reject) => {
+      connection("mock_orders")
+        .where("mock_orders.order_id", orderId)
+        .delete()
+        .then((response) => resolve({ Message: `Mock order ${orderId} deleted!` }))
+    })
+  },
+
   createNewOrder(order) {
     return new Promise((resolve, reject) => {
       connection("orders")
@@ -17,7 +52,7 @@ module.exports = {
   },
 
   async updateOrder(id, order) {
-    const response = await connection("orders").where("id","=", id).update(order);
+    const response = await connection("orders").where("id", "=", id).update(order);
     return response;
   },
 
@@ -212,12 +247,12 @@ module.exports = {
       Object.keys(result).forEach((value, index) => {
         finalResult[index] = result[value];
       });
-      if(process.env.NODE_ENV == "production"){
+      if (process.env.NODE_ENV == "production") {
         resolve({ data: finalResult, totalCount: totalCount.count });
-     }else{
-      resolve({ data: finalResult, totalCount: totalCount["count(`o`.`id`)"] });
-     }
-      
+      } else {
+        resolve({ data: finalResult, totalCount: totalCount["count(`o`.`id`)"] });
+      }
+
     });
   },
 
@@ -249,7 +284,7 @@ module.exports = {
           "u.birthdate",
           "u.phonenumber",
         )
-        .where("u.id", query1.user_id)
+        .where("u.id", query1.user_id || id)
         .first();
 
       const query3 = connection("orders_products AS op")
@@ -265,7 +300,12 @@ module.exports = {
         products
       }
 
-      resolve(result);
+      if (order && user && products) {
+        resolve(result);
+      } else {
+        reject({ message: "Some of the data could not be fetched. This order doesn't exist for this user." })
+      }
+
     }
     )
   },

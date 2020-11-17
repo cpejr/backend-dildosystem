@@ -4,7 +4,8 @@ const { v1: uuidv1 } = require('uuid');
 const { getOne } = require("./UserController");
 const { default: ShortUniqueId } = require('short-unique-id');
 
-const Email = require('../mail/mail.js')
+const Email = require('../mail/mail.js');
+const { createMock } = require("../validators/OrderValidator");
 
 const uid = new ShortUniqueId({
   dictionary: [
@@ -16,6 +17,7 @@ const uid = new ShortUniqueId({
 });
 
 module.exports = {
+
   async index(request, response) {
     try {
       const { page, byStatus, byid } = request.query;
@@ -26,7 +28,7 @@ module.exports = {
       response.setHeader("X-Total-Count", result.totalCount);
       return response.status(200).json(result.data);
 
-    } catch (err) {   
+    } catch (err) {
       console.error(err);
 
       return response.status(500).json({
@@ -43,7 +45,7 @@ module.exports = {
 
       response.status(200).json(result);
     }
-    catch(err){
+    catch (err) {
       console.error(err);
 
       return response.status(500).json({
@@ -86,19 +88,95 @@ module.exports = {
     }
   },
 
+  async initialize(request, response) {
+    try {
+      const id = uid.randomUUID(10);
+
+      return response.status(200).json(id);
+    } catch (err) {
+      console.error(err);
+      return response.status(500).json({
+        notification: "Internal server error while trying to initiate order",
+      });
+    }
+  },
+
+  async createMock(request, response) {
+    try {
+      let { order_number, shipping_name, shipping_price, payment_method_type } = request.body;
+
+      const dashIndex = shipping_name.indexOf("-");
+      shipping_name = shipping_name.substring(0, dashIndex - 1);
+
+      let payment_type;
+
+      switch (payment_method_type) {
+        case 1:
+          payment_type = "cartao_credito";
+          break;
+        case 2:
+          payment_type = "boleto";
+          break;
+        case 3:
+          payment_type = "debito_online";
+          break;
+        case 4:
+          payment_type = "cartao_debito";
+          break;
+        case 5:
+          payment_type = "QRcode";
+          break;
+      }
+
+      const mock = {
+        order_id: order_number,
+        payment_type,
+        track_type: shipping_name,
+        track_price: shipping_price
+      };
+
+      await OrderModel.createMockOrder(mock);
+
+      return response.status(200).json({ message: 'Ok!' })
+
+    } catch (error) {
+      return response.status(500).json({
+        notification:
+          "Internal server error while trying to register the data of the ongoing new order",
+      });
+    }
+  },
+
+  async getMock(request, response) {
+    try {
+      const orderId = request.params.id;
+      //const userId = request.session.user.id;
+
+      const mockOrder = await OrderModel.getMockOrder(orderId);
+
+      return response.status(200).json(mockOrder);
+    } catch (error) {
+      console.log(error)
+      return response.status(500).json({
+        notification:
+          "Internal server error while trying to get the data of the ongoing new order",
+      });
+    }
+  },
+
   async create(request, response) {
     try {
-      let { products, paymentType, tracktype, trackprice, address_id } = request.body;
+      let { id, products, payment_type, track_type, track_price, address_id } = request.body;
       const user = request.session.user;
-      let id = uid.randomUUID(10);
+      //let id = uid.randomUUID(10);
 
       // console.log('esse eh o products: ', products)
 
       const order = {
         id: id,
-        track_price: trackprice,
-        track_type: tracktype,
-        payment_type: paymentType,
+        track_price: track_price,
+        track_type: track_type,
+        payment_type: payment_type,
         user_id: user.id,
         address_id: address_id
       };
@@ -182,7 +260,12 @@ module.exports = {
 
       await OrderModel.createProductOrder(products);
 
-      response.status(200).json({ order_id });
+      const returnOrder = OrderModel.getOne(user.id, order_id);
+      const deleteMock = OrderModel.deleteMockOrder(order_id);
+
+      const promises = await Promise.all([returnOrder, deleteMock])
+
+      response.status(200).json(promises[0]);
 
       const dataMail = {
         to: user.email,
@@ -230,7 +313,7 @@ module.exports = {
 
     } catch (err) {
       console.error(err);
-      return response.status(500).json({notification: "Internal error while trying to get order address"})
+      return response.status(500).json({ notification: "Internal error while trying to get order address" })
     }
   },
 };

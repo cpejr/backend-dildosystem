@@ -34,6 +34,7 @@ const imageMultUpload = require('./middlewares/imageMultUpload');
 const { generateId } = require('./middlewares/idGenerator');
 const { resolve } = require('path');
 const CieloController = require('./controllers/CieloController');
+const authentication = require('./middlewares/authentication');
 
 //Users
 routes.post('/user', celebrate(userValidate.create), generateId, UserController.create);
@@ -67,16 +68,21 @@ routes.get('/subproducts/:product_id', authenticateOptionalToken, celebrate(subP
 routes.delete('/subproducts/:product_id', authenticateToken, isAdmin, celebrate(subProductValidate.delete), SubproductController.delete);
 routes.put('/updateSubproduct/:id', authenticateToken, isAdmin, imageUpload('imageFile', 'update'), celebrate(subProductValidate.update), SubproductController.update);
 
+//Mock Orders
+routes.post('/cielo', celebrate(orderValidate.createMock), OrderController.createMock);
+routes.get('/mockOrder/:id', authenticateToken, celebrate(orderValidate.getMock), OrderController.getMock)
+
 //Orders
 routes.post('/newOrder', authenticateToken, celebrate(orderValidate.create), OrderController.create);
 routes.get('/orders', authenticateToken, isAdmin, celebrate(orderValidate.index), OrderController.index);
 routes.get('/orders/:id', authenticateToken, isAdminOrSelf, celebrate(orderValidate.index), OrderController.index);
 routes.get('/order/:id', authenticateToken, isAdminOrSelf, celebrate(orderValidate.getOne), OrderController.getOne);
+routes.get('/initializeOrder', authenticateToken, OrderController.initialize);
 routes.put('/order/:id', authenticateToken, isAdmin, celebrate(orderValidate.update), OrderController.update);
 routes.delete('/order/:order_id', authenticateToken, isAdmin, celebrate(orderValidate.delete), OrderController.delete);
 
 //Cielo API
-routes.post('/cielo', CieloController.print);
+
 
 //GoogleDrive
 routes.get('/validateCredentials', DriveController.validateCredentials)
