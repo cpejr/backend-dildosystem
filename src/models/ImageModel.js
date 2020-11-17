@@ -7,7 +7,7 @@ module.exports = {
         try {
             let existing;
             if (subproduct_id === null) {
-                existing = await connection('images').where({ product_id: product_id }).count("id").first();
+                existing = await connection('images').where({ product_id: product_id, subproduct_id: null }).count("id").first();
             } else {
                 existing = await connection('images').where({ subproduct_id: subproduct_id }).count("id").first();
             }
