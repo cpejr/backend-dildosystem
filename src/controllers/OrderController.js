@@ -39,9 +39,10 @@ module.exports = {
 
   async getOne(request, response) {
     try {
+      const requester = request.session.user;
       const { id } = request.params;
       const { order_id } = request.query;
-      const result = await OrderModel.getOne(id, order_id);
+      const result = await OrderModel.getOne(id, order_id, requester);
 
       response.status(200).json(result);
     }

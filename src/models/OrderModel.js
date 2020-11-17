@@ -256,7 +256,7 @@ module.exports = {
     });
   },
 
-  getOne(id, order_id) {
+  getOne(id, order_id, requester = {}) {
     return new Promise(async (resolve, reject) => {
 
       const query1 = await connection("orders")
@@ -300,7 +300,7 @@ module.exports = {
         products
       }
 
-      if (order && user && products) {
+      if (order && (id === order.user_id || requester.type === "admin") && products) {
         resolve(result);
       } else {
         reject({ message: "Some of the data could not be fetched. This order doesn't exist for this user." })
