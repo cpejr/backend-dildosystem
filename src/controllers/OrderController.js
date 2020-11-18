@@ -238,26 +238,37 @@ module.exports = {
           items: out_of_stock,
         });
 
-      const orderPromise = OrderModel.createNewOrder(order);
-      const pricesPromise = ProductModel.getProductsPrices(
+      //const orderPromise = OrderModel.createNewOrder(order);
+      //const pricesPromise = ProductModel.getProductsPrices(
+      //   products_id,
+      //   user.type
+      // );
+
+      let prices = await ProductModel.getProductsPrices(
         products_id,
-        user.type
+        ((user.type && user.user_status === 'approved') || 'retailer')
       );
 
-      let [order_id, prices] = await Promise.all([orderPromise, pricesPromise]);
+      let total_price = 0;
 
       products = products.map((value) => {
         const product = {
           id: uuidv1(),
           product_id: value.product_id,
-          order_id,
+          order_id: id,
           product_quantity: value.product_quantity,
           subproduct_id: value.subproduct_id,
           price: prices[value.product_id],
         };
 
+        total_price += product.product_quantity * product.price;
+
         return product;
       });
+
+      order.total_price = total_price;
+
+      let order_id = await OrderModel.createNewOrder(order);
 
       await OrderModel.createProductOrder(products);
 
