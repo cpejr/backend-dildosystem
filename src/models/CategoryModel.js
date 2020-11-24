@@ -112,5 +112,36 @@ module.exports = {
                 reject(error);
             }
         });
+    },
+
+    async categorize(product_id, subcategories_ids){
+        let newRelations = [];
+        subcategories_ids.forEach((subcategory_id) => {
+            const newRelation = {
+                product_id,
+                subcategory_id
+            }
+            newRelations.push(newRelation);    
+        })
+        
+        try {
+          const result = await connection('products_subcategories').insert(newRelations);
+          return result;
+        } catch (error) {
+            console.error(error);
+        }
+    },
+
+    async uncategorize( product_id, subcategory_id){
+        try {
+          const result = await connection('products_subcategories').where({
+              product_id,
+              subcategory_id
+          })
+          .delete();
+          return result;  
+        } catch (error) {
+            console.error(error);
+        }
     }
 }
