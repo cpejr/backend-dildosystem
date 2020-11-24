@@ -1,3 +1,4 @@
+const { uncategorize } = require('../models/CategoryModel');
 const CategoryModel = require('../models/CategoryModel');
 
 module.exports = {
@@ -97,8 +98,34 @@ module.exports = {
 
     } catch (err) {
       console.error(err);
-      return response.status(500).json({notification: "Internal error while trying to get categories"})
+      return response.status(500).json({notification: "Internal error while trying to get categories"});
+    }
+  },
+
+  async categorize(request, response){
+    try {
+      const {product_id} = request.params;
+      const {subcategories_ids} = request.body;
+      
+      const result = await CategoryModel.categorize(product_id, subcategories_ids);
+
+      return response.status(200).json(result);
+    } catch (error) {
+      console.error(error);
+      return response.status(500).json({notification: "Internal error while trying to categorize a product"});
+    }
+  },
+
+  async uncategorize(request, response){
+    try {
+      const {product_id, subcategory_id} = request.params;
+
+      const result = await CategoryModel.uncategorize(product_id, subcategory_id);
+
+      return response.status(200).json(result);
+    } catch (error) {
+      console.error(error);
+      return response.status(500).json({notification: "Internal error while trying to delete a subcategory"})
     }
   }
-
 }

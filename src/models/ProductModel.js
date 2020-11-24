@@ -1,11 +1,15 @@
 const connection = require("../database/connection");
+const categoryModel = require("./CategoryModel");
 const ITEMS_PER_PAGE = 15;
 
 module.exports = {
   createNewProduct(product) {
     return new Promise(async (resolve, reject) => {
+      const subcategory_id = product.subcategory_id;
+      //delete product.subcategory_id;
       try {
         const response = await connection("products").insert(product);
+        await categoryModel.categorize(product.id, [subcategory_id]);
         resolve(response);
       } catch (error) {
         console.error(error);
@@ -184,7 +188,13 @@ module.exports = {
         }
 
         if (subcategories.length > 0) { //Insere restrição de subcategoria se a query existir.
-          pipeline = pipeline.andWhere((qb) => {
+          pipeline = pipeline
+          .select(
+            "products.id"
+          )
+          .join("products_subcategories AS ps", "products.id", "=", "ps.product_id" )
+          .join("subcategories AS s", "s.id", "=", "pr.subcategory_id")
+          .andWhere((qb) => {
             subcategories.forEach(subcat => {
               qb.orWhere("subcategory_id", "=", subcat)
             })
