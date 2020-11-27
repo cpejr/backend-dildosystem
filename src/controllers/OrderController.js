@@ -136,6 +136,8 @@ module.exports = {
         track_price: shipping_price
       };
 
+      console.log('mock to create', mock);
+
       await OrderModel.createMockOrder(mock);
 
       return response.status(200).json({ message: 'Ok!' })
