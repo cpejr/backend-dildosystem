@@ -141,6 +141,7 @@ module.exports = {
       return response.status(200).json({ message: 'Ok!' })
 
     } catch (error) {
+      console.log(error)
       return response.status(500).json({
         notification:
           "Internal server error while trying to register the data of the ongoing new order",
