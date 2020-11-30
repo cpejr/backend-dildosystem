@@ -102,6 +102,11 @@ module.exports = {
     }
   },
 
+  async logCielo(request, response) {
+    console.log(request.body);
+    return response.status(200).json({ message: 'Ok!' });
+  },
+
   async createMock(request, response) {
     try {
       console.log(request.body);
@@ -142,7 +147,7 @@ module.exports = {
 
       await OrderModel.createMockOrder(mock);
 
-      return response.status(200).json({ message: 'Ok!' })
+      return response.status(200).json({ message: 'Ok!' });
 
     } catch (error) {
       console.log(error)

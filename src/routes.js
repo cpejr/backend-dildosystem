@@ -69,7 +69,7 @@ routes.delete('/subproducts/:product_id', authenticateToken, isAdmin, celebrate(
 routes.put('/updateSubproduct/:id', authenticateToken, isAdmin, imageUpload('imageFile', 'update'), celebrate(subProductValidate.update), SubproductController.update);
 
 //Mock Orders
-routes.post('/cielo', celebrate(orderValidate.createMock), OrderController.createMock);
+routes.post('/cielo'/*, celebrate(orderValidate.createMock)*/, OrderController.logCielo);
 routes.get('/mockOrder/:id', authenticateToken, celebrate(orderValidate.getMock), OrderController.getMock)
 
 //Orders
