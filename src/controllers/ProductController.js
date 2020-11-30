@@ -1,13 +1,12 @@
-const ProductModel = require('../models/ProductModel');
-const SubproductModel = require('../models/SubproductModel');
-const CategoryModel = require('../models/CategoryModel');
+const ProductModel = require("../models/ProductModel");
+const SubproductModel = require("../models/SubproductModel");
+const CategoryModel = require("../models/CategoryModel");
 const ImageModel = require("../models/ImageModel");
-const { uploadFile, deleteFile } = require('../models/GoogleDriveModel');
-const { getImages } = require('../validators/ProductValidator');
-const { isAdmin } = require('../middlewares/authentication');
+const { uploadFile, deleteFile } = require("../models/GoogleDriveModel");
+const { getImages } = require("../validators/ProductValidator");
+const { isAdmin } = require("../middlewares/authentication");
 
 module.exports = {
-
   async create(request, response) {
     try {
       const newProduct = request.body;
@@ -22,56 +21,92 @@ module.exports = {
 
       await ProductModel.createNewProduct(newProduct);
 
-      if(images){
+      if (images) {
         await ImageModel.createImages(images, newProduct.id);
       }
 
       return response.status(200).json({ id: newProduct.id });
     } catch (err) {
       console.error(err);
-      return response.status(500).json({ notification: "Internal server error while trying to register the new product" });
+      return response
+        .status(500)
+        .json({
+          notification:
+            "Internal server error while trying to register the new product",
+        });
     }
   },
 
   async index(request, response) {
     try {
       const filter = request.query;
-      const { max_price, min_price, order_by, order_ascending, page, search, category_id } = filter;
+      const {
+        max_price,
+        min_price,
+        order_by,
+        order_ascending,
+        page,
+        search,
+        subcategory_id,
+        category_id,
+      } = filter;
+      //Campos que não correspondem diretamente a valores do produto devem ser removidos do filtro
+      //porque este filtro é passado diretamente para o ProductModel como query.
       delete filter.max_price;
       delete filter.min_price;
       delete filter.order_by;
       delete filter.order_ascending;
       delete filter.page;
       delete filter.search;
+      delete filter.subcategory_id;
       delete filter.category_id;
 
-      let type = "retailer";
-      if (request.session)
-        type = request.session.user.type;
+      let type = "retailer"; //Controle de tipo de usuário para diferenciação do preço
+      if (request.session) type = request.session.user.type;
 
-      let query = { visible: true, ...filter };
-      if (type === 'admin')
-        query = { ...filter };
+      let query = { visible: true, ...filter }; 
+      //Por padrão um usuário que não é admin não enxerga produtos invisíveis
+      if (type === "admin") query = { ...filter };
 
-      const categories = await CategoryModel.getCategories();
 
-      let subcategories = [];
+      //Filtros de categoria e subcategoria
+      //Funcionam gerando um vetor de ids de produto que são pertencentes a categoria ou subcategoria passada
+      //Este vetor é passado para o index do ProductModel e usado em funções o tipo whereIn na tabela de produtos
+      let categoryQuery = [];
+      if(category_id && !subcategory_id){ //O filtro de categoria só funciona se o filtro de subcategoria não existe.
+        const category = await CategoryModel.getCategory(category_id);
+        const subcategoriesFromCategory = category && category.subcategories.map((subcategory) => subcategory.id);
+        categoryQuery = await CategoryModel.createProductQuery(subcategoriesFromCategory);
+      }
 
-      categories.forEach((cat) => {
-        if (cat.id === category_id) {
-          subcategories = cat.subcategories.map(subcat => subcat.id);
-        }
-      });
+      let subcategoryQuery = [];
+      if(subcategory_id){
+        //Chama a função dedicada a retornar um vetor de produtos que estão naquela subcategoria
+        subcategoryQuery = await CategoryModel.createProductQuery([subcategory_id]);
+      }
 
-      const result = await ProductModel.getProducts(type, query, max_price, min_price, order_by, order_ascending, search, subcategories, page);
-      //console.log("teste: ", result);
-      response.setHeader('X-Total-Count', result.totalCount);
+      const result = await ProductModel.getProducts(
+        type,
+        query,
+        max_price,
+        min_price,
+        order_by,
+        order_ascending,
+        search,
+        categoryQuery,
+        subcategoryQuery,
+        page
+      );
+
+      response.setHeader("X-Total-Count", result.totalCount);
       return response.status(200).json(result.data);
-
-
     } catch (err) {
       console.error(err);
-      return response.status(500).json({ notification: "Internal server error while trying to get products" });
+      return response
+        .status(500)
+        .json({
+          notification: "Internal server error while trying to get products",
+        });
     }
   },
 
@@ -80,13 +115,17 @@ module.exports = {
       const lowProducts = await ProductModel.getlowStock();
       const result = {
         products: lowProducts,
-        number: lowProducts ? lowProducts.length : 0
-      }
+        number: lowProducts ? lowProducts.length : 0,
+      };
       return response.status(200).json(result);
-    }
-    catch (err) {
+    } catch (err) {
       console.error(err);
-      return response.status(500).json({ notification: "Internal server error while trying to get low stock products" });
+      return response
+        .status(500)
+        .json({
+          notification:
+            "Internal server error while trying to get low stock products",
+        });
     }
   },
 
@@ -107,14 +146,16 @@ module.exports = {
 
       const result = await Promise.all(promises);
       let data = result[0];
-      if (data)
-        data.subproducts = result[1];
+      if (data) data.subproducts = result[1];
 
       return response.status(200).json(data);
-
     } catch (err) {
       console.error(err);
-      return response.status(500).json({ notification: "Internal server error while trying to get products" });
+      return response
+        .status(500)
+        .json({
+          notification: "Internal server error while trying to get products",
+        });
     }
   },
 
@@ -122,17 +163,21 @@ module.exports = {
     try {
       let { ids } = request.params; //Coloque ids de produtos e subprodutos no params
       let { user } = request.session;
-    
-      let isAdmin = (user && user.type === "admin") ? true : false;
+
+      let isAdmin = user && user.type === "admin" ? true : false;
 
       const idVector = ids.split("-*-"); //Atenção aqui!! Tem que ser separados por esta string!
-      
+
       const result = await ProductModel.findImages(idVector, isAdmin);
 
       return response.status(200).json(result);
     } catch (err) {
       console.error(err);
-      return response.status(500).json({ notification: "Internal server error while trying to get images" });
+      return response
+        .status(500)
+        .json({
+          notification: "Internal server error while trying to get images",
+        });
     }
   },
 
@@ -159,21 +204,33 @@ module.exports = {
       response.status(200).json({ message: "Sucesso!" });
     } catch (err) {
       console.error(err);
-      return response.status(500).json({ notification: "Internal server error while trying to update product" });
+      return response
+        .status(500)
+        .json({
+          notification: "Internal server error while trying to update product",
+        });
     }
   },
 
   async uploadFiles(request, response) {
     try {
       const images = request.files.imageFiles;
-      const {product_id, subproduct_id} = request.body;
+      const { product_id, subproduct_id } = request.body;
 
-      const result = await ImageModel.createImages(images, product_id, subproduct_id);
+      const result = await ImageModel.createImages(
+        images,
+        product_id,
+        subproduct_id
+      );
 
       return response.status(200).json(result);
     } catch (err) {
       console.error(err);
-      return response.status(500).json({ notification: "Internal server error while trying to upload images" });
+      return response
+        .status(500)
+        .json({
+          notification: "Internal server error while trying to upload images",
+        });
     }
   },
 
@@ -185,7 +242,11 @@ module.exports = {
       return response.status(200).json({ notification: "Image deleted!" });
     } catch (err) {
       console.error(err);
-      return response.status(500).json({ notification: "Internal server error while trying to delete images" });
+      return response
+        .status(500)
+        .json({
+          notification: "Internal server error while trying to delete images",
+        });
     }
   },
 
@@ -201,9 +262,11 @@ module.exports = {
       await deleteFile(product.image_id);
       return response.status(200).json({ message: "Deleted product: " + product_id });
     } catch (err) {
-      return response.status(500).json({ notification: "Internal server error while trying to delete product" });
+      return response
+        .status(500)
+        .json({
+          notification: "Internal server error while trying to delete product",
+        });
     }
   },
-
-}
-
+};
