@@ -109,7 +109,6 @@ module.exports = {
 
   async createMock(request, response) {
     try {
-      console.log(request.body);
 
       let { order_number, shipping_name, shipping_price, payment_method_type } = request.body;
 
@@ -248,11 +247,6 @@ module.exports = {
           items: out_of_stock,
         });
 
-      //const orderPromise = OrderModel.createNewOrder(order);
-      //const pricesPromise = ProductModel.getProductsPrices(
-      //   products_id,
-      //   user.type
-      // );
 
       let prices = await ProductModel.getProductsPrices(
         products_id,
