@@ -365,3 +365,4 @@ function operateStock(product_vector, isIncrement) {
   });
   return Promise.all(promiseVector);
 }
+

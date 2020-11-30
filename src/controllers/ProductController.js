@@ -192,10 +192,14 @@ module.exports = {
   async delete(request, response) {
     try {
       const { product_id } = request.params;
+      const isInOrder = await ProductModel.productIsInOrder(product_id);
+      if (isInOrder) {
+       return response.status(500).json({ message: "Este produto já está incluído em um pedido.", code: 527});
+      }
       const product = await ProductModel.getProductbyId(product_id);
-      await deleteFile(product.image_id);
       await ProductModel.deleteProduct(product_id);
-      response.status(200).json({ message: "Deleted product: " + product_id });
+      await deleteFile(product.image_id);
+      return response.status(200).json({ message: "Deleted product: " + product_id });
     } catch (err) {
       return response.status(500).json({ notification: "Internal server error while trying to delete product" });
     }
