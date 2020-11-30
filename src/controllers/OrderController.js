@@ -104,6 +104,8 @@ module.exports = {
 
   async createMock(request, response) {
     try {
+      console.log(request.body);
+
       let { order_number, shipping_name, shipping_price, payment_method_type } = request.body;
 
       const dashIndex = shipping_name.indexOf("-");
