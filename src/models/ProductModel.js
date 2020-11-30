@@ -120,6 +120,7 @@ module.exports = {
     order_by,
     order_ascending,
     search,
+    categoryQuery,
     subcategoryQuery,
     page = 1
   ) {
@@ -185,6 +186,11 @@ module.exports = {
           Object.keys(query).forEach((key) => {
             pipeline = pipeline.andWhere(`products.${key}`, "=", query[key]);
           })
+        }
+
+        if (categoryQuery.length > 0) { //Insere restrição de subcategoria se a query existir.
+          pipeline = pipeline
+            .whereIn("products.id", categoryQuery);
         }
 
         if (subcategoryQuery.length > 0) { //Insere restrição de subcategoria se a query existir.

@@ -112,12 +112,29 @@ module.exports = {
     });
   },
 
+  async getCategory(category_id) {
+      try {
+        const promises = [
+          connection("categories").where({"categories.id": category_id}).select("*").first(),
+          connection("subcategories").where({"subcategories.category_id": category_id}).select("*"),
+        ];
+
+        let [category, subcategories] = await Promise.all(promises);
+
+        category.subcategories = subcategories;
+
+        return(category);
+      } catch (error) {
+        console.error(error);
+      }
+  },
+
   //Cria e retorna uma query para o Product Model que contém todos os produtos
   //que estão categorizados com a subcategoria que esta função recebe como parâmetro
-  async createSubcategoryQuery(subcategory_id) {
+  async createProductQuery(subcategory_ids) {
     const relations = await connection("products_subcategories")
-      .where({"products_subcategories.subcategory_id": subcategory_id})
-      .select(["products_subcategories.product_id"]);
+      .whereIn("subcategory_id", subcategory_ids)
+      .select(["product_id"]);
     let result = [];
     if (relations && relations.length > 0){
         relations.forEach(relation => {

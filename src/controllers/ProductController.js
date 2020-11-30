@@ -68,20 +68,22 @@ module.exports = {
       //Por padrão um usuário que não é admin não enxerga produtos invisíveis
       if (type === "admin") query = { ...filter };
 
+
+      //Filtros de categoria e subcategoria
+      //Funcionam gerando um vetor de ids de produto que são pertencentes a categoria ou subcategoria passada
+      //Este vetor é passado para o index do ProductModel e usado em funções o tipo whereIn na tabela de produtos
       let categoryQuery = [];
-      if(category_id){
-        subcategoryVector = await CategoryModel.getCategories(category_id);
-        console.log("getCategories: ", subcategoryVector);
+      if(category_id && !subcategory_id){ //O filtro de categoria só funciona se o filtro de subcategoria não existe.
+        const category = await CategoryModel.getCategory(category_id);
+        const subcategoriesFromCategory = category && category.subcategories.map((subcategory) => subcategory.id);
+        categoryQuery = await CategoryModel.createProductQuery(subcategoriesFromCategory);
       }
 
       let subcategoryQuery = [];
       if(subcategory_id){
         //Chama a função dedicada a retornar um vetor de produtos que estão naquela subcategoria
-        subcategoryQuery = await CategoryModel.createSubcategoryQuery(subcategory_id);
+        subcategoryQuery = await CategoryModel.createProductQuery([subcategory_id]);
       }
-
-      console.log("Passou da criação da query!! - ", subcategory_id);
-      console.log("Query retornada: ", subcategoryQuery);
 
       const result = await ProductModel.getProducts(
         type,
@@ -91,6 +93,7 @@ module.exports = {
         order_by,
         order_ascending,
         search,
+        categoryQuery,
         subcategoryQuery,
         page
       );
