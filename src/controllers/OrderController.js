@@ -140,7 +140,7 @@ module.exports = {
         order_id: order_number,
         payment_type,
         track_type: shipping_name,
-        track_price: shipping_price
+        track_price: shipping_price / 100.0
       };
 
       console.log('mock to create', mock);
@@ -259,7 +259,7 @@ module.exports = {
         ((user.type && user.user_status === 'approved') || 'retailer')
       );
 
-      let total_price = 0;
+      let total_price = track_price;
 
       products = products.map((value) => {
         const product = {
