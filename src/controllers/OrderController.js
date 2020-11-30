@@ -102,8 +102,14 @@ module.exports = {
     }
   },
 
+  async logCielo(request, response) {
+    console.log(request.body);
+    return response.status(200).json({ message: 'Ok!' });
+  },
+
   async createMock(request, response) {
     try {
+
       let { order_number, shipping_name, shipping_price, payment_method_type } = request.body;
 
       const dashIndex = shipping_name.indexOf("-");
@@ -133,12 +139,14 @@ module.exports = {
         order_id: order_number,
         payment_type,
         track_type: shipping_name,
-        track_price: shipping_price
+        track_price: shipping_price / 100.0
       };
+
+      console.log('mock to create', mock);
 
       await OrderModel.createMockOrder(mock);
 
-      return response.status(200).json({ message: 'Ok!' })
+      return response.status(200).json({ message: 'Ok!' });
 
     } catch (error) {
       console.log(error)
@@ -239,18 +247,13 @@ module.exports = {
           items: out_of_stock,
         });
 
-      //const orderPromise = OrderModel.createNewOrder(order);
-      //const pricesPromise = ProductModel.getProductsPrices(
-      //   products_id,
-      //   user.type
-      // );
 
       let prices = await ProductModel.getProductsPrices(
         products_id,
         ((user.type && user.user_status === 'approved') || 'retailer')
       );
 
-      let total_price = 0;
+      let total_price = track_price;
 
       products = products.map((value) => {
         const product = {
