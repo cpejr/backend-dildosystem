@@ -120,7 +120,7 @@ module.exports = {
     order_by,
     order_ascending,
     search,
-    subcategories,
+    subcategoryQuery,
     page = 1
   ) {
     return new Promise(async (resolve, reject) => {
@@ -187,18 +187,9 @@ module.exports = {
           })
         }
 
-        if (subcategories.length > 0) { //Insere restrição de subcategoria se a query existir.
+        if (subcategoryQuery.length > 0) { //Insere restrição de subcategoria se a query existir.
           pipeline = pipeline
-          .select(
-            "products.id"
-          )
-          .join("products_subcategories AS ps", "products.id", "=", "ps.product_id" )
-          .join("subcategories AS s", "s.id", "=", "pr.subcategory_id")
-          .andWhere((qb) => {
-            subcategories.forEach(subcat => {
-              qb.orWhere("subcategory_id", "=", subcat)
-            })
-          })
+            .whereIn("products.id", subcategoryQuery);
         }
 
         if (max_price) { //Insere comparações de preço máximo se a query existir.
