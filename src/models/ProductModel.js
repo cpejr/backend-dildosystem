@@ -224,18 +224,18 @@ module.exports = {
           });
         }
 
-        if (order_by) {
-          pipeline = pipeline.orderByRaw(
-            `case when ${reference_on_sale} = true then ${reference_sale} else ${reference} end ${order_reference} `
-          ); //VERIFY WHEN CHANGE DATABASE YOU DICK!
-        }
-
         let totalCount;
 
         if (process.env.NODE_ENV == "production") {
           totalCount = await pipeline.clone().select().count("id").first();
         } else {
           totalCount = await pipeline.clone().select().count("*").first();
+        }
+
+        if (order_by) {
+          pipeline = pipeline.orderByRaw(
+            `case when ${reference_on_sale} = true then ${reference_sale} else ${reference} end ${order_reference} `
+          ); //VERIFY WHEN CHANGE DATABASE YOU DICK!
         }
 
         let spColumns = [
@@ -590,12 +590,12 @@ module.exports = {
           .select('*')
           .whereIn("product_id", [product_id])
           .first();
-          if (response) {
-           resolve(true);
-          }
-          else {
-           resolve(false);
-          }
+        if (response) {
+          resolve(true);
+        }
+        else {
+          resolve(false);
+        }
       } catch (error) {
         console.error(error);
         reject(error);
