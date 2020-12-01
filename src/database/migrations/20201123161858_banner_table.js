@@ -4,6 +4,7 @@ exports.up = function(knex) {
     table.string('id').primary().notNullable();
     table.string('image_id').notNullable();
     table.integer('position').notNullable();
+    table.string('link').notNullable();
 });
 };
 

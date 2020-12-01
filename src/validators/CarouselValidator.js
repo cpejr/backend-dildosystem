@@ -8,6 +8,7 @@ CarouselValidate.updateCarousel = {
             id: Joi.string().optional(),
             image_id: Joi.string().optional(),
             position: Joi.number().integer().min(1).optional(),
+            link: Joi.string().optional(),
         }))
     })
 },

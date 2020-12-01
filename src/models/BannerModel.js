@@ -29,7 +29,8 @@ module.exports = {
           info.forEach(async element => { 
             response = await connection("banner")
             .where({ id: element.id })
-            .update({position: element.position});
+            .update({position: element.position})
+            .update({link: element.link});
         });  
           resolve(response);
         } catch (error) {
