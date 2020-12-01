@@ -3,7 +3,7 @@ exports.up = function(knex) {
     table.string('product_id').notNullable();
     table.foreign('product_id').references('id').inTable('products');
     table.string('subcategory_id').notNullable();
-    table.foreign('subcategory_id').references('id').inTable('subcategories');
+    table.foreign('subcategory_id').references('id').inTable('subcategories').onDelete('CASCADE');
     table.primary(['product_id', 'subcategory_id']);
   })
 };

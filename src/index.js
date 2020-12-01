@@ -5,6 +5,9 @@ const cors = require('cors');
 const routes = require('./routes');
 const { errors } = require('celebrate');
 require('./models/GoogleDriveModel').config();
+const bodyParser = require('body-parser');
+
+
 
 const port = process.env.PORT || 3333;
 
@@ -15,10 +18,11 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.use(express.json());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(routes);
 app.use(errors());
 
-app.listen(port, ()=>{
+app.listen(port, () => {
   console.log("Listening on port: " + port);
 });

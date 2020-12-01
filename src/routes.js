@@ -97,6 +97,8 @@ routes.put('/subcategory/:id', authenticateToken, isAdmin, celebrate(categoryVal
 routes.delete('/category/:id', authenticateToken, isAdmin, celebrate(categoryValidate.deleteCategory), CategoryController.deleteCategory);
 routes.delete('/subcategory/:id', authenticateToken, isAdmin, celebrate(categoryValidate.deleteSubcategory), CategoryController.deleteSubcategory);
 routes.get('/categories', CategoryController.getCategories)
+routes.put('/categorize/:product_id', authenticateToken, isAdmin, celebrate(categoryValidate.categorize), CategoryController.categorize)
+routes.delete('/uncategorize/:product_id/:subcategory_id', authenticateToken, isAdmin, celebrate(categoryValidate.uncategorize), CategoryController.uncategorize)
 
 //Carousel
 routes.get('/carousel', CarouselController.index);

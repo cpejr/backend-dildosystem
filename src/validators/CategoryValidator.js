@@ -46,5 +46,21 @@ categoryValidate.deleteSubcategory = {
     }),
 }
 
+categoryValidate.categorize = {
+    [Segments.PARAMS]: Joi.object().keys({
+        product_id: Joi.string().required(),
+    }),
+    [Segments.BODY]: Joi.object().keys({
+        subcategories_ids: Joi.array().min(1).required(),
+    })
+}
+
+categoryValidate.uncategorize = {
+    [Segments.PARAMS]: Joi.object().keys({
+        product_id: Joi.string().required(),
+        subcategory_id: Joi.string().required()
+    }),
+}
+
 
 module.exports = categoryValidate;      
