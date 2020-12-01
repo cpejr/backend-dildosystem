@@ -27,6 +27,8 @@ const orderValidate = require('./validators/OrderValidator');
 const CarouselController = require('./controllers/CarouselController');
 const CarouselValidate = require('./validators/CarouselValidator');
 
+const BannerController = require('./controllers/BannerController');
+
 const { authenticateToken, isAdmin, authenticateOptionalToken, isAdminOrSelf } = require('./middlewares/authentication');
 const { celebrate, Segments, Joi } = require('celebrate');
 const imageUpload = require('./middlewares/imageUpload');
@@ -103,6 +105,11 @@ routes.get('/carousel', CarouselController.index);
 routes.post('/newCarousel', authenticateToken, isAdmin, imageUpload('imageFile'), generateId, CarouselController.create);
 routes.put('/carousel', authenticateToken, isAdmin, celebrate(CarouselValidate.updateCarousel), CarouselController.update);
 routes.delete('/carousel/:id', authenticateToken, isAdmin, celebrate(CarouselValidate.deleteCarousel), CarouselController.delete);
+//Banner
+routes.get('/banner', BannerController.index);
+routes.post('/newBanner', authenticateToken, isAdmin, imageUpload('imageFile'), generateId, BannerController.create);
+routes.put('/banner', authenticateToken, isAdmin, celebrate(CarouselValidate.updateCarousel), BannerController.update);
+routes.delete('/banner/:id', authenticateToken, isAdmin, celebrate(CarouselValidate.deleteCarousel), BannerController.delete);
 
 //Images
 routes.post('/images', authenticateToken, isAdmin, imageMultUpload(undefined, 'imageFiles'), celebrate(productValidate.uploadFiles), ProductController.uploadFiles);
