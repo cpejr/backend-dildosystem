@@ -64,7 +64,7 @@ module.exports = {
       let type = "retailer"; //Controle de tipo de usuário para diferenciação do preço
       if (request.session) type = request.session.user.type;
 
-      let query = { visible: true, ...filter }; 
+      let query = { visible: true, ...filter };
       //Por padrão um usuário que não é admin não enxerga produtos invisíveis
       if (type === "admin") query = { ...filter };
 
@@ -72,15 +72,15 @@ module.exports = {
       //Filtros de categoria e subcategoria
       //Funcionam gerando um vetor de ids de produto que são pertencentes a categoria ou subcategoria passada
       //Este vetor é passado para o index do ProductModel e usado em funções o tipo whereIn na tabela de produtos
-      let categoryQuery = [];
-      if(category_id && !subcategory_id){ //O filtro de categoria só funciona se o filtro de subcategoria não existe.
+      let categoryQuery;
+      if (category_id && !subcategory_id) { //O filtro de categoria só funciona se o filtro de subcategoria não existe.
         const category = await CategoryModel.getCategory(category_id);
         const subcategoriesFromCategory = category && category.subcategories.map((subcategory) => subcategory.id);
         categoryQuery = await CategoryModel.createProductQuery(subcategoriesFromCategory);
       }
 
-      let subcategoryQuery = [];
-      if(subcategory_id){
+      let subcategoryQuery;
+      if (subcategory_id) {
         //Chama a função dedicada a retornar um vetor de produtos que estão naquela subcategoria
         subcategoryQuery = await CategoryModel.createProductQuery([subcategory_id]);
       }
@@ -255,7 +255,7 @@ module.exports = {
       const { product_id } = request.params;
       const isInOrder = await ProductModel.productIsInOrder(product_id);
       if (isInOrder) {
-       return response.status(500).json({ message: "Este produto já está incluído em um pedido.", code: 527});
+        return response.status(500).json({ message: "Este produto já está incluído em um pedido.", code: 527 });
       }
       const product = await ProductModel.getProductbyId(product_id);
       await ProductModel.deleteProduct(product_id);

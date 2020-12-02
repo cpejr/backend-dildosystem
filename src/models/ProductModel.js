@@ -186,12 +186,12 @@ module.exports = {
           });
         }
 
-        if (categoryQuery.length > 0) { //Insere restrição de subcategoria se a query existir.
+        if (categoryQuery) { //Insere restrição de subcategoria se a query existir.
           pipeline = pipeline
             .whereIn("products.id", categoryQuery);
         }
 
-        if (subcategoryQuery.length > 0) { //Insere restrição de subcategoria se a query existir.
+        if (subcategoryQuery) { //Insere restrição de subcategoria se a query existir.
           pipeline = pipeline
             .whereIn("products.id", subcategoryQuery);
         }
@@ -253,7 +253,6 @@ module.exports = {
         })
 
         const subproducts = await Promise.all(subpPromises);
-        console.log
         subproducts.forEach((subpList, index) => {
           if (subpList && subpList.length > 0) {
             products[index].subproducts = subpList;
@@ -262,12 +261,9 @@ module.exports = {
 
         //PUXA AS IMAGENS SECUNDÁRIAS DOS PRODUTOS
         const prodIds = products.map(prod => prod.id);
-        console.log("productIDs: ", prodIds);
         const secondaryImages = await connection("images")
           .select('*')
           .whereIn('images.product_id', prodIds);
-
-        console.log("secondaryImages:", secondaryImages);
 
         //COLOCA AS IMAGENS SECUNDÁRIAS ONDE DEVEM FICAR
         secondaryImages.forEach(image => {
