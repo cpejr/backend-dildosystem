@@ -16,6 +16,7 @@ CarouselValidate.updateCarousel = {
     CarouselValidate.deleteCarousel = {
         [Segments.PARAMS]: Joi.object().keys({
             id: Joi.string().required(),
+            link: Joi.string().optional(),
         })
     }
 
