@@ -55,17 +55,25 @@ module.exports = {
     }
   },
 
+  async changeStatus(request, response) {
+    try {
+      console.log(request.body);
+      return response.status(200).json({ message: 'Ok!' });
+    } catch (error) {
+      console.log(error);
+      return response.status(500).json({ message: 'Internal server error while trying to change status' });
+    }
+
+  },
+
   async update(request, response) {
     try {
       const { id } = request.params;
       const fields = request.body;
-      // console.log('id do param: ', id);
-      // console.log('fields do body: ', fields);
-      const result = await OrderModel.updateOrder(id, fields);
-      // console.log('esse eh o result babe: ', result)
-      const ord = await OrderModel.getOrders(1, {}, id);
 
-      // console.log(ord);
+      const result = await OrderModel.updateOrder(id, fields);
+
+      const ord = await OrderModel.getOrders(1, {}, id);
 
       const data = {
         to: ord.data[0].user.email,
