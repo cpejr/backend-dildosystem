@@ -37,6 +37,7 @@ const { generateId } = require('./middlewares/idGenerator');
 const { resolve } = require('path');
 const CieloController = require('./controllers/CieloController');
 const authentication = require('./middlewares/authentication');
+const { Router } = require('express');
 
 //Users
 routes.post('/user', celebrate(userValidate.create), generateId, UserController.create);
@@ -81,6 +82,7 @@ routes.get('/orders/:id', authenticateToken, isAdminOrSelf, celebrate(orderValid
 routes.get('/order/:id', authenticateToken, isAdminOrSelf, celebrate(orderValidate.getOne), OrderController.getOne);
 routes.get('/initializeOrder', authenticateToken, OrderController.initialize);
 routes.put('/order/:id', authenticateToken, isAdmin, celebrate(orderValidate.update), OrderController.update);
+routes.post('/cielonotification', celebrate(orderValidate.changeStatus), OrderController.changeStatus);
 routes.delete('/order/:order_id', authenticateToken, isAdmin, celebrate(orderValidate.delete), OrderController.delete);
 
 //Cielo API

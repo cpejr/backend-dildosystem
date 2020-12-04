@@ -13,9 +13,9 @@ const transporter = nodemailer.createTransport({
     user: process.env.EMAIL_LOGIN,
     pass: process.env.EMAIL_PASSWORD
   },
-tls: {
-  rejectUnauthorized: false
- }
+  tls: {
+    rejectUnauthorized: false
+  }
 });
 
 const handlebarOptions = {
@@ -53,20 +53,20 @@ module.exports = {
         path: path.join(__dirname, '/images/ladys-legs2.jpg'),
         cid: 'testImage2'
       }
-    ],
-      
+      ],
+
     };
 
-   
+
     const mailSent = await transporter.sendMail(config, (err, info) => {
-      if(err){
+      if (err) {
         console.log('Error: ', err)
       }
       else {
         console.log('Message sent!!!')
       }
     })
-    
+
   },
 
   async resgisterMail(data) {
@@ -97,18 +97,18 @@ module.exports = {
         path: path.join(__dirname, '/images/insta-icon.jpg'),
         cid: 'instaIcon'
       }],
-    context: { user_name }
+      context: { user_name }
     };
-   
+
     const mailSent = await transporter.sendMail(config, (err, info) => {
-      if(err){
+      if (err) {
         console.log('Error: ', err)
       }
       else {
         console.log('Message sent!!! (Bem vindo cara usuário)')
       }
     })
-    
+
   },
 
   async retailerAprovalMail(data) {
@@ -138,11 +138,11 @@ module.exports = {
         path: path.join(__dirname, '/images/insta-icon.jpg'),
         cid: 'instaIcon'
       }
-    ]
+      ]
     };
-   
+
     const mailSent = await transporter.sendMail(config, (err, info) => {
-      if(err){
+      if (err) {
         console.log('Error: ', err)
       }
       else {
@@ -155,7 +155,7 @@ module.exports = {
     const user_name = data.user_name
     const order_number = data.id
     const products = data.products.data[0].products
-    const { zipcode, state, city, neighborhood, street, number, complement }= data.products.data[0]
+    const { zipcode, state, city, neighborhood, street, number, complement } = data.products.data[0]
     const config = {
       from: `Loja Casulus <${process.env.EMAIL_LOGIN}>`,
       to: data.to,
@@ -172,39 +172,44 @@ module.exports = {
         path: path.join(__dirname, '/images/insta-icon.jpg'),
         cid: 'instaIcon'
       }],
-      context: { user_name, order_number, products, zipcode, state, city, neighborhood, street, number, complement }};
-   
+      context: { user_name, order_number, products, zipcode, state, city, neighborhood, street, number, complement }
+    };
+
     const mailSent = await transporter.sendMail(config, (err, info) => {
-      if(err){
+      if (err) {
         console.log('Error: ', err)
       }
       else {
         console.log('Message sent!!! (seu pedido foi created)')
       }
     })
-    
+
   },
 
   async orderStatusMail(data) {
 
     let order_status = 'Entregue a transportadora.'
 
-    if(data.order_status === 'paid'){
+    if (data.order_status === 'paid') {
       order_status = 'Pago.'
     }
-    if(data.order_status === 'pending'){
+    else if (data.order_status === 'pending') {
       order_status = 'Aguardando aprovação.'
     }
-    if(data.order_status === 'mailed'){
+    else if (data.order_status === 'mailed') {
       order_status = 'Entregue a transportadora.'
     }
-    if(data.order_status === 'delivered'){
+    else if (data.order_status === 'delivered') {
       order_status = 'O seu pedido chegou!'
     }
+    else if (data.order_status === 'cancelled') {
+      order_status = 'O seu pedido foi cancelado. Entre em contato para mais informações.'
+    }
     else {
+      console.log(data.order_status)
       order_status = 'Em andamento.'
     }
-    
+
 
     const config = {
       from: `Loja Casulus <${process.env.EMAIL_LOGIN}>`,
@@ -222,10 +227,11 @@ module.exports = {
         path: path.join(__dirname, '/images/insta-icon.jpg'),
         cid: 'instaIcon'
       }],
-      context: { order_status }};
-   
+      context: { order_status }
+    };
+
     const mailSent = await transporter.sendMail(config, (err, info) => {
-      if(err){
+      if (err) {
         console.log('Error: ', err)
       }
       else {
