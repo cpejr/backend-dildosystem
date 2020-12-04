@@ -40,7 +40,7 @@ orderValidate.index = {
     [Segments.QUERY]: Joi.object().keys({
         byid: Joi.string().optional(),
         page: Joi.number().integer().min(1).optional(),
-        byStatus: Joi.string().valid('pending', 'paid', 'mailed', 'delivered').optional()
+        byStatus: Joi.string().valid('pending', 'paid', 'mailed', 'delivered', 'cancelled').optional()
     }),
     [Segments.PARAMS]: Joi.object().keys({
         id: Joi.string().optional(),
@@ -60,8 +60,8 @@ orderValidate.changeStatus = {
     [Segments.BODY]: Joi.object().keys({
         checkout_cielo_order_number: Joi.string().required(),
         amount: Joi.string().required(),
-        payment_status: Joi.string().required(),
         order_number: Joi.string().required(),
+        payment_status: Joi.string().required(),
         test_transaction: Joi.string().optional(),
         brand: Joi.string().required(),
         nsu: Joi.string().required()

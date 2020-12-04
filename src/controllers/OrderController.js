@@ -58,7 +58,24 @@ module.exports = {
   async changeStatus(request, response) {
     try {
       console.log(request.body);
-      return response.status(200).json({ message: 'Ok!' });
+
+      const { checkout_cielo_order_number, order_number, payment_status } = request.body;
+
+      let newPaymentStatus;
+
+      if (payment_status === '2') {
+        newPaymentStatus = 'paid';
+      } else if (['3', '4', '5', '6', '8'].includes(payment_status)) {
+        newPaymentStatus = 'cancelled';
+      } else if (['1', '7'].includes(payment_status)) {
+        newPaymentStatus = 'pending';
+      }
+
+      if (newPaymentStatus) {
+        await OrderModel.updateOrder(order_number, { order_status: newPaymentStatus });
+      }
+
+      return response.status(200).json({ message: `Order with cielo checkout number ${checkout_cielo_order_number} was updated` });
     } catch (error) {
       console.log(error);
       return response.status(500).json({ message: 'Internal server error while trying to change status' });
