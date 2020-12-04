@@ -82,9 +82,8 @@ routes.get('/orders/:id', authenticateToken, isAdminOrSelf, celebrate(orderValid
 routes.get('/order/:id', authenticateToken, isAdminOrSelf, celebrate(orderValidate.getOne), OrderController.getOne);
 routes.get('/initializeOrder', authenticateToken, OrderController.initialize);
 routes.put('/order/:id', authenticateToken, isAdmin, celebrate(orderValidate.update), OrderController.update);
-routes.delete('/order/:order_id', authenticateToken, isAdmin, celebrate(orderValidate.delete), OrderController.delete);
-
 routes.post('/cielonotification', celebrate(orderValidate.changeStatus), OrderController.changeStatus);
+routes.delete('/order/:order_id', authenticateToken, isAdmin, celebrate(orderValidate.delete), OrderController.delete);
 
 //Cielo API
 

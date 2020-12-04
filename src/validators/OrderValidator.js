@@ -59,11 +59,11 @@ orderValidate.getOne = {
 orderValidate.changeStatus = {
     [Segments.BODY]: Joi.object().keys({
         checkout_cielo_order_number: Joi.string().required(),
-        amount: Joi.number().required(),
-        paymente_status: Joi.number().required(),
-        test_transaction: Joi.boolean().optional(),
+        amount: Joi.string().required(),
+        paymente_status: Joi.string().required(),
+        test_transaction: Joi.string().optional(),
         brand: Joi.string().required(),
-        nsu: Joi.number().required()
+        nsu: Joi.string().required()
     })
 }
 
