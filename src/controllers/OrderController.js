@@ -73,6 +73,17 @@ module.exports = {
 
       if (newPaymentStatus) {
         await OrderModel.updateOrder(order_number, { order_status: newPaymentStatus });
+        const ord = await OrderModel.getOrders(1, {}, order_number);
+        const data = {
+          to: ord.data[0].user.email,
+          subject: 'Bem Vindo',
+          text: 'Loja Casulus',
+          order_status: newPaymentStatus,
+          products: ord,
+          user_name: ord.data[0].user.name,
+          id: ord.data[0].id
+        }
+        Email.orderStatusMail(data);
       }
 
       return response.status(200).json({ message: `Order with cielo checkout number ${checkout_cielo_order_number} was updated` });
