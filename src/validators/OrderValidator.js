@@ -60,7 +60,8 @@ orderValidate.changeStatus = {
     [Segments.BODY]: Joi.object().keys({
         checkout_cielo_order_number: Joi.string().required(),
         amount: Joi.string().required(),
-        paymente_status: Joi.string().required(),
+        payment_status: Joi.string().required(),
+        order_number: Joi.string().required(),
         test_transaction: Joi.string().optional(),
         brand: Joi.string().required(),
         nsu: Joi.string().required()
