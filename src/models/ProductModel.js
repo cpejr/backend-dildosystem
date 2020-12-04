@@ -1,6 +1,6 @@
 const connection = require("../database/connection");
 const categoryModel = require("./CategoryModel");
-const subproductModel = require("./SubProductModel");
+const subproductModel = require("./SubproductModel");
 const ITEMS_PER_PAGE = 15;
 
 module.exports = {
