@@ -72,17 +72,26 @@ module.exports = {
       //Filtros de categoria e subcategoria
       //Funcionam gerando um vetor de ids de produto que são pertencentes a categoria ou subcategoria passada
       //Este vetor é passado para o index do ProductModel e usado em funções o tipo whereIn na tabela de produtos
-      let categoryQuery;
-      if (category_id && !subcategory_id) { //O filtro de categoria só funciona se o filtro de subcategoria não existe.
+      // let categoryQuery;
+      // if (category_id && !subcategory_id) { //O filtro de categoria só funciona se o filtro de subcategoria não existe.
+      //   const category = await CategoryModel.getCategory(category_id);
+      //   const subcategoriesFromCategory = category && category.subcategories.map((subcategory) => subcategory.id);
+      //   categoryQuery = await CategoryModel.createProductQuery(subcategoriesFromCategory);
+      // }
+
+      // let subcategoryQuery;
+      // if (subcategory_id) {
+      //   //Chama a função dedicada a retornar um vetor de produtos que estão naquela subcategoria
+      //   subcategoryQuery = await CategoryModel.createProductQuery([subcategory_id]);
+      // }
+
+      let productQuery;
+      if(subcategory_id){
+        productQuery = await CategoryModel.createProductQuery([subcategory_id]);
+      } else if(category_id){
         const category = await CategoryModel.getCategory(category_id);
         const subcategoriesFromCategory = category && category.subcategories.map((subcategory) => subcategory.id);
-        categoryQuery = await CategoryModel.createProductQuery(subcategoriesFromCategory);
-      }
-
-      let subcategoryQuery;
-      if (subcategory_id) {
-        //Chama a função dedicada a retornar um vetor de produtos que estão naquela subcategoria
-        subcategoryQuery = await CategoryModel.createProductQuery([subcategory_id]);
+        productQuery = await CategoryModel.createProductQuery(subcategoriesFromCategory);
       }
 
       const result = await ProductModel.getProducts(
@@ -93,8 +102,9 @@ module.exports = {
         order_by,
         order_ascending,
         search,
-        categoryQuery,
-        subcategoryQuery,
+        // categoryQuery,
+        // subcategoryQuery,
+        productQuery,
         page
       );
 

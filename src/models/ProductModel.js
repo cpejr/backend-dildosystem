@@ -119,11 +119,14 @@ module.exports = {
     order_by,
     order_ascending,
     search,
-    categoryQuery,
-    subcategoryQuery,
-    page = 1
+    // categoryQuery,
+    // subcategoryQuery,
+    productQuery,
+    page = 1,
+    cart = false
   ) {
     return new Promise(async (resolve, reject) => {
+      console.log("Product Query Model: ", productQuery);
       try {
         let columns = [
           //Colunas padrão da busca.
@@ -186,15 +189,15 @@ module.exports = {
           });
         }
 
-        if (categoryQuery) { //Insere restrição de subcategoria se a query existir.
+        if (productQuery) { //Insere restrição de subcategoria, categoria ou lista de produtos se a query existir.
           pipeline = pipeline
-            .whereIn("products.id", categoryQuery);
+            .whereIn("products.id", productQuery);
         }
 
-        if (subcategoryQuery) { //Insere restrição de subcategoria se a query existir.
-          pipeline = pipeline
-            .whereIn("products.id", subcategoryQuery);
-        }
+        // if (subcategoryQuery) { //Insere restrição de subcategoria se a query existir.
+        //   pipeline = pipeline
+        //     .whereIn("products.id", subcategoryQuery);
+        // }
 
         if (max_price) { //Insere comparações de preço máximo se a query existir.
           pipeline = pipeline.andWhere((qb) => {
@@ -239,10 +242,15 @@ module.exports = {
           ); //VERIFY WHEN CHANGE DATABASE YOU DICK!
         }
 
-        pipeline = pipeline
+        if(!cart){
+          pipeline = pipeline
           .limit(ITEMS_PER_PAGE)
           .offset((page - 1) * ITEMS_PER_PAGE) //Paginação
           .select(columns)
+        } else {
+          pipeline = pipeline.select(columns);
+        }
+        
 
         const products = await pipeline; //Efetivamente faz a busca completa da pipeline.
         const subpPromises = [];
