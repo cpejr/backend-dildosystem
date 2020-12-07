@@ -1,7 +1,7 @@
 
 const connection = require("../database/connection");
 
-const ORDERS_PER_PAGE = 10;
+const ORDERS_PER_PAGE = 20;
 
 module.exports = {
   createMockOrder(mock) {
