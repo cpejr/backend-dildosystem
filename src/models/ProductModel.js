@@ -7,7 +7,7 @@ module.exports = {
   createNewProduct(product) {
     return new Promise(async (resolve, reject) => {
       const subcategory_id = product.subcategory_id;
-      //delete product.subcategory_id;
+      delete product.subcategory_id;
       try {
         const response = await connection("products").insert(product);
         await categoryModel.categorize(product.id, [subcategory_id]);
@@ -139,7 +139,7 @@ module.exports = {
           "products.stock_quantity",
           "products.min_stock",
           "products.image_id",
-          "subcategory_id",
+          // "subcategory_id",
           "products.weight",
           "products.height",
           "products.width",
