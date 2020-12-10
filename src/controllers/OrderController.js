@@ -153,14 +153,23 @@ module.exports = {
       const words = shipping_name.split(" ");
       let name = "";
       let delivery_time;
-      words.forEach((element, index) => {
-        if(element === "-"){
+      // words.forEach((element, index) => {
+      //   if(element === "-"){
+      //     delivery_time = Number(words[index + 2])
+      //     break;
+      //   } else {
+      //     name += element;
+      //   }
+      // });
+      for (let index = 0; index < words.length; index++) {
+        const element = words[index];
+        if (element === "-") {
           delivery_time = Number(words[index + 2])
           break;
         } else {
           name += element;
         }
-      });
+      }
 
       shipping_name = name;
 

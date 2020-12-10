@@ -142,7 +142,7 @@ module.exports = {
           "products.stock_quantity",
           "products.min_stock",
           "products.image_id",
-          "subcategory_id",
+          //"subcategory_id",
           "products.weight",
           "products.height",
           "products.width",
@@ -242,15 +242,15 @@ module.exports = {
           ); //VERIFY WHEN CHANGE DATABASE YOU DICK!
         }
 
-        if(!cart){
+        if (!cart) {
           pipeline = pipeline
-          .limit(ITEMS_PER_PAGE)
-          .offset((page - 1) * ITEMS_PER_PAGE) //Paginação
-          .select(columns)
+            .limit(ITEMS_PER_PAGE)
+            .offset((page - 1) * ITEMS_PER_PAGE) //Paginação
+            .select(columns)
         } else {
           pipeline = pipeline.select(columns);
         }
-        
+
 
         const products = await pipeline; //Efetivamente faz a busca completa da pipeline.
         const subpPromises = [];
