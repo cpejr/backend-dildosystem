@@ -1,4 +1,5 @@
 const connection = require("../database/connection");
+const CategoryModel = require("./CategoryModel");
 const categoryModel = require("./CategoryModel");
 const subproductModel = require("./SubproductModel");
 const ITEMS_PER_PAGE = 15;
@@ -92,11 +93,15 @@ module.exports = {
             "wholesaler_sale_price",
             "on_sale_wholesaler",
           ];
+        
         let response = await connection("products")
           .where("id", id)
           .select(columns)
           .first();
-
+        
+        const subcategories = await CategoryModel.getCategoriesByProduct(id)
+          response.subcategories = subcategories;
+        
         const images = await connection("images")
           .where("product_id", id)
           .select(["id", "index"]);

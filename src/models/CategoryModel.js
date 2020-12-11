@@ -113,20 +113,25 @@ module.exports = {
   },
 
   async getCategory(category_id) {
-      try {
-        const promises = [
-          connection("categories").where({"categories.id": category_id}).select("*").first(),
-          connection("subcategories").where({"subcategories.category_id": category_id}).select("*"),
-        ];
+    try {
+      const promises = [
+        connection("categories")
+          .where({ "categories.id": category_id })
+          .select("*")
+          .first(),
+        connection("subcategories")
+          .where({ "subcategories.category_id": category_id })
+          .select("*"),
+      ];
 
-        let [category, subcategories] = await Promise.all(promises);
+      let [category, subcategories] = await Promise.all(promises);
 
-        category.subcategories = subcategories;
+      category.subcategories = subcategories;
 
-        return(category);
-      } catch (error) {
-        console.error(error);
-      }
+      return category;
+    } catch (error) {
+      console.error(error);
+    }
   },
 
   //Cria e retorna uma query para o Product Model que contém todos os produtos
@@ -136,10 +141,10 @@ module.exports = {
       .whereIn("subcategory_id", subcategory_ids)
       .select(["product_id"]);
     let result = [];
-    if (relations && relations.length > 0){
-        relations.forEach(relation => {
-            result.push(relation.product_id);
-        })
+    if (relations && relations.length > 0) {
+      relations.forEach((relation) => {
+        result.push(relation.product_id);
+      });
     }
     return result;
   },
@@ -172,6 +177,28 @@ module.exports = {
           subcategory_id,
         })
         .delete();
+      return result;
+    } catch (error) {
+      console.error(error);
+    }
+  },
+
+  async getCategoriesByProduct(product_id) {
+    try {
+      const result = await connection("subcategories AS s")
+        .whereIn(
+          "s.id",
+          connection("products_subcategories")
+            .select("subcategory_id")
+            .where({ product_id })
+        )
+        .join("categories AS c", "s.category_id", "=", "c.id")
+        .select([
+          "s.id AS subcategory_id",
+          "s.name AS subcategory_name",
+          "c.id AS category_id",
+          "c.name AS category_name",
+        ]);
       return result;
     } catch (error) {
       console.error(error);
