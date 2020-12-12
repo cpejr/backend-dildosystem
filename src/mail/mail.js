@@ -206,7 +206,7 @@ module.exports = {
       order_status = 'O seu pedido foi cancelado. Entre em contato para mais informações.'
     }
     else {
-      console.log(data.order_status)
+      //console.log(data.order_status)
       order_status = 'Em andamento.'
     }
 

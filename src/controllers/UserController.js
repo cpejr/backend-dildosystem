@@ -50,7 +50,7 @@ module.exports = {
       if (err.message)
         return response.status(400).json({ notification: err.message });
 
-      console.log("User creation failed: " + err);
+      //console.log("User creation failed: " + err);
       return response.status(500).json({ notification: "Internal server error while trying to register user" });
     }
     return response.status(200).json({ notification: "Usuario criado!" });
@@ -62,7 +62,7 @@ module.exports = {
       const { id } = request.params;
 
       const user = await UserModel.getUserById(id);
-      console.log(user);
+      //console.log(user);
 
       await FirebaseModel.deleteUser(user.firebase);
 
@@ -220,7 +220,7 @@ module.exports = {
   async deleteUserAddress(request, response) {
     try {
       const { user_id, address_id } = request.body;
-      console.log(user_id, address_id);
+      //console.log(user_id, address_id);
 
       const resp = await UserModel.deleteUserAddress(user_id, address_id);
 
