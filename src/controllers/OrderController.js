@@ -57,7 +57,7 @@ module.exports = {
 
   async changeStatus(request, response) {
     try {
-      console.log(request.body);
+      //console.log(request.body);
 
       const { checkout_cielo_order_number, order_number, payment_status } = request.body;
 
@@ -88,7 +88,7 @@ module.exports = {
 
       return response.status(200).json({ message: `Order with cielo checkout number ${checkout_cielo_order_number} was updated` });
     } catch (error) {
-      console.log(error);
+      //console.log(error);
       return response.status(500).json({ message: 'Internal server error while trying to change status' });
     }
 
@@ -139,7 +139,7 @@ module.exports = {
   },
 
   async logCielo(request, response) {
-    console.log(request.body);
+    //console.log(request.body);
     return response.status(200).json({ message: 'Ok!' });
   },
 
@@ -185,7 +185,7 @@ module.exports = {
       return response.status(200).json({ message: 'Ok!' });
 
     } catch (error) {
-      console.log(error)
+      //console.log(error)
       return response.status(500).json({
         notification:
           "Internal server error while trying to register the data of the ongoing new order",
@@ -202,7 +202,7 @@ module.exports = {
 
       return response.status(200).json(mockOrder);
     } catch (error) {
-      console.log(error)
+      //console.log(error)
       return response.status(500).json({
         notification:
           "Internal server error while trying to get the data of the ongoing new order",

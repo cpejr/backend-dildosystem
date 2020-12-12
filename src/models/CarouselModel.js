@@ -70,16 +70,16 @@ module.exports = {
         const all = await connection("carousel").select("*");
 
         const updateFields = all.map(async (x) => {
-          console.log(x.id);
-          console.log(item.id);
+          //console.log(x.id);
+         // console.log(item.id);
           if (item.id < x.id) {
             const position = (x.position) - 1;
-            console.log("posição");
-            console.log(position);
+            //console.log("posição");
+            //console.log(position);
             const update = await connection("carousel")
               .where({ id: x.id })
               .update("position",position);
-            console.log(update);
+            //console.log(update);
           }
         });
 

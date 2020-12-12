@@ -38,7 +38,7 @@ module.exports = {
 
   async isAdminOrSelf(request, response, next) {
 
-    console.log(request.params.id, request.session.user.id)
+    //console.log(request.params.id, request.session.user.id)
 
     const hasAuthorization = (request.session.user.type === 'admin') || (request.params.id == request.session.user.id);
 
