@@ -149,7 +149,29 @@ module.exports = {
       let { order_number, shipping_name, shipping_price, payment_method_type } = request.body;
 
       const dashIndex = shipping_name.indexOf("-");
-      shipping_name = shipping_name.substring(0, dashIndex - 1);
+      // shipping_name = shipping_name.substring(0, dashIndex - 1);
+      const words = shipping_name.split(" ");
+      let name = "";
+      let delivery_time;
+      // words.forEach((element, index) => {
+      //   if(element === "-"){
+      //     delivery_time = Number(words[index + 2])
+      //     break;
+      //   } else {
+      //     name += element;
+      //   }
+      // });
+      for (let index = 0; index < words.length; index++) {
+        const element = words[index];
+        if (element === "-") {
+          delivery_time = Number(words[index + 2])
+          break;
+        } else {
+          name += element;
+        }
+      }
+
+      shipping_name = name;
 
       let payment_type;
 
@@ -175,7 +197,8 @@ module.exports = {
         order_id: order_number,
         payment_type,
         track_type: shipping_name,
-        track_price: shipping_price / 100.0
+        track_price: shipping_price / 100.0,
+        delivery_time
       };
 
       console.log('mock to create', mock);
@@ -212,7 +235,7 @@ module.exports = {
 
   async create(request, response) {
     try {
-      let { id, products, payment_type, track_type, track_price, address_id } = request.body;
+      let { id, products, payment_type, track_type, track_price, address_id, delivery_time } = request.body;
       const user = request.session.user;
       //let id = uid.randomUUID(10);
 
@@ -224,7 +247,8 @@ module.exports = {
         track_type: track_type,
         payment_type: payment_type,
         user_id: user.id,
-        address_id: address_id
+        address_id: address_id,
+        delivery_time: delivery_time
       };
 
       let products_id = [];

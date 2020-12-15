@@ -8,6 +8,7 @@ orderValidate.createMock = {
         shipping_name: Joi.string().required(),
         shipping_price: Joi.number().required(),
         payment_method_type: Joi.number().required(),
+        delivery_time: Joi.number().integer().min(1).required()
     }).unknown(true)
 }
 
@@ -31,7 +32,8 @@ orderValidate.create = {
         payment_type: Joi.string().required(),
         track_price: Joi.number().required(),
         track_type: Joi.string().required(),
-        address_id: Joi.string().required()
+        address_id: Joi.string().required(),
+        delivery_time: Joi.number().integer().min(1).required()
     }),
 
 }
