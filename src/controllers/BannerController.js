@@ -20,7 +20,7 @@ module.exports = {
   async update(request, response) {
     try {
       const info = request.body;
-      console.log(info)
+      //console.log(info)
       const result = await BannerModel.updateBanner(info.info);
 
       return response.status(200).json("Atualizado com sucesso!");

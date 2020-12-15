@@ -53,7 +53,7 @@ module.exports.config = async function config() {
 
   }
 
-  console.log(tokenData);
+  //console.log(tokenData);
 }
 
 module.exports.validateCredentials = validateCredentials;

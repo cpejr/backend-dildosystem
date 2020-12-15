@@ -24,7 +24,7 @@ module.exports = {
         .first()
         .then((response) => resolve(response))
         .catch((error) => {
-          console.log(error);
+          //console.log(error);
           reject(error);
         })
     })
