@@ -271,6 +271,19 @@ module.exports = {
           }
         });
 
+        const subcat = []
+        products.forEach(prod => {
+          subcat.push(CategoryModel.getCategoriesByProduct(prod.id))
+        })
+
+        const subcategories = await Promise.all(subcat);
+          subcategories.forEach((sub, index) => {
+            if(sub && sub.length > 0) {
+              products[index].subcategories = sub;
+            }
+          })
+
+
         //PUXA AS IMAGENS SECUNDÁRIAS DOS PRODUTOS
         const prodIds = products.map(prod => prod.id);
         const secondaryImages = await connection("images")
