@@ -180,20 +180,23 @@ module.exports = {
       let payment_type;
 
       switch (payment_method_type) {
-        case 1:
+        case '1':
           payment_type = "cartao_credito";
           break;
-        case 2:
+        case '2':
           payment_type = "boleto";
           break;
-        case 3:
+        case '3':
           payment_type = "debito_online";
           break;
-        case 4:
+        case '4':
           payment_type = "cartao_debito";
           break;
-        case 5:
+        case '5':
           payment_type = "QRcode";
+          break;
+        default:
+          payment_type = "indefinido";
           break;
       }
 
