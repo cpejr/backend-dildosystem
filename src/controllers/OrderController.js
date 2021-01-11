@@ -61,6 +61,8 @@ module.exports = {
 
       const { checkout_cielo_order_number, order_number, payment_status } = request.body;
 
+      console.log('Received Cielo Notification on /cielonotification', request.body);
+
       let newPaymentStatus;
 
       if (payment_status === '2') {
@@ -147,6 +149,8 @@ module.exports = {
     try {
 
       let { order_number, shipping_name, shipping_price, payment_method_type } = request.body;
+
+      console.log('Received Cielo Notification on /cielo', request.body);
 
       const dashIndex = shipping_name.indexOf("-");
       // shipping_name = shipping_name.substring(0, dashIndex - 1);
