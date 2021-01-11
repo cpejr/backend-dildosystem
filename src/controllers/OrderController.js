@@ -61,6 +61,8 @@ module.exports = {
 
       const { checkout_cielo_order_number, order_number, payment_status } = request.body;
 
+      /* console.log('Received Cielo Notification on /cielonotification', request.body); */
+
       let newPaymentStatus;
 
       if (payment_status === '2') {
@@ -148,6 +150,8 @@ module.exports = {
 
       let { order_number, shipping_name, shipping_price, payment_method_type } = request.body;
 
+      /*  console.log('Received Cielo Notification on /cielo', request.body); */
+
       const dashIndex = shipping_name.indexOf("-");
       // shipping_name = shipping_name.substring(0, dashIndex - 1);
       const words = shipping_name.split(" ");
@@ -176,20 +180,23 @@ module.exports = {
       let payment_type;
 
       switch (payment_method_type) {
-        case 1:
+        case '1':
           payment_type = "cartao_credito";
           break;
-        case 2:
+        case '2':
           payment_type = "boleto";
           break;
-        case 3:
+        case '3':
           payment_type = "debito_online";
           break;
-        case 4:
+        case '4':
           payment_type = "cartao_debito";
           break;
-        case 5:
+        case '5':
           payment_type = "QRcode";
+          break;
+        default:
+          payment_type = "indefinido";
           break;
       }
 

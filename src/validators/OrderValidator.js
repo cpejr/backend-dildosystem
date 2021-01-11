@@ -7,8 +7,7 @@ orderValidate.createMock = {
         order_number: Joi.string().required(),
         shipping_name: Joi.string().required(),
         shipping_price: Joi.number().required(),
-        payment_method_type: Joi.number().required(),
-        delivery_time: Joi.number().integer().min(1).required()
+        payment_method_type: Joi.string().required(),
     }).unknown(true)
 }
 

@@ -114,7 +114,7 @@ routes.get('/banner', BannerController.index);
 routes.post('/newBanner', authenticateToken, isAdmin, imageUpload('imageFile'), generateId, BannerController.create);
 routes.put('/banner', authenticateToken, isAdmin, celebrate(CarouselValidate.updateCarousel), BannerController.update);
 routes.delete('/banner/:id', authenticateToken, isAdmin, celebrate(CarouselValidate.deleteCarousel), BannerController.delete);
- 
+
 //Images
 routes.post('/images', authenticateToken, isAdmin, imageMultUpload(undefined, 'imageFiles'), celebrate(productValidate.uploadFiles), ProductController.uploadFiles);
 routes.delete('/image/:id', authenticateToken, isAdmin, celebrate(productValidate.deleteFile), ProductController.deleteFile)
@@ -128,6 +128,6 @@ routes.put('/address/:id', authenticateToken, celebrate(addressValidate.update),
 routes.delete('/address/:id', authenticateToken, celebrate(addressValidate.delete), AddressController.deleteAddress);
 
 //Cart 
-routes.post('/cart', authenticateToken,CartController.getCart);
+routes.post('/cart', authenticateToken, CartController.getCart);
 
 module.exports = routes;
