@@ -17,7 +17,7 @@ exports.up = function (knex) {
         table.string('user_id').notNullable();
         table.foreign('user_id').references('id').inTable('users').onDelete('CASCADE');
         table.string('address_id').nullable();
-        table.foreign('address_id').references('id').inTable('address');
+        table.foreign('address_id').references('id').inTable('address').onDelete('CASCADE');
         
       });
 };

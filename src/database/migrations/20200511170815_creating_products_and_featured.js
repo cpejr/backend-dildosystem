@@ -27,8 +27,8 @@ exports.up = function (knex) {
       table.string('image_id').nullable();
       table.timestamp('created_at').defaultTo(knex.fn.now());
       table.timestamp('updated_at').defaultTo(knex.fn.now());
-      table.string('subcategory_id').nullable().defaultTo(0).unsigned();
-      table.foreign('subcategory_id').references('id').inTable('subcategories').onDelete('SET NULL');
+      // table.string('subcategory_id').nullable().defaultTo(0).unsigned();
+      // table.foreign('subcategory_id').references('id').inTable('subcategories').onDelete('SET NULL');
     })  
 };
 

@@ -123,7 +123,7 @@ routes.get('/images/:ids', authenticateOptionalToken, celebrate(productValidate.
 
 //Address
 routes.get('/address', AddressController.index);
-routes.post('/address', authenticateToken, generateId, AddressController.createAddress);
+routes.post('/address', authenticateToken, celebrate(addressValidate.create), generateId, AddressController.createAddress);
 routes.put('/address/:id', authenticateToken, celebrate(addressValidate.update), AddressController.updateAddress);
 routes.delete('/address/:id', authenticateToken, celebrate(addressValidate.delete), AddressController.deleteAddress);
 
