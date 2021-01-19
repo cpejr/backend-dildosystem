@@ -131,7 +131,7 @@ module.exports = {
     cart = false
   ) {
     return new Promise(async (resolve, reject) => {
-      console.log("Product Query Model: ", productQuery);
+      // console.log("Product Query Model: ", productQuery);
       try {
         let columns = [
           //Colunas padrão da busca.
