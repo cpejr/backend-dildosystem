@@ -128,6 +128,6 @@ routes.put('/address/:id', authenticateToken, celebrate(addressValidate.update),
 routes.delete('/address/:id', authenticateToken, celebrate(addressValidate.delete), AddressController.deleteAddress);
 
 //Cart 
-routes.post('/cart', authenticateToken, CartController.getCart);
+routes.post('/cart', authenticateOptionalToken, CartController.getCart);
 
 module.exports = routes;
