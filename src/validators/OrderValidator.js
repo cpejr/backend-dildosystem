@@ -75,7 +75,7 @@ orderValidate.update = {
     }),
     [Segments.BODY]: Joi.object().keys({
         payment_type: Joi.string().optional(),
-        order_status: Joi.string().valid('pending', 'paid', 'mailed', 'delivered').optional(),
+        order_status: Joi.string().valid('pending', 'paid', 'mailed', 'delivered', 'cancelled').optional(),
         track_number: Joi.string().allow("").optional()
     })
 }
