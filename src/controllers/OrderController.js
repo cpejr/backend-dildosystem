@@ -27,105 +27,6 @@ module.exports = {
 
       response.setHeader("X-Total-Count", result.totalCount);
 
-      const returnOrder ={
-        "id":"84A9C6C96D",
-        "user_id":"df78ddf0-5f1e-11eb-9117-3546f639c123",
-        "address_id":"0b622b60-5f1f-11eb-9117-3546f639c123",
-        "created_at":"2021-01-25T15:08:39.122Z",
-        "payment_type":"cartao_credito",
-        "order_status":"delivered",
-        "track_number":"",
-        "track_price":0,
-        "track_type":"Retirada na loja",
-        "total_price":105,
-        "delivery_time":0,
-        "zipcode":"75389334",
-        "state":"GO",
-        "city":"Trindade",
-        "neighborhood":"Em Goiania, sei la",
-        "street":"Rua Joaquim Bento",
-        "number":"1",
-        "complement":null,
-        "user":{
-           "order_user_id":"df78ddf0-5f1e-11eb-9117-3546f639c123",
-           "name":"Vitin Lanxin",
-           "email":"vmarquesds@gmail.com",
-           "type":"retailer",
-           "cpf":"87465406013",
-           "birthdate":"1997-06-01",
-           "phonenumber":"31998745632"
-        },
-        "products":[
-           {
-              "id":"cd542000-5a53-11eb-8f48-0f0d4e61341f",
-              "order_id":"84A9C6C96D",
-              "product_id":"cd542000-5a53-11eb-8f48-0f0d4e61341f",
-              "product_quantity":1,
-              "subproduct_id":null,
-              "price":12,
-              "name":"Teste Com desconto",
-              "client_price":20,
-              "client_sale_price":12,
-              "wholesaler_price":18,
-              "wholesaler_sale_price":11,
-              "on_sale_client":true,
-              "on_sale_wholesaler":true,
-              "best_seller":true,
-              "release":true,
-              "description":"Esse é o teste com desconto.",
-              "visible":true,
-              "stock_quantity":12,
-              "min_stock":2,
-              "image_id":"1EWChEyQv03SPQHVWhjtYLXSC6FTULcPp",
-              "created_at":"2021-01-19T12:42:36.605Z",
-              "updated_at":"2021-01-19T12:42:36.605Z",
-              "weight":300,
-              "height":50,
-              "width":10,
-              "length":15
-           },
-           {
-              "id":"e0c7caf0-5f04-11eb-95f2-812149f7aab9",
-              "order_id":"84A9C6C96D",
-              "product_id":"e0c7caf0-5f04-11eb-95f2-812149f7aab9",
-              "product_quantity":3,
-              "subproduct_id":null,
-              "price":31,
-              "name":"Teste 2",
-              "client_price":31,
-              "client_sale_price":25,
-              "wholesaler_price":28,
-              "wholesaler_sale_price":23,
-              "on_sale_client":false,
-              "on_sale_wholesaler":false,
-              "best_seller":true,
-              "release":true,
-              "description":"Teste com imagens secundárias.",
-              "visible":true,
-              "stock_quantity":46,
-              "min_stock":10,
-              "image_id":"1yYiv6B8F_0RIg5HqkX-bjAKHoRL9QeB9",
-              "created_at":"2021-01-25T12:00:15.098Z",
-              "updated_at":"2021-01-25T12:00:15.098Z",
-              "weight":30,
-              "height":1,
-              "width":5,
-              "length":5
-           }
-        ]
-     }
-
-      const dataMail = {
-        to: returnOrder.user.email,
-        subject: 'Bem Vindo',
-        text: 'Loja Casulus',
-        order_number: returnOrder.id,
-        produtos: returnOrder
-      }
-
-      Email.orderReceiviedMail(dataMail);
-
-
 
       return response.status(200).json(result.data);
 
@@ -459,10 +360,10 @@ module.exports = {
       response.status(200).json(promises[0]);
 
       const dataMail = {
-        to: user.email,
+        to: returnOrder.user.email,
         subject: 'Bem Vindo',
         text: 'Loja Casulus',
-        order_number: id,
+        order_number: returnOrder.id,
         produtos: returnOrder
       }
 
