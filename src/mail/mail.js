@@ -153,9 +153,11 @@ module.exports = {
 
   async orderReceiviedMail(data) {
     const user_name = data.user_name
-    const order_number = data.id
+    const order_number = data.order_number
     const products = data.produtos.products
     const { zipcode, state, city, neighborhood, street, number, complement } = data.produtos
+    console.log(data)
+    
     const config = {
       from: `Loja Casulus <${process.env.EMAIL_LOGIN}>`,
       to: data.to,
