@@ -20,7 +20,7 @@ exports.up = function (knex) {
       table.boolean('on_sale_wholesaler').nullable().defaultTo(false);
       table.boolean('best_seller').notNullable().defaultTo(false);
       table.boolean('release').notNullable().defaultTo(false);
-      table.string('description').nullable();
+      table.text('description').nullable();
       table.boolean('visible').notNullable().defaultTo(false);
       table.integer('stock_quantity').notNullable().defaultTo(0).unsigned();
       table.integer('min_stock').notNullable().defaultTo(0).unsigned();
@@ -29,7 +29,7 @@ exports.up = function (knex) {
       table.timestamp('updated_at').defaultTo(knex.fn.now());
       // table.string('subcategory_id').nullable().defaultTo(0).unsigned();
       // table.foreign('subcategory_id').references('id').inTable('subcategories').onDelete('SET NULL');
-    })  
+    })
 };
 
 exports.down = function (knex) {
