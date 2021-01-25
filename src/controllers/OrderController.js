@@ -167,13 +167,15 @@ module.exports = {
       //     name += element;
       //   }
       // });
+      let nameEnded = false;
       for (let index = 0; index < words.length; index++) {
         const element = words[index];
         if (element === "-") {
           /* delivery_time = Number(words[index + 2]) */
+          nameEnded = true;
           dashIndex = index;
         } else {
-          name += element;
+          if (!nameEnded) name += element;
         }
       }
       if (words[0] === "Retirada") name = "Retirada na loja";
