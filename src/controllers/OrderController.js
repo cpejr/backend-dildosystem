@@ -109,7 +109,7 @@ module.exports = {
         to: ord.data[0].user.email,
         subject: 'Bem Vindo',
         text: 'Loja Casulus',
-        order_status: fields,
+        order_status: fields.order_status,
         products: ord,
         user_name: ord.data[0].user.name,
         id: ord.data[0].id
@@ -362,6 +362,7 @@ module.exports = {
         subject: 'Bem Vindo',
         text: 'Loja Casulus',
         order_number: id,
+        produtos: returnOrder
       }
 
       Email.orderReceiviedMail(dataMail);

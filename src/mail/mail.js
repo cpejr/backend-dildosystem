@@ -39,8 +39,8 @@ module.exports = {
       text: data.text,
       template: 'register',
       attachments: [{
-        filename: 'logoCasulus.png',
-        path: path.join(__dirname, '/images/logoCasulus.png'),
+        filename: 'CASULUS00LOGO.png',
+        path: path.join(__dirname, '/images/CASULUS00LOGO.png'),
         cid: 'logoCasulus'
       },
       {
@@ -78,8 +78,8 @@ module.exports = {
       text: data.text,
       template: 'register',
       attachments: [{
-        filename: 'logoCasulus.png',
-        path: path.join(__dirname, '/images/logoCasulus.png'),
+        filename: 'CASULUS00LOGO.png',
+        path: path.join(__dirname, '/images/CASULUS00LOGO.png'),
         cid: 'logoCasulus'
       },
       {
@@ -119,8 +119,8 @@ module.exports = {
       text: data.text,
       template: 'retailerApproval',
       attachments: [{
-        filename: 'logoCasulus.png',
-        path: path.join(__dirname, '/images/logoCasulus.png'),
+        filename: 'CASULUS00LOGO.png',
+        path: path.join(__dirname, '/images/CASULUS00LOGO.png'),
         cid: 'logoCasulus'
       },
       {
@@ -154,8 +154,8 @@ module.exports = {
   async orderReceiviedMail(data) {
     const user_name = data.user_name
     const order_number = data.id
-    const products = data.products.data[0].products
-    const { zipcode, state, city, neighborhood, street, number, complement } = data.products.data[0]
+    const products = data.produtos.products
+    const { zipcode, state, city, neighborhood, street, number, complement } = data.produtos
     const config = {
       from: `Loja Casulus <${process.env.EMAIL_LOGIN}>`,
       to: data.to,
@@ -163,8 +163,8 @@ module.exports = {
       text: data.text,
       template: 'orderReceived',
       attachments: [{
-        filename: 'logoCasulus.png',
-        path: path.join(__dirname, '/images/logoCasulus.png'),
+        filename: 'CASULUS00LOGO.png',
+        path: path.join(__dirname, '/images/CASULUS00LOGO.png'),
         cid: 'logoCasulus'
       },
       {
@@ -218,8 +218,8 @@ module.exports = {
       text: data.text,
       template: 'orderStatus',
       attachments: [{
-        filename: 'logoCasulus.png',
-        path: path.join(__dirname, '/images/logoCasulus.png'),
+        filename: 'CASULUS00LOGO.png',
+        path: path.join(__dirname, '/images/CASULUS00LOGO.png'),
         cid: 'logoCasulus'
       },
       {
