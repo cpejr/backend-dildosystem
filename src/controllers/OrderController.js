@@ -152,9 +152,11 @@ module.exports = {
 
       /*  console.log('Received Cielo Notification on /cielo', request.body); */
 
-      const dashIndex = shipping_name.indexOf("-");
       // shipping_name = shipping_name.substring(0, dashIndex - 1);
+
       const words = shipping_name.split(" ");
+      let dashIndex;
+
       let name = "";
       let delivery_time;
       // words.forEach((element, index) => {
@@ -168,12 +170,15 @@ module.exports = {
       for (let index = 0; index < words.length; index++) {
         const element = words[index];
         if (element === "-") {
-          delivery_time = Number(words[index + 2])
-          break;
+          /* delivery_time = Number(words[index + 2]) */
+          dashIndex = index;
         } else {
           name += element;
         }
       }
+      if (words[0] === "Retirada") name = "Retirada na loja";
+      delivery_time = Number(words[dashIndex + 2]);
+      console.log(delivery_time)
 
       shipping_name = name;
 
