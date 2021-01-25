@@ -32,7 +32,7 @@ orderValidate.create = {
         track_price: Joi.number().required(),
         track_type: Joi.string().required(),
         address_id: Joi.string().required(),
-        delivery_time: Joi.number().integer().min(1).required()
+        delivery_time: Joi.number().integer().min(0).required()
     }),
 
 }
