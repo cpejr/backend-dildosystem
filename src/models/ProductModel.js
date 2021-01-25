@@ -93,15 +93,15 @@ module.exports = {
             "wholesaler_sale_price",
             "on_sale_wholesaler",
           ];
-        
+
         let response = await connection("products")
           .where("id", id)
           .select(columns)
           .first();
-        
+
         const subcategories = await CategoryModel.getCategoriesByProduct(id)
-          response.subcategories = subcategories;
-        
+        response.subcategories = subcategories;
+
         const images = await connection("images")
           .where("product_id", id)
           .select(["id", "index"]);
@@ -277,11 +277,11 @@ module.exports = {
         })
 
         const subcategories = await Promise.all(subcat);
-          subcategories.forEach((sub, index) => {
-            if(sub && sub.length > 0) {
-              products[index].subcategories = sub;
-            }
-          })
+        subcategories.forEach((sub, index) => {
+          if (sub && sub.length > 0) {
+            products[index].subcategories = sub;
+          }
+        })
 
 
         //PUXA AS IMAGENS SECUNDÁRIAS DOS PRODUTOS
@@ -386,11 +386,10 @@ module.exports = {
     response.forEach((product) => {
       let price;
 
-      if (user_type === "wholesailer") {
+      if (user_type === "wholesaler") {
         // == é necessário
-        if (product.on_sale_wholesaler == 1)
-          price = product.wholesaler_sale_price;
-        else price = product.wholesaler_price;
+        if (product.on_sale_wholesaler == 1) { price = product.wholesaler_sale_price; }
+        else { price = product.wholesaler_price; }
       } else {
         // == é necessário
         if (product.on_sale_client == 1) price = product.client_sale_price;

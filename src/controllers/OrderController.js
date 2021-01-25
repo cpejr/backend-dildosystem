@@ -317,7 +317,7 @@ module.exports = {
 
       let prices = await ProductModel.getProductsPrices(
         products_id,
-        ((user.type && user.user_status === 'approved') || 'retailer')
+        ((user.type === 'wholesaler' && user.user_status === 'approved') ? 'wholesaler' : 'retailer')
       );
 
       let total_price = track_price;
