@@ -6,11 +6,12 @@ module.exports = {
     try {
       const cart = request.body;
       let productQuery = cart.map(element => element.product_id);
-  
-      let userType = false;
+
+      let userType = "retailer";
       if (request.session) {
         const type = request.session.user.type;
-        userType = type === "admin" || type === "wholesaler";
+        userType = type;
+        if (type === "wholesaler" && request.session.user.user_status !== "approved") userType = "retailer";
       }
 
       const result = await ProductModel.getProducts(
@@ -25,11 +26,11 @@ module.exports = {
         1,
         true
       );
-      
+
       let new_cart = [];
       cart.forEach(element => {
         let product = { ...result.data.find(p => p.id === element.product_id) };
-        if(product.subproducts){
+        if (product.subproducts) {
           product.subproduct = product.subproducts.find(s => s.id === element.subproduct_id);
           delete product.subproducts
         }
