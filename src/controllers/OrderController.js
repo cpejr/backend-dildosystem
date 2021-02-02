@@ -352,12 +352,14 @@ module.exports = {
 
       await OrderModel.createProductOrder(products);
 
-      const returnOrder = OrderModel.getOne(user.id, order_id);
+      let returnOrder = OrderModel.getOne(user.id, order_id);
       const deleteMock = OrderModel.deleteMockOrder(order_id);
 
       const promises = await Promise.all([returnOrder, deleteMock])
 
       response.status(200).json(promises[0]);
+      returnOrder = promises[0];
+      console.log(returnOrder)
 
       const dataMail = {
         to: returnOrder.user.email,

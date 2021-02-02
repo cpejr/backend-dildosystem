@@ -86,14 +86,13 @@ module.exports = {
       // }
 
       let productQuery;
-      if(subcategory_id){
+      if (subcategory_id) {
         productQuery = await CategoryModel.createProductQuery([subcategory_id]);
-      } else if(category_id){
+      } else if (category_id) {
         const category = await CategoryModel.getCategory(category_id);
         const subcategoriesFromCategory = category && category.subcategories.map((subcategory) => subcategory.id);
         productQuery = await CategoryModel.createProductQuery(subcategoriesFromCategory);
       }
-
       const result = await ProductModel.getProducts(
         type,
         query,
