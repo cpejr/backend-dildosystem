@@ -1,5 +1,6 @@
 const express = require('express');
 const routes = express.Router();
+const axios = require('axios');
 
 const AddressController = require('./controllers/AddressController');
 const addressValidate = require('./validators/AddressValidator');
@@ -39,7 +40,8 @@ const { generateId } = require('./middlewares/idGenerator');
 const { resolve } = require('path');
 const CieloController = require('./controllers/CieloController');
 const authentication = require('./middlewares/authentication');
-const { Router } = require('express');
+const { Router, response } = require('express');
+const FrenetController = require('./controllers/FrenetController');
 
 //Users
 routes.post('/user', celebrate(userValidate.create), generateId, UserController.create);
@@ -87,8 +89,11 @@ routes.put('/order/:id', authenticateToken, isAdmin, celebrate(orderValidate.upd
 routes.post('/cielonotification', celebrate(orderValidate.changeStatus), OrderController.changeStatus);
 routes.delete('/order/:order_id', authenticateToken, isAdmin, celebrate(orderValidate.delete), OrderController.delete);
 
-//Cielo API
+//FRENET
+routes.post('/frenet', FrenetController.getShippingServices);
 
+//CIELO
+routes.post('/cielolink', CieloController.getLink)
 
 //GoogleDrive
 routes.get('/validateCredentials', DriveController.validateCredentials)
