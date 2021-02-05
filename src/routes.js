@@ -1,5 +1,6 @@
 const express = require('express');
 const routes = express.Router();
+const axios = require('axios');
 
 const AddressController = require('./controllers/AddressController');
 const addressValidate = require('./validators/AddressValidator');
@@ -39,7 +40,7 @@ const { generateId } = require('./middlewares/idGenerator');
 const { resolve } = require('path');
 const CieloController = require('./controllers/CieloController');
 const authentication = require('./middlewares/authentication');
-const { Router } = require('express');
+const { Router, response } = require('express');
 
 //Users
 routes.post('/user', celebrate(userValidate.create), generateId, UserController.create);
@@ -87,7 +88,27 @@ routes.put('/order/:id', authenticateToken, isAdmin, celebrate(orderValidate.upd
 routes.post('/cielonotification', celebrate(orderValidate.changeStatus), OrderController.changeStatus);
 routes.delete('/order/:order_id', authenticateToken, isAdmin, celebrate(orderValidate.delete), OrderController.delete);
 
-//Cielo API
+//FRENET
+routes.post('/frenet', async (req, res) => {
+  console.log('ahoy');
+
+  const objFrenet = { "SellerCEP": "75389334", "RecipientCEP": "31160463", "ShipmentInvoiceValue": 3.5, "ShippingServiceCode": null, "ShippingItemArray": [{ "Weight": 0.001, "Height": 1, "Width": 1, "Length": 1, "Quantity": 1 }], "RecipientCountry": "BR" };
+
+  try {
+    const respostaFrenet = await axios.post('https://api.frenet.com.br/shipping/quote', objFrenet, {
+      headers: {
+        'Content-Type': 'application/json',
+        'token': '141A8046RB13FR4AE0R9085RD085090B7777'
+      }
+    });
+    console.log(respostaFrenet)
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ message: "Internal server error" })
+  }
+
+  return res.status(200).json({ message: 'ok' });
+})
 
 
 //GoogleDrive
