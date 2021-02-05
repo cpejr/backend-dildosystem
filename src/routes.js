@@ -41,6 +41,7 @@ const { resolve } = require('path');
 const CieloController = require('./controllers/CieloController');
 const authentication = require('./middlewares/authentication');
 const { Router, response } = require('express');
+const FrenetController = require('./controllers/FrenetController');
 
 //Users
 routes.post('/user', celebrate(userValidate.create), generateId, UserController.create);
@@ -89,27 +90,10 @@ routes.post('/cielonotification', celebrate(orderValidate.changeStatus), OrderCo
 routes.delete('/order/:order_id', authenticateToken, isAdmin, celebrate(orderValidate.delete), OrderController.delete);
 
 //FRENET
-routes.post('/frenet', async (req, res) => {
-  console.log('ahoy');
+routes.post('/frenet', FrenetController.getShippingServices);
 
-  const objFrenet = { "SellerCEP": "75389334", "RecipientCEP": "31160463", "ShipmentInvoiceValue": 3.5, "ShippingServiceCode": null, "ShippingItemArray": [{ "Weight": 0.001, "Height": 1, "Width": 1, "Length": 1, "Quantity": 1 }], "RecipientCountry": "BR" };
-
-  try {
-    const respostaFrenet = await axios.post('https://api.frenet.com.br/shipping/quote', objFrenet, {
-      headers: {
-        'Content-Type': 'application/json',
-        'token': '141A8046RB13FR4AE0R9085RD085090B7777'
-      }
-    });
-    console.log(respostaFrenet)
-  } catch (e) {
-    console.log(e);
-    return res.status(500).json({ message: "Internal server error" })
-  }
-
-  return res.status(200).json({ message: 'ok' });
-})
-
+//CIELO
+routes.post('/cielolink', CieloController.getLink)
 
 //GoogleDrive
 routes.get('/validateCredentials', DriveController.validateCredentials)
