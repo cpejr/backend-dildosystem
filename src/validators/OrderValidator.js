@@ -65,8 +65,7 @@ orderValidate.changeStatus = {
         payment_status: Joi.string().required(),
         test_transaction: Joi.string().optional(),
         brand: Joi.string().required(),
-        nsu: Joi.string().required()
-    })
+    }).unknown(true)
 }
 
 orderValidate.update = {

@@ -1,6 +1,5 @@
 const express = require('express');
 const routes = express.Router();
-const axios = require('axios');
 
 const AddressController = require('./controllers/AddressController');
 const addressValidate = require('./validators/AddressValidator');
@@ -42,6 +41,7 @@ const CieloController = require('./controllers/CieloController');
 const authentication = require('./middlewares/authentication');
 const { Router, response } = require('express');
 const FrenetController = require('./controllers/FrenetController');
+const InstagramController = require('./controllers/InstagramController');
 
 //Users
 routes.post('/user', celebrate(userValidate.create), generateId, UserController.create);
@@ -136,3 +136,6 @@ routes.delete('/address/:id', authenticateToken, celebrate(addressValidate.delet
 routes.post('/cart', authenticateOptionalToken, CartController.getCart);
 
 module.exports = routes;
+
+
+routes.get('/instagram', InstagramController.getPictures);
