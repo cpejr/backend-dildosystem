@@ -62,7 +62,10 @@ module.exports = {
       delete filter.category_id;
 
       let type = "retailer"; //Controle de tipo de usuário para diferenciação do preço
-      if (request.session) type = request.session.user.type;
+      if (request.session && request.session.user.type != 'wholesaler') type = request.session.user.type;
+      if (request.session.user.type === 'wholesaler' && request.session.user.user_status === 'approved') type = 'wholesaler';
+
+      //console.log(request.session.user)
 
       let query = { visible: true, ...filter };
       //Por padrão um usuário que não é admin não enxerga produtos invisíveis
@@ -145,8 +148,10 @@ module.exports = {
       let showWholesaler = false;
       if (request.session) {
         const type = request.session.user.type;
-        showWholesaler = type === "admin" || type === "wholesaler";
+        showWholesaler = type === "admin" || type === "wholesaler" && request.session.user.user_status === 'approved';
       }
+
+      //console.log()
 
       const promises = [];
 
