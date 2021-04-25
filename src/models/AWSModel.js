@@ -30,22 +30,22 @@ module.exports = {
 
         const awsRes = await s3.upload(uploadParams).promise()
 
-        const data = {
-          id: 'testAWS4',
-          name: 'test',
-          client_price: 23.99,
-          description: 'test',
-          image_id: awsRes.key
-        }
+        // const data = {
+        //   id: 'testAWS4',
+        //   name: 'test',
+        //   client_price: 23.99,
+        //   description: 'test',
+        //   image_id: awsRes.key
+        // }
 
-        const response = await connection('testAWS').insert(data)
+        // const response = await connection('testAWS').insert(data)
 
-        const res = {
-          response,
-          awsRes
-        }
+        // const res = {
+        //   response,
+        //   awsRes
+        // }
 
-        resolve(res)
+        resolve(awsRes)
       }
       catch (error) {
         console.log(error)
@@ -61,13 +61,7 @@ module.exports = {
           Key: fileKey,
           Bucket: bucketName
         }
-        s3.getObject(downloadParams, (err, data) =>{
-          if(err){
-            return resolve({ error: err })
-          }
-          console.log(data)
-          resolve(data)
-        })
+        resolve(s3.getObject(downloadParams).createReadStream())
       }
       catch (error) {
         console.log(error)
@@ -85,7 +79,7 @@ module.exports = {
         }
 
         resolve(s3.deleteObject(deleteParams, (err, data) => {
-          if (err) console.log('Erro no delete!')
+          if (err) console.log('Erro no delete!', err)
           else console.log('Deletado!')
         }))
       }

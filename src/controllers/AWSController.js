@@ -12,9 +12,9 @@ module.exports = {
       const key = req.params.key
       const readStream = await AWSModel.getAWS(key)
 
-      // readStream.pipe(res)
+      readStream.pipe(res)
 
-      return res.status(200).send(readStream)
+      //return res.status(200).send(readStream)
     }
     catch (err) {
       console.log(err)
