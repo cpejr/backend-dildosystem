@@ -42,6 +42,7 @@ const authentication = require('./middlewares/authentication');
 const { Router, response } = require('express');
 const FrenetController = require('./controllers/FrenetController');
 const InstagramController = require('./controllers/InstagramController');
+const ImagesDriveController = require('./controllers/ImagesDriveController')
 
 //Users
 routes.post('/user', celebrate(userValidate.create), generateId, UserController.create);
@@ -95,8 +96,14 @@ routes.post('/frenet', FrenetController.getShippingServices);
 //CIELO
 routes.post('/cielolink', CieloController.getLink)
 
+//INSTAGRAM
+routes.get('/instagram', InstagramController.getPictures);
+
 //GoogleDrive
 routes.get('/validateCredentials', DriveController.validateCredentials)
+
+//ImagensDoDrive
+routes.get('/driveimages/:id', ImagesDriveController.getDriveImages)
 
 //Categories
 routes.post('/newCategory', authenticateToken, isAdmin, celebrate(categoryValidate.createCategory), generateId, CategoryController.createCategory);
@@ -137,5 +144,11 @@ routes.post('/cart', authenticateOptionalToken, CartController.getCart);
 
 module.exports = routes;
 
+const AWSController = require('./controllers/AWSController')
+const multer = require('multer')
+const upload = multer({ dest: './temp/upload' })
 
-routes.get('/instagram', InstagramController.getPictures);
+
+routes.get('/imagesAWS/:key', AWSController.getImagesAWS)
+routes.post('/imagesAWS', upload.single('image'), AWSController.uploadImagesAWS)
+routes.delete('/imagesAWS/:key', AWSController.deleteImagesAWS)

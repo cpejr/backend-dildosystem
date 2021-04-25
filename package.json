@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/cpejr/backEnd-dildoSystem#readme",
   "dependencies": {
+    "aws-sdk": "^2.886.0",
     "axios": "^0.21.1",
     "celebrate": "^12.2.0",
     "cors": "^2.8.5",

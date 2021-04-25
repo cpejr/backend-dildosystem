@@ -1,20 +1,31 @@
 const axios = require('axios');
 
 module.exports = {
+
   async getPictures(request, response) {
     try {
-      const resp = await axios.get(`https://www.instagram.com/graphql/query/?query_id=17888483320059182&variables=%7B%22id%22:%2219360403638%22,%22first%22:20,%22after%22:null%7D`);
+      
+      let allPics = await axios.get(`https://graph.instagram.com/me/media?fields=id,caption&access_token=${process.env.INSTA_ACCESS_TOKEN}`);
 
-      //resp = await resp.json();
+      allPics = allPics.data.data
 
-      //console.log(resp.data)
+      const picsUrl = [];
 
-      const pics = resp.data.data.user.edge_owner_to_timeline_media.edges;
+      // Map assincrono
+      await Promise.all(allPics.map(async pics => {
+        const resp = await axios.get(`https://graph.instagram.com/${pics.id}?fields=id,media_type,media_url,username,timestamp&access_token=${process.env.INSTA_ACCESS_TOKEN}`);
+        // console.log(resp.data)
+        picsUrl.push(resp.data)
+      }))
 
-      return response.status(200).json(pics);
+      //console.log(picsUrl)
+
+      return response.status(200).json(picsUrl);
     } catch (error) {
-      console.log(error);
+      //console.log(error);
       return response.status(500).json({ message: "There was an error while trying to fetch" });
     }
   }
+
+
 }
