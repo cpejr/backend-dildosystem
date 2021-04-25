@@ -149,6 +149,7 @@ const multer = require('multer')
 const upload = multer({ dest: './temp/upload' })
 
 
+
 routes.get('/imagesAWS/:key', AWSController.getImagesAWS)
 routes.post('/imagesAWS', upload.single('image'), AWSController.uploadImagesAWS)
 routes.delete('/imagesAWS/:key', AWSController.deleteImagesAWS)
