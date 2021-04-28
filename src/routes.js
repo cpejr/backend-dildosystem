@@ -44,6 +44,9 @@ const FrenetController = require('./controllers/FrenetController');
 const InstagramController = require('./controllers/InstagramController');
 const ImagesDriveController = require('./controllers/ImagesDriveController')
 
+const multer = require('multer')
+const upload = multer({ dest: './temp/upload' })
+
 //Users
 routes.post('/user', celebrate(userValidate.create), generateId, UserController.create);
 routes.get('/users', authenticateToken, isAdmin, celebrate(userValidate.index), UserController.index);
@@ -63,7 +66,7 @@ routes.post('/login', celebrate(loginValidate.signin), SessionController.signin)
 routes.get('/verify', celebrate(loginValidate.verifyToken), SessionController.verifyToken);
 
 //Product
-routes.post('/newProduct', authenticateToken, isAdmin, imageMultUpload('imageFile', 'imageFiles'), celebrate(productValidate.create), generateId, ProductController.create);
+routes.post('/newProduct', authenticateToken, isAdmin, imageMultUpload('imageFile', 'imageFiles')/*upload.single('imageFile')*/, celebrate(productValidate.create), generateId, ProductController.create);
 routes.get('/products', authenticateOptionalToken, celebrate(productValidate.index), ProductController.index);
 routes.get('/product/:product_id', authenticateOptionalToken, celebrate(productValidate.getProduct), ProductController.getProduct);
 routes.put('/updateProduct/:id', authenticateToken, isAdmin, imageUpload('imageFile', 'update'), celebrate(productValidate.update), ProductController.update);
@@ -145,8 +148,7 @@ routes.post('/cart', authenticateOptionalToken, CartController.getCart);
 module.exports = routes;
 
 const AWSController = require('./controllers/AWSController')
-const multer = require('multer')
-const upload = multer({ dest: './temp/upload' })
+
 
 
 

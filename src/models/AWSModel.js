@@ -30,21 +30,6 @@ module.exports = {
 
         const awsRes = await s3.upload(uploadParams).promise()
 
-        // const data = {
-        //   id: 'testAWS4',
-        //   name: 'test',
-        //   client_price: 23.99,
-        //   description: 'test',
-        //   image_id: awsRes.key
-        // }
-
-        // const response = await connection('testAWS').insert(data)
-
-        // const res = {
-        //   response,
-        //   awsRes
-        // }
-
         resolve(awsRes)
       }
       catch (error) {

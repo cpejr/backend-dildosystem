@@ -4,7 +4,7 @@ const express = require('express');
 const cors = require('cors');
 const routes = require('./routes');
 const { errors, isCelebrate } = require('celebrate');
-require('./models/GoogleDriveModel').config();
+//require('./models/GoogleDriveModel').config();
 const bodyParser = require('body-parser');
 
 

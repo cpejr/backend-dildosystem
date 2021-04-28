@@ -6,24 +6,36 @@ const { uploadFile, deleteFile } = require("../models/GoogleDriveModel");
 const { getImages } = require("../validators/ProductValidator");
 const { isAdmin } = require("../middlewares/authentication");
 
+const { uploadAWS, deleteAWS } = require('../models/AWSModel')
+const fs = require('fs')
+const util = require('util')
+const unlinkFile = util.promisify(fs.unlink)
+
 module.exports = {
   async create(request, response) {
     try {
       const newProduct = request.body;
-      const { originalname, buffer, mimetype } = request.files.imageFile[0];
+      // const { originalname, buffer, mimetype } = request.files.imageFile[0];
       const images = request.files.imageFiles;
+      const file = request.files.imageFile[0];
+      console.log('File: ', file)
+      console.log('subFile:', images)
 
       //console.log(request.files)
 
-      const image_id = await uploadFile(buffer, originalname, mimetype);
-
-      newProduct.image_id = image_id;
-
+      // const image_id = await uploadFile(buffer, originalname, mimetype);
+      const image_id = await uploadAWS(file)
+      console.log('Response: ', image_id)
+      await unlinkFile(file.path)
+      newProduct.image_id = image_id.key;
       await ProductModel.createNewProduct(newProduct);
 
       if (images) {
         await ImageModel.createImages(images, newProduct.id);
       }
+      await Promise.all(images.map(async img => {
+        await unlinkFile(img.path)
+      }))
 
       return response.status(200).json({ id: newProduct.id });
     } catch (err) {
@@ -202,15 +214,21 @@ module.exports = {
       const { id } = request.params;
 
       if (request.file) {
-        const { originalname, buffer, mimetype } = request.file;
-
-        const image_id = await uploadFile(buffer, originalname, mimetype);
-
-        newProduct.image_id = image_id;
-
+        //OLD METHOD
+        // const { originalname, buffer, mimetype } = request.file;
+        // const image_id = await uploadFile(buffer, originalname, mimetype);
+        //
+        const file = request.file
+        console.log('File: ', file)
+        //console.log(request.files)
+        // const image_id = await uploadFile(buffer, originalname, mimetype);
+        const image_id = await uploadAWS(file)
+        console.log('Response: ', image_id)
+        await unlinkFile(file.path)
+        newProduct.image_id = image_id.key;
         const prevProduct = await ProductModel.getProductbyId(id);
-
-        await deleteFile(prevProduct.image_id);
+        //await deleteFile(prevProduct.image_id);
+        await deleteAWS(prevProduct.image_id)
       }
 
       await ProductModel.updateProduct(newProduct, id);
@@ -272,8 +290,11 @@ module.exports = {
         return response.status(500).json({ message: "Este produto já está incluído em um pedido.", code: 527 });
       }
       const product = await ProductModel.getProductbyId(product_id);
+      await ImageModel.deleteImage(product_id)
       await ProductModel.deleteProduct(product_id);
-      await deleteFile(product.image_id);
+      await deleteAWS(product.image_id);
+      //terminar a questão de deletar imagens secundárias...
+      
       return response.status(200).json({ message: "Deleted product: " + product_id });
     } catch (err) {
       return response

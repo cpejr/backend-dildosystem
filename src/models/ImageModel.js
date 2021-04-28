@@ -1,5 +1,6 @@
 const connection = require("../database/connection");
-const { uploadFile, deleteFile } = require('./GoogleDriveModel');
+// const { uploadFile, deleteFile } = require('./GoogleDriveModel');
+const { uploadAWS, deleteAWS } = require('../models/AWSModel')
 
 module.exports = {
 
@@ -25,8 +26,8 @@ module.exports = {
                 }
 
                 return new Promise((resolve, reject) => {
-                    uploadFile(buffer, originalname, mimetype).then((image_id) => {
-                        image.id = image_id;
+                    uploadAWS(imageData).then((image_id) => {
+                        image.id = image_id.key;
                         resolve(image);
                     }).catch((error) => {
                         console.error(error);
@@ -44,10 +45,18 @@ module.exports = {
         }
     },
 
-    async deleteImage(image_id) {
+    async deleteImage(product_id) {
         try {
-            await connection('images').where({ id: image_id }).delete();
-            await deleteFile(image_id);
+            const resultSearch = await connection('images').where('product_id', product_id).select('*')
+            console.log('resultado da busca no banco: ', resultSearch)
+            const result = resultSearch.map((img) => {
+                return new Promise(async (resolve, reject) => {
+                    const resultDel = await connection('images').where('id', img.id).del()
+                    await deleteAWS(img.id);
+                    resolve(resultDel)
+                })
+            })
+            // await connection('images').where({ id: product_id }).delete();
         } catch (error) {
             console.error(error);
         }
