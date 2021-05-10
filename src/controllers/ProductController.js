@@ -18,14 +18,14 @@ module.exports = {
       // const { originalname, buffer, mimetype } = request.files.imageFile[0];
       const images = request.files.imageFiles;
       const file = request.files.imageFile[0];
-      console.log('File: ', file)
-      console.log('subFile:', images)
+      // console.log('File: ', file)
+      // console.log('subFile:', images)
 
       //console.log(request.files)
 
       // const image_id = await uploadFile(buffer, originalname, mimetype);
       const image_id = await uploadAWS(file)
-      console.log('Response: ', image_id)
+      // console.log('Response: ', image_id)
       await unlinkFile(file.path)
       newProduct.image_id = image_id.key;
       await ProductModel.createNewProduct(newProduct);
@@ -255,6 +255,10 @@ module.exports = {
         subproduct_id
       );
 
+      await Promise.all(images.map(async img => {
+        await unlinkFile(img.path)
+      }))
+
       return response.status(200).json(result);
     } catch (err) {
       console.error(err);
@@ -290,10 +294,17 @@ module.exports = {
         return response.status(500).json({ message: "Este produto já está incluído em um pedido.", code: 527 });
       }
       const product = await ProductModel.getProductbyId(product_id);
+      const subProduct = await SubproductModel.getSubproductsbyProductId(product_id)
+      // console.log(subProduct)
+      if(subProduct.length > 0){
+        // console.log('é true')
+        await Promise.all(subProduct.map(async sub => {
+          await deleteAWS(sub.image_id)
+        }))
+      }
       await ImageModel.deleteImage(product_id)
       await ProductModel.deleteProduct(product_id);
       await deleteAWS(product.image_id);
-      //terminar a questão de deletar imagens secundárias...
       
       return response.status(200).json({ message: "Deleted product: " + product_id });
     } catch (err) {

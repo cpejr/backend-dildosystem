@@ -1,6 +1,11 @@
 const BannerModel = require("../models/BannerModel");
 const { uploadFile, deleteFile } = require('../models/GoogleDriveModel');
 
+const { uploadAWS, deleteAWS } = require('../models/AWSModel')
+const fs = require('fs')
+const util = require('util')
+const unlinkFile = util.promisify(fs.unlink)
+
 
 module.exports = {
   async index(request, response) {
@@ -35,11 +40,16 @@ module.exports = {
   async create(request, response) {
     try {
       const newBanner = request.body;
-      const { originalname, buffer, mimetype } = request.file;
+      // const { originalname, buffer, mimetype } = request.file;
+      const file = request.file;
 
-      const image_id = await uploadFile(buffer, originalname, mimetype);
+      // const image_id = await uploadFile(buffer, originalname, mimetype);
 
-      newBanner.image_id = image_id;
+      const image_id = await uploadAWS(file)
+      console.log('Response: ', image_id)
+      await unlinkFile(file.path)
+
+      newBanner.image_id = image_id.key;
 
       await BannerModel.createBanner(newBanner);
 
@@ -54,7 +64,7 @@ module.exports = {
     try {
       const { id } = request.params;
       const Banner_item = await BannerModel.deleteBanner(id);
-      await deleteFile(Banner_item.image_id);
+      await deleteAWS(Banner_item.image_id);
       response.status(200).json({ message: "Deleted Banner_Item: " + id });
     } catch (err) {
       console.warn(err);  

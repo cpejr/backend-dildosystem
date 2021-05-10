@@ -65,7 +65,6 @@ module.exports = {
 
         resolve(s3.deleteObject(deleteParams, (err, data) => {
           if (err) console.log('Erro no delete!', err)
-          else console.log('Deletado!')
         }))
       }
       catch (error) {

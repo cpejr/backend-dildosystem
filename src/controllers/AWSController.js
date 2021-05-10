@@ -8,7 +8,7 @@ module.exports = {
 
   async getImagesAWS(req, res) {
     try {
-      console.log(req.params)
+      // console.log(req.params)
       const key = req.params.key
       const readStream = await AWSModel.getAWS(key)
 
@@ -25,10 +25,10 @@ module.exports = {
   async uploadImagesAWS(req, res) {
     try {
       const file = req.file
-      console.log('File: ',file)
+      // console.log('File: ',file)
       const resultAWS = await AWSModel.uploadAWS(file)
       await unlinkFile(file.path)
-      console.log('Upload: ',resultAWS)
+      // console.log('Upload: ',resultAWS)
       
       // res.send({ imaPath: `./image/${resultAWS.key}` })
       return res.status(200).json('Deu certo!')

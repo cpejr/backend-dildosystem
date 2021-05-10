@@ -1,6 +1,11 @@
 const CarouselModel = require("../models/CarouselModel");
 const { uploadFile, deleteFile } = require('../models/GoogleDriveModel');
 
+const { uploadAWS, deleteAWS } = require('../models/AWSModel')
+const fs = require('fs')
+const util = require('util')
+const unlinkFile = util.promisify(fs.unlink)
+
 
 module.exports = {
   async index(request, response) {
@@ -37,11 +42,16 @@ module.exports = {
   async create(request, response) {
     try {
       const newCarousel = request.body;
-      const { originalname, buffer, mimetype } = request.file;
+      // const { originalname, buffer, mimetype } = request.file;
+      const file = request.file;
 
-      const image_id = await uploadFile(buffer, originalname, mimetype);
+      // const image_id = await uploadFile(buffer, originalname, mimetype);
 
-      newCarousel.image_id = image_id;
+      const image_id = await uploadAWS(file)
+      console.log('Response: ', image_id)
+      await unlinkFile(file.path)
+
+      newCarousel.image_id = image_id.key;
 
       await CarouselModel.createCarousel(newCarousel);
 
@@ -56,7 +66,7 @@ module.exports = {
     try {
       const { id } = request.params;
       const carousel_item = await CarouselModel.deleteCarousel(id);
-      await deleteFile(carousel_item.image_id);
+      await deleteAWS(carousel_item.image_id);
       response.status(200).json({ message: "Deleted Carousel_Item: " + id });
     } catch (err) {
       console.warn(err);  

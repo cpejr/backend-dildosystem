@@ -2,16 +2,27 @@ const SubproductModel = require('../models/SubproductModel');
 const ImageModel = require('../models/ImageModel');
 const { uploadFile, deleteFile } = require('../models/GoogleDriveModel');
 
+const { uploadAWS, deleteAWS } = require('../models/AWSModel')
+const fs = require('fs')
+const util = require('util')
+const unlinkFile = util.promisify(fs.unlink)
+
 
 module.exports = {
   async create(request, response) {
     try {
       const newSubproduct = request.body;
-      const { originalname, buffer, mimetype } = request.file;
+      // const { originalname, buffer, mimetype } = request.file;
+      const file = request.file;
+      console.log('File: ', file)
 
-      const image_id = await uploadFile(buffer, originalname, mimetype);
+      const image_id = await uploadAWS(file)
+      console.log('Response: ', image_id)
+      await unlinkFile(file.path)
 
-      newSubproduct.image_id = image_id;
+      // const image_id = await uploadFile(buffer, originalname, mimetype);
+
+      newSubproduct.image_id = image_id.key;
 
       await SubproductModel.createNewSubproduct(newSubproduct);
 
@@ -52,15 +63,17 @@ module.exports = {
       const { id } = request.params;
 
       if (request.file) {
-        const { originalname, buffer, mimetype } = request.file;
+        const file = request.file
+        console.log('File: ', file)
 
-        const image_id = await uploadFile(buffer, originalname, mimetype);
+        // const image_id = await uploadFile(buffer, originalname, mimetype);
 
-        newSubProduct.image_id = image_id;
-
+        const image_id = await uploadAWS(file)
+        console.log('Response: ', image_id)
+        await unlinkFile(file.path)
+        newSubProduct.image_id = image_id.key;
         const prevSubProduct = await SubproductModel.getSubproductbyId(id);
-
-        await deleteFile(prevSubProduct.image_id);
+        await deleteAWS(prevSubProduct.image_id);
       }
 
       await SubproductModel.updateSubproduct(newSubProduct, id);
@@ -75,10 +88,13 @@ module.exports = {
   async delete(request, response) {
     try {
       const { product_id } = request.params;
+      console.log( product_id )
+      const subProduct = await SubproductModel.getSubproductbyId(product_id);
+      await deleteAWS(subProduct.image_id)
       await SubproductModel.deleteSubProduct(product_id);
       response.status(200).json({ message: "Deleted subproduct: " + product_id });
     } catch (err) {
-      return response.status(500).json({ notification: "Internal server error while trying to delete product" });
+      return response.status(500).json({ notification: "Internal server error while trying to delete Subproduct" });
     }
   },
 }

@@ -47,6 +47,7 @@ module.exports = {
 
     async deleteImage(product_id) {
         try {
+            //First, a logic for produc_id
             const resultSearch = await connection('images').where('product_id', product_id).select('*')
             console.log('resultado da busca no banco: ', resultSearch)
             const result = resultSearch.map((img) => {
@@ -57,6 +58,11 @@ module.exports = {
                 })
             })
             // await connection('images').where({ id: product_id }).delete();
+
+            //then a logic for a direct id
+            if(resultSearch.length === 0){
+                await connection('images').where({ id: product_id }).delete();
+            }
         } catch (error) {
             console.error(error);
         }
