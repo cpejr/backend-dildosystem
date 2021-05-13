@@ -6,6 +6,7 @@ const routes = require('./routes');
 const { errors, isCelebrate } = require('celebrate');
 //require('./models/GoogleDriveModel').config();
 const bodyParser = require('body-parser');
+// require('./controllers/InstagramController').config()
 
 
 

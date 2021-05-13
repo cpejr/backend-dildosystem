@@ -23,12 +23,14 @@ module.exports = {
     }
 
     try {
+      // console.log('body: ', requestBody)
       let respostaCielo = await axios.post(url, requestBody, config);
       respostaCielo = respostaCielo.data;
+      // console.log(respostaCielo.data)
 
       return response.status(200).json(respostaCielo);
     } catch (error) {
-      console.log(error);
+      console.log(error.response.data);
       return response.status(500).json({ message: "Internal server error" });
     }
   }

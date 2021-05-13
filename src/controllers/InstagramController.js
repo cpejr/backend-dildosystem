@@ -1,6 +1,25 @@
+const { config } = require('aws-sdk');
 const axios = require('axios');
+const InstaCredecialModel = require('../models/InstaCredencial')
 
 module.exports = {
+
+  async config() {
+    let tempo = await InstaCredecialModel.getCredentials()
+    console.log(tempo)
+
+    if( !tempo ) {
+      const data = {
+        access_token: process.env.INSTA_ACCESS_TOKEN,
+        expiry_date: new Date()
+      }
+      InstaCredecialModel.createCredentials(data)
+    }
+    
+    // tempo = tempo.expiry_date
+    // console.log(tempo)
+
+  },
 
   async getPictures(request, response) {
     try {
@@ -10,6 +29,8 @@ module.exports = {
       allPics = allPics.data.data
 
       const picsUrl = [];
+
+      // console.log('pics: ', allPics)
 
       // Map assincrono
       await Promise.all(allPics.map(async pics => {
