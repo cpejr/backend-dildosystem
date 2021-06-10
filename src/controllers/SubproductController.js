@@ -48,7 +48,28 @@ module.exports = {
         query = {};
 
       const { product_id } = request.params;
+      console.log(request.params)
       const result = await SubproductModel.getSubproductsbyProductId(product_id, query);
+      response.status(200).json(result);
+    } catch (err) {
+      console.error(err.errno);
+      return response.status(500).json({ notification: "Internal server error while trying to get subproducts" });
+    }
+  },
+
+  async getSubproductsId(request, response) {
+    try {
+      let type = "retailer";
+      if (request.session)
+        type = request.session.user.type;
+
+      let query = { visible: true };
+      if (type === 'admin')
+        query = {};
+
+      const { subproduct_id } = request.params;
+      // console.log(request.params)
+      const result = await SubproductModel.getSubproductbyId(subproduct_id);
       response.status(200).json(result);
     } catch (err) {
       console.error(err.errno);

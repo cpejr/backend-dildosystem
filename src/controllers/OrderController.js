@@ -255,7 +255,7 @@ module.exports = {
       const user = request.session.user;
       //let id = uid.randomUUID(10);
 
-      // console.log('esse eh o products: ', products)
+      console.log('esse eh o products: ', products)
 
       const order = {
         id: id,

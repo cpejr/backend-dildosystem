@@ -78,6 +78,7 @@ routes.post('/newSubproduct', authenticateToken, isAdmin, imageUpload('imageFile
 routes.get('/subproducts/:product_id', authenticateOptionalToken, celebrate(subProductValidate.getSubproducts), SubproductController.getSubproducts);
 routes.delete('/subproducts/:product_id', authenticateToken, isAdmin, celebrate(subProductValidate.delete), SubproductController.delete);
 routes.put('/updateSubproduct/:id', authenticateToken, isAdmin, imageUpload('imageFile', 'update'), celebrate(subProductValidate.update), SubproductController.update);
+routes.get('/subproductsId/:subproduct_id', authenticateOptionalToken, SubproductController.getSubproductsId);
 
 //Mock Orders
 routes.post('/cielo', celebrate(orderValidate.createMock), OrderController.createMock);
