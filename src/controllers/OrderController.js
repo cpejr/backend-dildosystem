@@ -324,8 +324,10 @@ module.exports = {
         });
 
 
+      let allProductsId = completesubproducts.map(item => item.product_id);
+      allProductsId = [...allProductsId, ...products_id];
       let prices = await ProductModel.getProductsPrices(
-        products_id,
+        allProductsId,
         ((user.type === 'wholesaler' && user.user_status === 'approved') ? 'wholesaler' : 'retailer')
       );
 
