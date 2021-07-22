@@ -365,7 +365,7 @@ module.exports = {
 
       const dataMail = {
         to: returnOrder.user.email,
-        subject: 'Bem Vindo',
+        subject: 'Seu pedido foi confirmado!',
         text: 'Loja Casulus',
         order_number: returnOrder.id,
         produtos: returnOrder
