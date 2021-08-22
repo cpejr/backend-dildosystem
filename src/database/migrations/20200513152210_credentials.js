@@ -5,7 +5,7 @@ exports.up = function (knex) {
     table.string('refresh_token').notNullable();
     table.string('scope').notNullable();
     table.string('token_type').notNullable();
-    table.biginteger('expiry_date').notNullable();
+    table.string('expiry_date').notNullable();
   });
 };
 

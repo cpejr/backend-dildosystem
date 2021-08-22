@@ -2,15 +2,18 @@ require('dotenv').config();
 
 const express = require('express');
 const cors = require('cors');
-const routes = require('./routes');
 const { errors, isCelebrate } = require('celebrate');
-//require('./models/GoogleDriveModel').config();
 const bodyParser = require('body-parser');
-// require('./controllers/InstagramController').config()
+const {ToadScheduler} = require('toad-scheduler')
 
+const routes = require('./routes');
+const {instaUpdateJob} = require('./schedule/instaSchedule');
 
 
 const port = process.env.PORT || 3333;
+
+const scheduler = new ToadScheduler();
+scheduler.addSimpleIntervalJob(instaUpdateJob);
 
 const app = express();
 

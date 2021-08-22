@@ -1,6 +1,7 @@
 const { config } = require('aws-sdk');
 const axios = require('axios');
 const InstaCredecialModel = require('../models/InstaCredencial')
+const credentialsModel = require('../models/CredentialModel')
 
 module.exports = {
 
@@ -23,8 +24,10 @@ module.exports = {
 
   async getPictures(request, response) {
     try {
+
+      const {access_token} = credentialsModel.getCredentials();
       
-      let allPics = await axios.get(`https://graph.instagram.com/me/media?fields=id,caption&access_token=${process.env.INSTA_ACCESS_TOKEN}`);
+      let allPics = await axios.get(`https://graph.instagram.com/me/media?fields=id,caption&access_token=${access_token}`);
 
       allPics = allPics.data.data
 
@@ -34,7 +37,7 @@ module.exports = {
 
       // Map assincrono
       await Promise.all(allPics.map(async pics => {
-        const resp = await axios.get(`https://graph.instagram.com/${pics.id}?fields=id,media_type,media_url,username,timestamp&access_token=${process.env.INSTA_ACCESS_TOKEN}`);
+        const resp = await axios.get(`https://graph.instagram.com/${pics.id}?fields=id,media_type,media_url,username,timestamp&access_token=${access_token}`);
         // console.log(resp.data)
         picsUrl.push(resp.data)
       }))
