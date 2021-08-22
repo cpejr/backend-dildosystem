@@ -25,7 +25,7 @@ module.exports = {
   async getPictures(request, response) {
     try {
 
-      const {access_token} = credentialsModel.getCredentials();
+      const {access_token} = await credentialsModel.getCredentials();
       
       let allPics = await axios.get(`https://graph.instagram.com/me/media?fields=id,caption&access_token=${access_token}`);
 
@@ -46,7 +46,7 @@ module.exports = {
 
       return response.status(200).json(picsUrl);
     } catch (error) {
-      //console.log(error);
+      console.log(error);
       return response.status(500).json({ message: "There was an error while trying to fetch" });
     }
   }
