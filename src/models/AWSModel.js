@@ -3,8 +3,8 @@ const fs = require('fs')
 const connection = require("../database/connection");
 
 const region = process.env.AWS_BUCKET_REGION
-const accessKeyId =  process.env.AWS_ACCESS_KEY
-const secretAccessKey =  process.env.AWS_SECRET_ACCESS_KEY
+const accessKeyId = process.env.AWS_ACCESS_KEY
+const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY
 const bucketName = process.env.AWS_BUCKET_NAME
 
 
@@ -28,7 +28,8 @@ module.exports = {
           Key: file.filename
         }
 
-        const awsRes = await s3.upload(uploadParams).promise()
+        const awsRes = await s3.upload(uploadParams).promise();
+        console.log("🚀 ~ file: AWSModel.js ~ line 32 ~ returnnewPromise ~ awsRes", awsRes);
 
         resolve(awsRes)
       }
